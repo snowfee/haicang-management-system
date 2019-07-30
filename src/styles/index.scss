@@ -63,3 +63,25 @@ div:focus {
 .app-container {
   padding: 20px;
 }
+
+// box ui
+.container{
+  padding: 20px;
+}
+.box{
+  padding: 20px;
+  border: 1px solid #ebeef5;
+  margin-bottom: 20px;
+  .box-top{
+    line-height: 32px;
+    .top-left{
+      display: inline-block;
+    }
+    .top-right{
+      float: right;
+    }
+  }
+  .box-content{
+    margin-top: 15px;
+  }
+}

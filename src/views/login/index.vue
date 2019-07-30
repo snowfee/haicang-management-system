@@ -3,7 +3,8 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">Login Form</h3>
+        <svg-icon icon-class="mall" class="title-icon" />
+        <h3 class="title">海仓后台</h3>
       </div>
 
       <el-form-item prop="username">
@@ -197,11 +198,16 @@ $theme:#409eff;
 
   .title-container {
     position: relative;
-
+    text-align: center;
+    .title-icon{
+      width: 56px;
+      height: 56px;
+      color: #409EFF
+    }
     .title {
       font-size: 26px;
-      color: $light_gray;
-      margin: 0px auto 40px auto;
+      color: $theme;
+      margin: 20px auto;
       text-align: center;
       font-weight: bold;
     }

@@ -14,6 +14,7 @@ import router from './router'
 
 import '@/icons' // icon
 import '@/permission' // permission control
+import * as filters from '@/filters/index'
 
 /**
  * If you don't want to use mock-server
@@ -30,6 +31,8 @@ if (process.env.NODE_ENV === 'production') {
 
 // set ElementUI lang to EN
 Vue.use(ElementUI, { size: 'small' })
+console.log(filters)
+Object.keys(filters).forEach(key => Vue.filter(key, filters[key]))
 
 Vue.config.productionTip = false
 

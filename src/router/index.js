@@ -46,12 +46,42 @@ export const constantRoutes = [
   {
     path: '/',
     component: Layout,
-    redirect: '/dashboard',
+    redirect: '/home',
     children: [{
-      path: 'dashboard',
+      path: 'home',
       name: '首页',
       component: () => import('@/views/dashboard/index'),
       meta: { title: '首页', icon: 'home' }
+    }]
+  },
+  {
+    path: '/staff',
+    component: Layout,
+    redirect: '/staff/list',
+    name: '员工管理',
+    meta: { title: '员工管理', icon: 'user' },
+    children: [{
+      path: 'list',
+      name: '员工列表',
+      component: () => import('@/views/staff/list'),
+      meta: { title: '员工列表', icon: 'list' }
+    }, {
+      path: 'addStaff',
+      name: '添加员工',
+      component: () => import('@/views/staff/addStaff'),
+      meta: { title: '添加员工', icon: 'add' },
+      hidden: true
+    }, {
+      path: 'editStaff',
+      name: '编辑员工',
+      component: () => import('@/views/staff/editStaff'),
+      meta: { title: '编辑员工', icon: 'add' },
+      hidden: true
+    }, {
+      path: 'role',
+      name: '职位列表',
+      component: () => import('@/views/staff/role'),
+      meta: { title: '职位列表', icon: 'list' }
     }]
   },
 
@@ -69,8 +99,14 @@ export const constantRoutes = [
     }, {
       path: 'add',
       name: '添加商品',
-      component: () => import('@/views/product/addProduct'),
+      component: () => import('@/views/product/add'),
       meta: { title: '添加商品', icon: 'add' }
+    }, {
+      path: 'update',
+      name: '修改商品',
+      component: () => import('@/views/product/update'),
+      meta: { title: '添加商品', icon: 'add' },
+      hidden: true
     }]
   },
 

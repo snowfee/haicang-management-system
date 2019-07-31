@@ -85,3 +85,12 @@ div:focus {
     margin-top: 15px;
   }
 }
+.edit-container{
+  @extend .box;
+  width: 800px;
+  margin: 20px auto;
+}
+.pagination-box{
+  text-align: right;
+  margin-top: 20px;
+}

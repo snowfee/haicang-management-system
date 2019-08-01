@@ -89,6 +89,15 @@ div:focus {
   @extend .box;
   width: 800px;
   margin: 20px auto;
+  .edit-step{
+    margin-bottom: 25px;
+  }
+  .edit-form{
+    width: 600px;
+    .form-btn{
+      text-align: center;
+    }
+  }
 }
 .pagination-box{
   text-align: right;

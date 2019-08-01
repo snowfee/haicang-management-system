@@ -1,6 +1,6 @@
 <template>
   <div class="edit-container">
-    <el-steps align-center :active="activeStep">
+    <el-steps align-center :active="activeStep" class="edit-step">
       <el-step title="填写商品信息"></el-step>
       <el-step title="填写商品属性"></el-step>
     </el-steps>

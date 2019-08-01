@@ -13,3 +13,11 @@ export function roleList({ pageIndex, pageSize }) {
     method: 'get'
   })
 }
+
+export function handleStaff(params) {
+  return request({
+    url: `/staff/handleStaff`,
+    method: 'post',
+    
+  })
+}

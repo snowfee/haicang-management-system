@@ -82,6 +82,18 @@ export const constantRoutes = [
       name: '职位列表',
       component: () => import('@/views/staff/role'),
       meta: { title: '职位列表', icon: 'list' }
+    }, {
+      path: 'addRole',
+      name: '添加职位',
+      component: () => import('@/views/staff/addRole'),
+      meta: { title: '添加职位', icon: 'add' },
+      hidden: true
+    }, {
+      path: 'editRole',
+      name: '编辑职位',
+      component: () => import('@/views/staff/editRole'),
+      meta: { title: '编辑职位', icon: 'add' },
+      hidden: true
     }]
   },
 

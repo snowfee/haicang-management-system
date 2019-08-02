@@ -30,7 +30,7 @@
             <el-button
               size="mini"
               type="text"
-              @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+              @click="handleEdit(scope.row.id)">编辑</el-button>
             <el-button
               size="mini"
               type="text"
@@ -106,12 +106,17 @@ export default {
         type: 'warning'
       }).then(() => {
         handleStaff(params).then(res => {
-          this.getStaffData()
+          this.getListData()
           this.$message({
             type: 'success',
             message: '删除成功!'
           })
         })
+      })
+    },
+    handleEdit(id) {
+      this.$router.push({
+        path: `editStaff?id=${id}`
       })
     }
   }

@@ -54,7 +54,7 @@ export default {
       },
       rules: {
         age: [
-          {required: true, message: '请输入活动名称', trigger: 'blur'}
+          {required: true, trigger: 'blur'}
         ],
         name: [
           {required: true, trigger: 'blur'}
@@ -102,6 +102,9 @@ export default {
               message: '员工添加成功',
               type: 'success'
             });
+            this.$router.replace({
+              path: 'list'
+            })
           })
         }
       })

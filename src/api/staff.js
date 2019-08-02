@@ -21,3 +21,25 @@ export function handleStaff(data) {
     data
   })
 }
+
+export function getStaffById(id) {
+  return request({
+    url: `/staff/getStaffInfo?id=${id}`,
+    method: 'get'
+  })
+}
+
+export function allPermissions() {
+  return request({
+    url: `/staff/allPermissions`,
+    method: 'get'
+  })
+}
+
+export function handleRole(data) {
+  return request({
+    url: `/staff/handleRole`,
+    method: 'post',
+    data
+  })
+}

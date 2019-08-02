@@ -7,7 +7,7 @@
           <span>数据列表</span>
         </div>
         <div class="top-right">
-          <el-button>添加</el-button>
+          <el-button @click="addRole">添加</el-button>
         </div>
       </div>
     </div>
@@ -24,7 +24,7 @@
             <el-button
               size="mini"
               type="text"
-              @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+              @click="handleDelete(scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import { roleList } from '@/api/staff'
+import { roleList, handleRole } from '@/api/staff'
 export default {
   name: 'RoleList',
   data() {
@@ -79,6 +79,30 @@ export default {
     handlePageSizeChange(val) {
       this.pageSize = val
       this.getListData()
+    },
+    addRole() {
+      this.$router.push({
+        path: 'addRole'
+      })
+    },
+    handleDelete(id) {
+      let params = {
+        id,
+        methodType: 'DELETE'
+      }
+      this.$confirm('此操作将永久删除该职位, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        handleRole(params).then(res => {
+          this.getListData()
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+        })
+      })
     }
   }
 }

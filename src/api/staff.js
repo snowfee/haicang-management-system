@@ -14,10 +14,10 @@ export function roleList({ pageIndex, pageSize }) {
   })
 }
 
-export function handleStaff(params) {
+export function handleStaff(data) {
   return request({
     url: `/staff/handleStaff`,
     method: 'post',
-    
+    data
   })
 }

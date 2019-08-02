@@ -34,7 +34,7 @@
             <el-button
               size="mini"
               type="text"
-              @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+              @click="handleDelete(scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import { staffList } from '@/api/staff'
+import { staffList, handleStaff } from '@/api/staff'
 export default {
   name: 'StaffList',
   data() {
@@ -93,6 +93,25 @@ export default {
     addStaff() {
       this.$router.push({
         path: 'addStaff'
+      })
+    },
+    handleDelete(id) {
+      let params = {
+        id,
+        methodType: 'DELETE'
+      }
+      this.$confirm('此操作将永久删除该员工, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        handleStaff(params).then(res => {
+          this.getStaffData()
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+        })
       })
     }
   }

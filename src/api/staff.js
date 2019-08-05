@@ -43,3 +43,10 @@ export function handleRole(data) {
     data
   })
 }
+
+export function getRoleById(id) {
+  return request({
+    url: `/staff/getRoleInfo?id=${id}`,
+    method: 'get'
+  })
+}

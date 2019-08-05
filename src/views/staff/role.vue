@@ -20,7 +20,7 @@
             <el-button
               size="mini"
               type="text"
-              @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+              @click="handleEdit(scope.row.id)">编辑</el-button>
             <el-button
               size="mini"
               type="text"
@@ -83,6 +83,11 @@ export default {
     addRole() {
       this.$router.push({
         path: 'addRole'
+      })
+    },
+    handleEdit(id) {
+      this.$router.push({
+        path: `editRole?id=${id}`
       })
     },
     handleDelete(id) {

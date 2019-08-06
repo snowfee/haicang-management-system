@@ -26,11 +26,33 @@ import variables from '@/styles/variables.scss'
 
 export default {
   components: { SidebarItem, Logo },
+  data() {
+    return {
+      router: []
+    }
+  },
+  created() {
+    this.filterRouter(this.$router.options.routes)
+  },
+  methods: {
+    filterRouter(routes) {
+      routes.forEach((item, index) => {
+        if (!item.hidden && item.id && this.permission.indexOf(item.id) < 0) {
+          item.hidden = true
+        }
+        if (item.children && item.children.length > 0) {
+          this.filterRouter(item.children)
+        }
+      })
+    }
+  },
   computed: {
     ...mapGetters([
-      'sidebar'
+      'sidebar',
+      'permission'
     ]),
     routes() {
+      console.log(this.$router.options.routes)
       return this.$router.options.routes
     },
     activeMenu() {

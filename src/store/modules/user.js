@@ -6,7 +6,8 @@ const state = {
   token: getToken(),
   name: '',
   avatar: '',
-  guid: getGuid()
+  guid: getGuid(),
+  permission: []
 }
 
 const mutations = {
@@ -21,6 +22,9 @@ const mutations = {
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
+  },
+  SET_PERMISSION: (state, permission) => {
+    state.permission = permission
   }
 }
 
@@ -34,6 +38,7 @@ const actions = {
         commit('SET_TOKEN', data.backendToken)
         commit('SET_NAME', data.staff.name)
         commit('SET_GUID', data.staff.id)
+        commit('SET_PERMISSION', data.staff.role.permissions)
         setToken(data.backendToken)
         setGuid(data.staff.id)
         resolve()
@@ -53,10 +58,8 @@ const actions = {
           reject('Verification failed, please Login again.')
         }
 
-        const { name, avatar } = data
-
-        commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar)
+        commit('SET_NAME', data.name)
+        commit('SET_PERMISSION', data.role.permissionIds.split(',').map(item => +item))
         resolve(data)
       }).catch(error => {
         reject(error)

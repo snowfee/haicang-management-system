@@ -47,9 +47,11 @@ export const constantRoutes = [
     path: '/',
     component: Layout,
     redirect: '/home',
+    id: 1,
     children: [{
       path: 'home',
       name: '首页',
+      id: 1,
       component: () => import('@/views/dashboard/index'),
       meta: { title: '首页', icon: 'home' }
     }]
@@ -59,10 +61,12 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/staff/list',
     name: '员工管理',
+    id: 2,
     meta: { title: '员工管理', icon: 'user' },
     children: [{
       path: 'list',
       name: '员工列表',
+      id: 3,
       component: () => import('@/views/staff/list'),
       meta: { title: '员工列表', icon: 'list' }
     }, {
@@ -80,6 +84,7 @@ export const constantRoutes = [
     }, {
       path: 'role',
       name: '职位列表',
+      id: 4,
       component: () => import('@/views/staff/role'),
       meta: { title: '职位列表', icon: 'list' }
     }, {
@@ -102,10 +107,18 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/product/list',
     name: '商品管理',
+    id: 6,
     meta: { title: '商品管理', icon: 'goods' },
     children: [{
+      path: 'category',
+      name: '类目管理',
+      id: 7,
+      component: () => import('@/views/product/category'),
+      meta: { title: '类目管理', icon: 'list' }
+    }, {
       path: 'list',
       name: '商品列表',
+      id: 8,
       component: () => import('@/views/product/list'),
       meta: { title: '商品列表', icon: 'list' }
     }, {

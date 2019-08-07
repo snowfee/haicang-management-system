@@ -74,7 +74,7 @@ export const constantRoutes = [
       name: '添加员工',
       component: () => import('@/views/staff/addStaff'),
       meta: { title: '添加员工', icon: 'add' },
-      hidden: true
+      hidden: false
     }, {
       path: 'editStaff',
       name: '编辑员工',
@@ -92,7 +92,7 @@ export const constantRoutes = [
       name: '添加职位',
       component: () => import('@/views/staff/addRole'),
       meta: { title: '添加职位', icon: 'add' },
-      hidden: true
+      hidden: false
     }, {
       path: 'editRole',
       name: '编辑职位',

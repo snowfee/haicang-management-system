@@ -71,12 +71,20 @@ export default {
     },
     handleCheckAllChange(val, permC, index) {
       this.ruleForm.permissions[index] = val ? permC.map(item => item.id) : []
+      if (val) {
+        // 父项id
+        this.ruleForm.permissions[index].push(this.allPermissions[index].id)
+      }
     },
     handleCheckedItemChange(val, permC, index) {
       let checkedCount = val.length
       // 数据绑定 改变数组时 使用this.$set()
       this.$set(this.checkAll, index, checkedCount === permC.length)
       this.$set(this.isIndeterminate, index, checkedCount > 0 && checkedCount < permC.length)
+      if (checkedCount > 0) {
+        // 父项id
+        this.ruleForm.permissions[index].push(this.allPermissions[index].id)
+      }
     },
     submitForm(formName) {
       this.$refs[formName].validate(valid => {

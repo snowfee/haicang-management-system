@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { handleRole, allPermissions } from '@/api/staff'
+import { handleRole, allPermissions, getRoleById } from '@/api/staff'
 export default {
   data() {
     return {
@@ -59,14 +59,35 @@ export default {
   },
   methods: {
     init() {
-      this.geiEditRole()
-      this.getAllPermissions()
+      this.getEditRole()
     },
-    geiEditRole() {
-      
+    async getEditRole() {
+      await this.getAllPermissions()
+      getRoleById(this.id).then(res => {
+        this.ruleForm.name = res.data.name
+        this.ruleForm.code = res.data.code
+        res.data.permissions.forEach((per, i) => {
+          this.allPermissions.forEach((allPer, j) => {
+            if (per.id == allPer.id) {
+              this.ruleForm.permissions[j] = [per.id]
+              if (per.children.length == allPer.children.length) {
+                this.$set(this.checkAll, j, true)
+              } else {
+                this.$set(this.isIndeterminate, j, true)
+              }
+              if(per.children.length > 0) {
+                per.children.forEach(child => {
+                  this.ruleForm.permissions[j].push(child.id)
+                })
+              }
+            }
+          })
+        })
+        console.log('1', this.ruleForm)
+      })
     },
     getAllPermissions() {
-      allPermissions().then(res => {
+      return allPermissions().then(res => {
         this.allPermissions = res.data
         this.allPermissions.forEach((item, index) => {
           this.$set(this.isIndeterminate, index, false)
@@ -77,19 +98,28 @@ export default {
     },
     handleCheckAllChange(val, permC, index) {
       this.ruleForm.permissions[index] = val ? permC.map(item => item.id) : []
+      if (val) {
+        // 父项id
+        this.ruleForm.permissions[index].push(this.allPermissions[index].id)
+      }
+      
     },
     handleCheckedItemChange(val, permC, index) {
       let checkedCount = val.length
       // 数据绑定 改变数组时 使用this.$set()
       this.$set(this.checkAll, index, checkedCount === permC.length)
       this.$set(this.isIndeterminate, index, checkedCount > 0 && checkedCount < permC.length)
+      if (checkedCount > 0) {
+        // 父项id
+        this.ruleForm.permissions[index].push(this.allPermissions[index].id)
+      }
     },
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
           let params = Object.assign({}, this.ruleForm)
           params.permissionIds = this.ruleForm.permissions.flat(Infinity).join(',')
-          params.methodType = 'ADD'
+          params.methodType = 'UPDATE'
           delete params.permissions
           handleRole(params).then(res => {
             this.$message({

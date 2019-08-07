@@ -38,6 +38,7 @@ export default {
     filterRouter(routes) {
       routes.forEach((item, index) => {
         if (!item.hidden && item.id && this.permission.indexOf(item.id) < 0) {
+          // console.log('ok', item)
           item.hidden = true
         }
         if (item.children && item.children.length > 0) {
@@ -52,7 +53,6 @@ export default {
       'permission'
     ]),
     routes() {
-      console.log(this.$router.options.routes)
       return this.$router.options.routes
     },
     activeMenu() {

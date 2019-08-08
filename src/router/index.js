@@ -101,7 +101,6 @@ export const constantRoutes = [
       hidden: true
     }]
   },
-
   {
     path: '/product',
     component: Layout,
@@ -124,6 +123,7 @@ export const constantRoutes = [
     }, {
       path: 'add',
       name: '添加商品',
+      id: 40,
       component: () => import('@/views/product/add'),
       meta: { title: '添加商品', icon: 'add' }
     }, {
@@ -132,6 +132,39 @@ export const constantRoutes = [
       component: () => import('@/views/product/update'),
       meta: { title: '添加商品', icon: 'add' },
       hidden: true
+    }]
+  },
+  {
+    path: '/material',
+    component: Layout,
+    redirect: '/material/list',
+    name: '物料管理',
+    id: 35,
+    meta: { title: '物料管理', icon: 'goods' },
+    children: [{
+      path: 'unit',
+      name: '单位管理',
+      id: 36,
+      component: () => import('@/views/materials/unit'),
+      meta: { title: '单位管理', icon: 'list' }
+    },{
+      path: 'attribute',
+      name: '属性管理',
+      id: 37,
+      component: () => import('@/views/materials/attribute'),
+      meta: { title: '属性管理', icon: 'list' }
+    }, {
+      path: 'add',
+      name: '添加物料',
+      id: 38,
+      component: () => import('@/views/materials/add'),
+      meta: { title: '添加物料', icon: 'add' }
+    }, {
+      path: 'list',
+      name: '物料列表',
+      id: 39,
+      component: () => import('@/views/materials/list'),
+      meta: { title: '物料列表', icon: 'list' }
     }]
   },
 

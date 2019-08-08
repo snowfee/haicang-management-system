@@ -12,7 +12,7 @@
         </div>
       </div>
       <div class="box-content">
-        <el-form :model="listForm" label-width="150px" :label-position="right" :inline="true" >
+        <el-form :model="listForm" label-width="150px" label-position="right" :inline="true" >
           <el-form-item label="商品名称">
             <el-input v-model="listForm.name" placeholder="商品名称"></el-input>
           </el-form-item>
@@ -21,16 +21,16 @@
           </el-form-item>
           <el-form-item label="商品状态">
             <el-select v-model="listForm.status">
-              <el-option :label="上架" :value="0"></el-option>
-              <el-option :label="下架" :value="1"></el-option>
+              <el-option label="上架" :value="0"></el-option>
+              <el-option label="下架" :value="1"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="商品分类">
-             <el-select v-model="listForm.category">
-              <el-option :label="上架" :value="0"></el-option>
-              <el-option :label="下架" :value="1"></el-option>
-            </el-select>
-            <!-- <el-cascader :options="" v-model="listForm"></el-cascader> -->
+            <el-cascader 
+            :props="categoriesRule" 
+            :options="categories" 
+            v-model="listForm.category"
+            expand-trigger="hover"></el-cascader>
           </el-form-item>
         </el-form>
       </div>
@@ -60,6 +60,7 @@
   </div>
 </template>
 <script>
+import { getAllCategories } from '@/api/product'
 export default {
   name: 'ProductList',
   data() {
@@ -70,10 +71,34 @@ export default {
         id: '',
         status: '',
         category: ''
+      },
+      categories: [],
+      categoriesRule: {
+        value: 'id',
+        label: 'name'
       }
     }
   },
+  created() {
+    this.getAllCategories()
+  },
   methods: {
+    getAllCategories() {
+      getAllCategories().then(res => {
+        this.categories = res.data
+        this.deleteEmptyChildren(this.categories)
+        console.log(this.categories)
+      })
+    },
+    deleteEmptyChildren(data) {
+      data.forEach(item => {
+        if (item.children.length === 0 ) {
+          delete item.children
+        } else {
+          this.deleteEmptyChildren(item.children)
+        }
+      })
+    }
   }
 }
 </script>

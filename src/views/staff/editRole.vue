@@ -66,6 +66,7 @@ export default {
       getRoleById(this.id).then(res => {
         this.ruleForm.name = res.data.name
         this.ruleForm.code = res.data.code
+        this.ruleForm.id = res.data.id
         res.data.permissions.forEach((per, i) => {
           this.allPermissions.forEach((allPer, j) => {
             if (per.id == allPer.id) {
@@ -83,7 +84,6 @@ export default {
             }
           })
         })
-        console.log('1', this.ruleForm)
       })
     },
     getAllPermissions() {

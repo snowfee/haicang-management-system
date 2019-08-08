@@ -32,7 +32,8 @@ export default {
     }
   },
   created() {
-    this.filterRouter(this.$router.options.routes)
+    this.router = this.$router.options.routes
+    this.filterRouter(this.router)
   },
   methods: {
     filterRouter(routes) {
@@ -53,7 +54,7 @@ export default {
       'permission'
     ]),
     routes() {
-      return this.$router.options.routes
+      return this.router
     },
     activeMenu() {
       const route = this.$route

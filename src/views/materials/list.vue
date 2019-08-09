@@ -42,7 +42,7 @@
         <!-- <el-table-column label="单价（元）" prop="name"></el-table-column> -->
         <el-table-column label="状态" prop="status">
           <template slot-scope="scope">
-            <el-switch v-model="scope.row.status" active-color="#13ce66" active-value="ENABLE" inactive-value="DISABLE"></el-switch>
+            <el-switch v-model="scope.row.status" active-value="ENABLE" inactive-value="DISABLE"></el-switch>
           </template>
         </el-table-column>
         <el-table-column label="创建时间" prop="name"></el-table-column>
@@ -69,7 +69,7 @@
           layout="total, sizes, prev, pager, next, jumper"
           :total="total">
         </el-pagination>
-    </div>
+      </div>
     </div>
   </div>
 </template>

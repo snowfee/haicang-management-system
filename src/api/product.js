@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
-export function queryMaterials(data) {
+export function productsList(data) {
   return request({
-    url: `/material/queryMaterials`,
+    url: `/product/queryProducts`,
     method: 'post',
     data
   })

@@ -68,7 +68,7 @@
             <el-button
               size="mini"
               type="text"
-              @click="handleDelete(scope.row.id)">删除</el-button>
+              @click="handleSee(scope.row.id)">查看</el-button>
           </template>
         </el-table-column>
       </el-table>

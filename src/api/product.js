@@ -15,6 +15,21 @@ export function getAllCategories() {
   })
 }
 
+export function handleCategory(data) {
+  return request({
+    url: `/product/handleCategory`,
+    method: 'post',
+    data
+  })
+}
+
+export function getCategoryDes(id) {
+  return request({
+    url: `/product/getCategoryById?categoryId=${id}`,
+    method: 'get'
+  })
+}
+
 export function unitsList() {
   return request({
     url: `/material/queryAllUnits`,

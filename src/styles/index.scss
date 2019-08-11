@@ -71,7 +71,7 @@ div:focus {
 .box{
   padding: 20px;
   border: 1px solid #ebeef5;
-  margin-bottom: 20px;
+  margin-bottom: 22px;
   .box-top{
     line-height: 32px;
     .top-left{
@@ -102,4 +102,7 @@ div:focus {
 .pagination-box{
   text-align: right;
   margin-top: 20px;
+}
+.detail-container{
+  padding: 30px;
 }

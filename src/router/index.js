@@ -154,6 +154,12 @@ export const constantRoutes = [
       component: () => import('@/views/materials/attribute'),
       meta: { title: '属性管理', icon: 'list' }
     }, {
+      path: 'attributeList',
+      name: '属性列表',
+      component: () => import('@/views/materials/attributeList'),
+      meta: { title: '属性列表', icon: 'list' },
+      hidden: true
+    }, {
       path: 'add',
       name: '添加物料',
       id: 38,

@@ -29,7 +29,7 @@
           <span>数据列表</span>
         </div>
         <div class="top-right">
-          <el-button>添加</el-button>
+          <el-button @click="toAddPage">添加</el-button>
         </div>
       </div>
     </div>
@@ -115,6 +115,11 @@ export default {
       this.pageSize = val
       this.getListData()
     },
+    toAddPage() {
+      this.$router.push({
+        path: 'add'
+      })
+    }
   }
 }
 </script>

@@ -15,6 +15,14 @@ export function skuAttributeList() {
   })
 }
 
+export function handleSkuAttribute(data) {
+  return request({
+    url: `/material/handleSkuAttribute`,
+    method: 'post',
+    data
+  })
+}
+
 export function unitsList() {
   return request({
     url: `/material/queryAllUnits`,

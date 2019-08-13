@@ -26,9 +26,17 @@
     <transition name="fade-transform" mode="out-in">
       <el-form v-show="activeStep === 1" :model="formData2" class="edit-form" :rules="ruleForm" label-width="150px">
         <el-form-item label="属性类型">
-          <el-select v-model="formData2.attributeId">
-            <el-option v-for="(type, index) in attributes" :key="index" :label="type.name" :value="type.id"></el-option>
+          <el-select v-model="attrIndex" @change="handleAttrSelectChange">
+            <el-option v-for="(type, index) in attributes" :key="index" :label="type.name" :value="index"></el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="商品规格">
+          <div v-for="(attr, index) in attributeList" :key="index">
+            <p>{{attr.name}}</p>
+            <!-- <el-checkbox-group v-model="">
+              <el-checkbox v-for="() in inputList" label=""></el-checkbox>
+            </el-checkbox-group> -->
+          </div>
         </el-form-item>
       </el-form>
     </transition>
@@ -42,6 +50,9 @@ export default {
     return {
       activeStep: 0,
       attributes: [], // 属性类型
+      attributeList: [], // 属性列表
+      attrIndex: '', 
+      materialSkuList: [], 
       formData1: {
         name: '',
         basicUnit: '',
@@ -49,7 +60,7 @@ export default {
         unitConversion: ''
       },
       formData2: {
-
+        attributeId: ''
       },
       ruleForm: {
         name: [{ required: true, trigger: 'blur' }],
@@ -74,6 +85,10 @@ export default {
           this.activeStep = this.activeStep + 1
         }
       })
+    },
+    handleAttrSelectChange(val) {
+      this.formData2.attributeId = this.attributes[val].id
+      this.attributeList = this.attributes[val].attributeList
     }
   }
 }

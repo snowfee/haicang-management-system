@@ -151,13 +151,25 @@ export const constantRoutes = [
       path: 'attribute',
       name: '属性管理',
       id: 37,
-      component: () => import('@/views/materials/attribute'),
+      component: () => import('@/views/materials/attribute/index'),
       meta: { title: '属性管理', icon: 'list' }
     }, {
       path: 'attributeList',
       name: '属性列表',
-      component: () => import('@/views/materials/attributeList'),
+      component: () => import('@/views/materials/attribute/list'),
       meta: { title: '属性列表', icon: 'list' },
+      hidden: true
+    }, {
+      path: 'addAttribute/:attrId',
+      name: '添加属性',
+      component: () => import('@/views/materials/attribute/add'),
+      meta: { title: '添加属性', icon: 'add' },
+      hidden: true
+    }, {
+      path: 'editAttribute/:attrId',
+      name: '编辑属性',
+      component: () => import('@/views/materials/attribute/edit'),
+      meta: { title: '编辑属性', icon: 'add' },
       hidden: true
     }, {
       path: 'add',

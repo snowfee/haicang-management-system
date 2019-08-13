@@ -79,6 +79,8 @@ export default {
     openAddDialog() {
       this.dialogTitle = "添加类型"
       this.addForm.methodType = 'ADD'
+      this.addForm.name = ''
+      this.addForm.id = ''
       this.showDialog = true
     },
     handleEdit(row) {
@@ -94,7 +96,7 @@ export default {
           let params = {...this.addForm}
           handleSkuAttribute(params).then(res => {
             this.$message({
-              message: '属性类型添加成功',
+              message: '操作成功',
               type: 'success'
             })
             this.getListData()

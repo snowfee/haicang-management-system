@@ -115,6 +115,11 @@ export default {
       this.pageSize = val
       this.getListData()
     },
+    handleEdit(id) {
+      this.$router.push({
+        path: `edit?id=${id}`
+      })
+    },
     toAddPage() {
       this.$router.push({
         path: 'add'

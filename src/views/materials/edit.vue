@@ -72,10 +72,11 @@
 </template> 
 
 <script>
-import { skuAttributeList, handleMaterial } from '@/api/materials'
+import { skuAttributeList, handleMaterial, getMaterialById } from '@/api/materials'
 export default {
   data() {
     return {
+      id: '',
       activeStep: 0,
       attributes: [], // 属性类型
       attributeList: [], // 属性列表
@@ -108,9 +109,26 @@ export default {
     }
   },
   created() {
+    this.id = this.$route.query.id || ''
+    this.getEditMaterial()
     this.getAttributes()
   },
   methods: {
+    getEditMaterial() {
+      getMaterialById(this.id).then(res => {
+        let data = res.data
+        this.formData1 = {
+          id: data.id,
+          name: data.name,
+          basicUnit: data.basicUnit,
+          purchaseUnit: data.purchaseUnit,
+          unitConversion: data.unitConversion
+        }
+        this.formData2 = {
+          attributeId: data.attributeId
+        }
+      })
+    },
     getAttributes() {
       skuAttributeList().then(res => {
         this.attributes = res.data
@@ -220,11 +238,11 @@ export default {
             })
             item.skuAttribute = item.skuAttribute.join('|')
           })
-          params.methodType = 'ADD'
+          params.methodType = 'UPDATE'
           console.log('params', params)
           handleMaterial(params).then(res => {
             this.$message({
-              message: '物料添加成功',
+              message: '物料更新成功',
               type: 'success'
             });
             this.$router.replace({

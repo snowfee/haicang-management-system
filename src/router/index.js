@@ -178,11 +178,44 @@ export const constantRoutes = [
       component: () => import('@/views/materials/add'),
       meta: { title: '添加物料', icon: 'add' }
     }, {
+      path: 'edit',
+      name: '编辑物料',
+      component: () => import('@/views/materials/edit'),
+      meta: { title: '编辑物料', icon: 'add' }
+    }, {
       path: 'list',
       name: '物料列表',
       id: 39,
       component: () => import('@/views/materials/list'),
       meta: { title: '物料列表', icon: 'list' }
+    }]
+  },
+
+  {
+    path: '/appset',
+    component: Layout,
+    redirect: '/appset/homePage',
+    name: 'App设置',
+    id: 41,
+    meta: { title: 'App设置', icon: 'goods' },
+    children: [{
+      path: 'homePage',
+      name: '首页管理',
+      id: 42,
+      component: () => import('@/views/appset/homePage'),
+      meta: { title: 'app首页管理', icon: 'list'}
+    }, {
+      path: 'addHomeBlock',
+      name: '添加版块',
+      component: () => import('@/views/appset/addHomeBlock'),
+      meta: { title: '添加版块', icon: 'list' },
+      hidden: true
+    }, {
+      path: 'carousel',
+      name: '首页轮播图设置',
+      id: 43,
+      component: () => import('@/views/appset/carousel'),
+      meta: { title: 'app首页轮播图设置', icon: 'list' }
     }]
   },
 

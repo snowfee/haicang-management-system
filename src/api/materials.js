@@ -8,6 +8,21 @@ export function queryMaterials(data) {
   })
 }
 
+export function handleMaterial(data) {
+  return request({
+    url: `/material/handleMaterial`,
+    method: 'post',
+    data
+  })
+}
+
+export function getMaterialById(id) {
+  return request({
+    url: `/material/getMaterialById?materialId=${id}`,
+    method: 'get'
+  })
+}
+
 export function skuAttributeList() {
   return request({
     url: `/material/queryAllSkuAttribute`,

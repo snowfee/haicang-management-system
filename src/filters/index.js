@@ -57,6 +57,18 @@ export function keyToDes(key) {
       break
     case 'CASH': des = '现金支付'
       break
+    case 'ACTIVITY': des = '活动'
+      break
+    case 'CATEGORY': des = '类目'
+      break
+    case 'PRODUCT_LIST': des = '商品列表'
+      break
+    case 'PRODUCT_BINARY': des = '商品二分'
+      break
+    case 'SNAP_UP': des = '抢购'
+      break
+    case 'GET_COUPON': des = '领券'
+      break
   }
   return des
 }

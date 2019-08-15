@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function getHomeSections(name) {
   return request({
-    url: `/appSet/allHomeSections?name=${name}`,
+    url: `/backend/appSet/allHomeSections?name=${name}`,
     method: 'get'
   })
 }

@@ -43,7 +43,7 @@
           <span>数据列表</span>
         </div>
         <div class="top-right">
-          <el-button>添加</el-button>
+          <el-button @click="add">添加</el-button>
         </div>
       </div>
     </div>
@@ -176,6 +176,16 @@ export default {
       this.categoryId2 = value[1] || ''
       this.categoryId3 = value[2] || ''
       console.log(this.categoryId2)
+    },
+    add() {
+      this.$router.push({
+        path: 'add'
+      })
+    },
+    handleSee(id) {
+      this.$router.push({
+        path: `see?id=${id}`
+      })
     }
   }
 }

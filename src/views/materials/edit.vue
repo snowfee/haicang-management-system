@@ -26,8 +26,8 @@
     <transition name="fade-transform" mode="out-in">
       <el-form v-show="activeStep === 1" ref="formData2" :model="formData2" class="edit-form" :rules="ruleForm" label-width="150px">
         <el-form-item label="属性类型" prop="attributeId">
-          <el-select v-model="attrIndex" @change="handleAttrSelectChange">
-            <el-option v-for="(type, index) in attributes" :key="index" :label="type.name" :value="index"></el-option>
+          <el-select v-model="formData2.attributeId" @change="handleAttrSelectChange">
+            <el-option v-for="(type, index) in attributes" :key="index" :label="type.name" :value="type.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="商品规格" v-if="attributeList && attributeList.length>0">
@@ -111,10 +111,11 @@ export default {
   created() {
     this.id = this.$route.query.id || ''
     this.getEditMaterial()
-    this.getAttributes()
+    // this.getAttributes()
   },
   methods: {
-    getEditMaterial() {
+    async getEditMaterial() {
+      await this.getAttributes()
       getMaterialById(this.id).then(res => {
         let data = res.data
         this.formData1 = {
@@ -127,10 +128,13 @@ export default {
         this.formData2 = {
           attributeId: data.attributeId
         }
+        this.materialSkuList = data.materialSkuList
+        this.handleAttrSelectChange(this.formData2.attributeId)
+        this.showSkuTable = true
       })
     },
     getAttributes() {
-      skuAttributeList().then(res => {
+      return skuAttributeList().then(res => {
         this.attributes = res.data
       })
     },
@@ -142,8 +146,8 @@ export default {
       })
     },
     handleAttrSelectChange(val) {
-      this.formData2.attributeId = this.attributes[val].id
-      this.attributeList = this.attributes[val].attributeList
+      let attribute = this.attributes.filter(item => item.id === val)[0]
+      this.attributeList = attribute.attributeList
       this.checkedAttr = {}
       this.attributeList.forEach(item => {
         this.$set(this.checkedAttr, item.name, [])

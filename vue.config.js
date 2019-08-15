@@ -44,7 +44,7 @@ module.exports = {
         target: `http://www.haic168.com:7521`,
         changeOrigin: true,
         pathRewrite: {
-          ['^' + process.env.VUE_APP_BASE_API]: '/backend'
+          ['^' + process.env.VUE_APP_BASE_API]: ''
         }
       }
     },

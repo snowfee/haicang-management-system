@@ -165,10 +165,9 @@ export default {
       let obj = {}
       return arr.filter(item => {
         if (!obj[item.id]) {
-          console.log('1')
           obj[item.id] = 1
           return true
-        } else {console.log('2')
+        } else {
           ++obj[item.id]
           return false
         }

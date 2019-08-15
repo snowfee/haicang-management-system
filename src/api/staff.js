@@ -2,21 +2,21 @@ import request from '@/utils/request'
 
 export function staffList({ pageIndex, pageSize }) {
   return request({
-    url: `/staff/staffList?pageIndex=${pageIndex}&pageSize=${pageSize}`,
+    url: `/backend/staff/staffList?pageIndex=${pageIndex}&pageSize=${pageSize}`,
     method: 'get'
   })
 }
 
 export function roleList({ pageIndex, pageSize }) {
   return request({
-    url: `/staff/roleList?pageIndex=${pageIndex}&pageSize=${pageSize}`,
+    url: `/backend/staff/roleList?pageIndex=${pageIndex}&pageSize=${pageSize}`,
     method: 'get'
   })
 }
 
 export function handleStaff(data) {
   return request({
-    url: `/staff/handleStaff`,
+    url: `/backend/staff/handleStaff`,
     method: 'post',
     data
   })
@@ -24,21 +24,21 @@ export function handleStaff(data) {
 
 export function getStaffById(id) {
   return request({
-    url: `/staff/getStaffInfo?id=${id}`,
+    url: `/backend/staff/getStaffInfo?id=${id}`,
     method: 'get'
   })
 }
 
 export function allPermissions() {
   return request({
-    url: `/staff/allPermissions`,
+    url: `/backend/staff/allPermissions`,
     method: 'get'
   })
 }
 
 export function handleRole(data) {
   return request({
-    url: `/staff/handleRole`,
+    url: `/backend/staff/handleRole`,
     method: 'post',
     data
   })
@@ -46,7 +46,7 @@ export function handleRole(data) {
 
 export function getRoleById(id) {
   return request({
-    url: `/staff/getRoleInfo?id=${id}`,
+    url: `/backend/staff/getRoleInfo?id=${id}`,
     method: 'get'
   })
 }

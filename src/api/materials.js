@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function queryMaterials(data) {
   return request({
-    url: `/material/queryMaterials`,
+    url: `/backend/material/queryMaterials`,
     method: 'post',
     data
   })
@@ -10,7 +10,7 @@ export function queryMaterials(data) {
 
 export function handleMaterial(data) {
   return request({
-    url: `/material/handleMaterial`,
+    url: `/backend/material/handleMaterial`,
     method: 'post',
     data
   })
@@ -18,21 +18,21 @@ export function handleMaterial(data) {
 
 export function getMaterialById(id) {
   return request({
-    url: `/material/getMaterialById?materialId=${id}`,
+    url: `/backend/material/getMaterialById?materialId=${id}`,
     method: 'get'
   })
 }
 
 export function skuAttributeList() {
   return request({
-    url: `/material/queryAllSkuAttribute`,
+    url: `/backend/material/queryAllSkuAttribute`,
     method: 'get'
   })
 }
 
 export function handleSkuAttribute(data) {
   return request({
-    url: `/material/handleSkuAttribute`,
+    url: `/backend/material/handleSkuAttribute`,
     method: 'post',
     data
   })
@@ -40,7 +40,7 @@ export function handleSkuAttribute(data) {
 
 export function handleSkuAttributeItem(data) {
   return request({
-    url: `/material/handleSkuAttributeItem`,
+    url: `/backend/material/handleSkuAttributeItem`,
     method: 'post',
     data
   })
@@ -48,21 +48,21 @@ export function handleSkuAttributeItem(data) {
 
 export function getAttributeListById(id) {
   return request({
-    url: `/material/querySkuAttributeItemByAttributeId?id=${id}`,
+    url: `/backend/material/querySkuAttributeItemByAttributeId?id=${id}`,
     method: 'get'
   })
 }
 
 export function unitsList() {
   return request({
-    url: `/material/queryAllUnits`,
+    url: `/backend/material/queryAllUnits`,
     method: 'get'
   })
 }
 
 export function handleUnit(data) {
   return request({
-    url: `/material/handleUnit`,
+    url: `/backend/material/handleUnit`,
     method: 'post',
     data
   })

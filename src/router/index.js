@@ -214,8 +214,14 @@ export const constantRoutes = [
     }, {
       path: 'addHomeBlock',
       name: '添加版块',
-      component: () => import('@/views/appset/addHomeBlock'),
+      component: () => import('@/views/appset/editHomeBlock'),
       meta: { title: '添加版块', icon: 'list' },
+      hidden: true
+    }, {
+      path: 'updateHomeBlock',
+      name: '编辑版块',
+      component: () => import('@/views/appset/editHomeBlock'),
+      meta: { title: '编辑版块', icon: 'list' },
       hidden: true
     }, {
       path: 'carousel',
@@ -223,6 +229,12 @@ export const constantRoutes = [
       id: 43,
       component: () => import('@/views/appset/carousel'),
       meta: { title: 'app首页轮播图设置', icon: 'list' }
+    }, {
+      path: 'addJump',
+      name: '添加跳转',
+      component: () => import('@/views/appset/editBannerJump'),
+      meta: { title: '添加跳转', icon: 'list' },
+      hidden: true
     }]
   },
 

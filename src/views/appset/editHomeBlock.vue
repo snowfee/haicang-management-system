@@ -34,7 +34,26 @@
           </el-date-picker>
         </el-form-item>
       </template>
-      <template v-if="ruleForm.type === 'PRODUCT_LIST' || ruleForm.type === 'SNAP_UP'">
+      <template v-if="ruleForm.type === 'ACTIVITY'">
+        <el-form-item label="添加活动">
+          <el-table border :data="bannerJumpList">
+            <el-table-column label="活动编号" prop="id"></el-table-column>
+            <el-table-column label="排序"></el-table-column>
+            <el-table-column label="跳转目标"></el-table-column>
+            <el-table-column label="操作">
+              <template slot-scope="scope">
+                <el-button type="text" @click="editBannerJump(scope.row.id)">编辑</el-button>
+                <el-button type="text" @click="deleteBannerJump(scope.row.id)">删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+          <div style="margin-top: 20px">
+            <span class="err" v-show="showAddBannerJumpErr">请先提交后再添加活动</span>
+            <el-button @click="addBannerJump" style="float: right">添加</el-button>
+          </div>
+        </el-form-item>
+      </template>
+      <template v-if="ruleForm.type === 'PRODUCT_LIST' || ruleForm.type === 'PRODUCT_BINARY' || ruleForm.type === 'SNAP_UP'">
         <el-form-item label="选择商品">
           <el-button @click="openProductDialog">添加商品</el-button>
           <el-table border :data="products" style="margin-top: 20px">
@@ -65,7 +84,7 @@
 </template>
 
 <script>
-import { handleHomeSection } from '@/api/appset'
+import { handleHomeSection, getHomeSectionById } from '@/api/appset'
 import { getAllCategories } from '@/api/product'
 import { getQiniuUpToken } from '@/api/user'
 import productDialog from './components/productDialog'
@@ -77,10 +96,12 @@ export default {
   },
   data() {
     return {
+      id: '',
+      editType: '添加',
       categories: [],
       ruleForm: {
         name: '',
-        type: '',
+        type: 'ACTIVITY',
         sort: '',
         categoryIds: [],
         time: '',
@@ -104,10 +125,19 @@ export default {
       stepStatus: 'progress',
       showProductDialog: false,
       products: [],
-      postQiniupData: null
+      postQiniupData: null,
+      showAddBannerJumpErr: false,
+      bannerJumpList: [] // 活动banner跳转集合
     }
   },
   created() {
+    this.id = this.$route.query.id || ''
+    if (!this.id) { 
+      this.showAddBannerJumpErr = true
+    } else {
+      this.editType = '更新'
+      this.getHomeSectionInfo()
+    }
     this.types = [{
       label: '活动版块',
       value: 'ACTIVITY'
@@ -131,6 +161,23 @@ export default {
     this.getCategories()
   },
   methods: {
+    getHomeSectionInfo() {
+      getHomeSectionById(this.id).then(res => {
+        let data = res.data
+        this.ruleForm = {
+          name: data.name,
+          type: data.type,
+          sort: data.sort,
+          categoryIds: data.categoryIds.map(item => +item),
+          time: '',
+          picUrl: data.picUrl
+        }
+        this.products = [...data.productList]
+        if (data.type === 'SNAP_UP') {
+          this.ruleForm.time = [data.startTime, data.endTime]
+        }
+      })
+    },
     getQiniuUpToken() {
       getQiniuUpToken().then(res => {
         this.postQiniupData = {}
@@ -143,7 +190,8 @@ export default {
       })
     },
     uploadSuccess(file, imgServe) {
-      this.ruleForm.picUrl = `${imgServe}/${file.resopnes.key}`
+      console.log(file)
+      this.ruleForm.picUrl = `${imgServe}/${file[0].response.key}`
     },
     removeUploadFile(file, imgServe) {
       this.ruleForm.picUrl = ''
@@ -188,6 +236,12 @@ export default {
       this.ruleForm.time = ''
       this.ruleForm.categoryIds = []
     },
+    addBannerJump() {
+      if (!this.id) return
+      this.$router.push({
+        path: `addJump?associatedId=${this.id}&type=HOME_SECTION`
+      })
+    },
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
@@ -209,12 +263,18 @@ export default {
           console.log('ok', params)
           handleHomeSection(params).then(res => {
             this.$message({
-              message: '版块添加成功',
+              message: `版块${this.editType}成功`,
               type: 'success'
             });
-            this.$router.replace({
-              path: 'homePage'
-            })
+            if (this.ruleForm.type === 'ACTIVITY') {
+              // this.$router.replace({
+              //   path: `updateHomeBlock?id=${res.data.id}`
+              // })
+            } else {
+              this.$router.replace({
+                path: 'homePage'
+              })
+            }
           })
         }
       })
@@ -225,4 +285,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.err{
+  color: red;
+  font-size: 12px;
+}
 </style>

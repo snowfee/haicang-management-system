@@ -16,4 +16,19 @@ export function handleHomeSection(data) {
 }
 
 
+export function getHomeSectionById(id) {
+  return request({
+    url: `/backend/appSet/getHomeSectionById?id=${id}`,
+    method: 'get'
+  })
+}
+
+export function handleBannerJump(data) {
+  return request({
+    url: `/backend/appSet/handleBannerJump`,
+    method: 'post',
+    data
+  })
+}
+
 

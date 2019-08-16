@@ -7,10 +7,12 @@
       <el-button type="primary" @click="addProduct">添加</el-button>
     </div>
     <div class="dialog-content">
+      <p v-if="limit != Infinity">提示：只能选择{{ limit }}个商品</p>
       <el-table border :data="tableData" @selection-change="handleSelectionChange">
          <el-table-column
           type="selection"
-          width="55">
+          width="55"
+          :selectable="checkRow">
         </el-table-column>
         <el-table-column label="商品编号" prop="id"></el-table-column>
         <el-table-column label="商品名称" prop="name"></el-table-column>
@@ -33,6 +35,11 @@
 <script>
 import { productsList } from '@/api/product'
 export default {
+  props: {
+    limit: {
+      default: Infinity
+    }
+  },
   data() {
     return {
       tableData: [],
@@ -43,7 +50,7 @@ export default {
       pageIndex: 0,
       pageSize: 10,
       total: 0,
-      products: null
+      products: []
     }
   },
   created() {
@@ -66,6 +73,16 @@ export default {
     handlePageSizeChange(val) {
       this.pageSize = val
       this.getListData()
+    },
+    checkRow(row, index) {
+      let checked = this.products.some(item => item.id === row.id)
+      console.log(checked)
+      if (checked) return 1
+      if (this.products.length >= this.limit) {
+        return 0
+      } else {
+        return 1
+      }
     },
     handleSelectionChange(val) {
       this.products = val

@@ -105,7 +105,7 @@ export default {
     },
     handleEdit(id) {
       this.$router.push({
-        path: `editStaff?id=${id}`
+        path: `updateHomeBlock?id=${id}`
       })
     },
     add() {

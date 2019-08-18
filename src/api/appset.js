@@ -15,7 +15,6 @@ export function handleHomeSection(data) {
   })
 }
 
-
 export function getHomeSectionById(id) {
   return request({
     url: `/backend/appSet/getHomeSectionById?id=${id}`,
@@ -31,4 +30,10 @@ export function handleBannerJump(data) {
   })
 }
 
+export function getBannerJump() {
+  return request({
+    url: `/backend/appSet/allHomeCarousels`,
+    method: 'get'
+  })
+}
 

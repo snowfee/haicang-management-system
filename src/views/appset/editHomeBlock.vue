@@ -38,8 +38,12 @@
         <el-form-item label="添加活动">
           <el-table border :data="bannerJumpList">
             <el-table-column label="活动编号" prop="id"></el-table-column>
-            <el-table-column label="排序"></el-table-column>
-            <el-table-column label="跳转目标"></el-table-column>
+            <el-table-column label="排序" prop="sort"></el-table-column>
+            <el-table-column label="跳转目标" prop="jumpDestination ">
+              <template slot-scope="scope">
+                {{scope.row.jumpDestination | keyToDes}}
+              </template>
+            </el-table-column>
             <el-table-column label="操作">
               <template slot-scope="scope">
                 <el-button type="text" @click="editBannerJump(scope.row.id)">编辑</el-button>
@@ -84,7 +88,7 @@
 </template>
 
 <script>
-import { handleHomeSection, getHomeSectionById } from '@/api/appset'
+import { handleHomeSection, getHomeSectionById, handleBannerJump } from '@/api/appset'
 import { getAllCategories } from '@/api/product'
 import { getQiniuUpToken } from '@/api/user'
 import productDialog from './components/productDialog'
@@ -173,6 +177,7 @@ export default {
           picUrl: data.picUrl
         }
         this.products = [...data.productList]
+        this.bannerJumpList = [...data.bannerJumpList]
         if (data.type === 'SNAP_UP') {
           this.ruleForm.time = [data.startTime, data.endTime]
         }
@@ -228,6 +233,30 @@ export default {
     deleteProduct(index) {
       this.products.splice(index, 1)
     },
+    editBannerJump(id) {
+      this.$router.push({
+        path: `editJump?id=${id}`
+      })
+    },
+    deleteBannerJump(id) {
+      let params = {
+        id,
+        methodType: 'DELETE'
+      }
+      this.$confirm('此操作将永久删除该活动, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        handleBannerJump(params).then(res => {
+          this.getHomeSectionInfo()
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+        })
+      })
+    },
     handleTypeChange(val) {
       console.log(val)
       // 类型选择切换时清空已选商品
@@ -246,7 +275,11 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           let params = Object.assign({}, this.ruleForm)
-          params.methodType = 'ADD'
+          if (this.editType === '添加') {
+            params.methodType = 'ADD'
+          } else {
+            params.methodType = 'UPDATE'
+          }
           if (params.time) {
             params.startTime = params.time[0]
             params.endTime = params.time[1]

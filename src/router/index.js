@@ -153,7 +153,7 @@ export const constantRoutes = [
       id: 36,
       component: () => import('@/views/materials/unit'),
       meta: { title: '单位管理', icon: 'list' }
-    },{
+    }, {
       path: 'attribute',
       name: '属性管理',
       id: 37,
@@ -210,7 +210,7 @@ export const constantRoutes = [
       name: '首页管理',
       id: 42,
       component: () => import('@/views/appset/homePage'),
-      meta: { title: 'app首页管理', icon: 'list'}
+      meta: { title: 'app首页管理', icon: 'list' }
     }, {
       path: 'addHomeBlock',
       name: '添加版块',
@@ -234,6 +234,12 @@ export const constantRoutes = [
       name: '添加跳转',
       component: () => import('@/views/appset/editBannerJump'),
       meta: { title: '添加跳转', icon: 'list' },
+      hidden: true
+    }, {
+      path: 'editJump',
+      name: '编辑跳转',
+      component: () => import('@/views/appset/editBannerJump'),
+      meta: { title: '编辑跳转', icon: 'list' },
       hidden: true
     }]
   },

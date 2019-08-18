@@ -19,8 +19,8 @@ export function keyToDes(key) {
       break
     case 'VOUCHER': des = '代金券'
       break
-    case 'PRODUCT': des = '商品券'
-      break
+    // case 'PRODUCT': des = '商品券'
+    //   break
     case 'UNCHECKED': des = '未审核'
       break
     case 'CHECKED': des = '已审核'
@@ -68,6 +68,20 @@ export function keyToDes(key) {
     case 'SNAP_UP': des = '抢购'
       break
     case 'GET_COUPON': des = '领券'
+      break
+    case 'COUPON_CENTER': des = '领券中心'
+      break
+    case 'WEBPAGE': des = '网页链接'
+      break
+    case 'PRODUCT': des = '商品'
+      break
+    case 'NO_JUMP': des = '不跳转'
+      break
+    case 'HOME_SECTION': des = '首页模块'
+      break
+    case 'SECOND_Category': des = '二级类目的banner'
+      break
+    case 'HOME_CAROUSEL': des = '首页轮播图'
       break
   }
   return des

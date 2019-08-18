@@ -23,7 +23,7 @@ export function handleCategory(data) {
   })
 }
 
-export function getCategoryDes(id) {
+export function getCategoryById(id) {
   return request({
     url: `/backend/product/getCategoryById?categoryId=${id}`,
     method: 'get'

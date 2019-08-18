@@ -110,8 +110,11 @@ export default {
   },
   created() {
     this.id = this.$route.query.id || ''
-    this.getEditMaterial()
-    // this.getAttributes()
+    if (this.id) {
+      this.getEditMaterial()
+    } else {
+      this.getAttributes()
+    }
   },
   methods: {
     async getEditMaterial() {
@@ -128,8 +131,22 @@ export default {
         this.formData2 = {
           attributeId: data.attributeId
         }
-        this.materialSkuList = data.materialSkuList
+        this.materialSkuList = [...data.materialSkuList]
+        this.materialSkuList.forEach(item => {
+          let skuList = item.skuAttribute.split('|')
+          let arr = []
+          skuList.forEach(sku => {
+            arr.push(sku.split(':')[1])
+          })
+          item.skuAttribute = [...arr]
+        })
+        this.checkedAttr = {}
         this.handleAttrSelectChange(this.formData2.attributeId)
+        data.skuAttribute.attributeList.forEach(item => {
+          item.selectedInputList.forEach(checked => {
+            this.checkedAttr[item.name].push(checked)
+          })
+        })
         this.showSkuTable = true
       })
     },
@@ -152,13 +169,12 @@ export default {
       this.attributeList.forEach(item => {
         this.$set(this.checkedAttr, item.name, [])
       })
+      this.checkedKeys = Object.keys(this.checkedAttr)
     },
     handleCheckedChange(val) {
-      // console.log('ok', val)
       this.skucCheckedErr = false
     },
     skuCheckedValidator() {
-      this.checkedKeys = Object.keys(this.checkedAttr)
       let validate = this.checkedKeys.every(key => this.checkedAttr[key].length > 0)
       this.skuErrText = '每一项至少选中一个'
       return validate
@@ -199,7 +215,7 @@ export default {
         let obj = {
           purchasePrice: '',
           stock: '',
-          skuAttribute: item
+          skuAttribute: item // 格式['', '', '']
         }
         this.materialSkuList.push(obj)
       })

@@ -3,11 +3,11 @@
     <el-form :model="ruleForm" ref="roleForm" :rules="rules" class="edit-form" label-width="150px">
       <el-form-item label="跳转目标">
         <el-radio-group v-model="ruleForm.jumpDestination" prop="jumpDestination">
-          <el-radio v-for="(item, index) in destinations" :key="index" :label="item.value">{{item.label}}</el-radio>
+          <el-radio style="line-height:40px" v-for="(item, index) in destinations" :key="index" :label="item.value">{{item.label}}</el-radio>
         </el-radio-group>
       </el-form-item>
        <template v-if="ruleForm.jumpDestination === 'WEBPAGE'">
-         <el-form-item label="跳转链接" prop="jumpUrl ">
+         <el-form-item label="跳转链接" prop="jumpUrl">
            <el-input v-model="ruleForm.jumpUrl"></el-input>
          </el-form-item>
       </template>
@@ -134,12 +134,20 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           let params = {...this.ruleForm}
+          if (this.editType === '添加') {
+            params.methodType = 'ADD'
+          } else {
+            params.methodType = 'UPDATE'
+          }
           console.log('params', params)
           handleBannerJump(params).then(res => {
             this.$message({
               message: `${this.editType}成功`,
               type: 'success'
-            });
+            })
+            this.$router.push({
+              path: 'carousel'
+            })
           })
         }
       })

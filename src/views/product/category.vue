@@ -1,6 +1,6 @@
 <template>
-  <div class="detail-container">
-    <div>
+  <div class="edit-container">
+    <div style="margin: 20px 0 0 120px; ">
       <el-cascader
         expand-trigger="hover"
         filterable
@@ -19,10 +19,10 @@
         <el-button class="add-btn" type="primary" @click="handleDelete()" :disabled="!canEditAndDe || isAdding || isEditing">删除类目</el-button>
       </div>
     </div>
-    <div v-if="showDialog">
+    <div v-if="showDialog" style="margin-left:120px">
       <h3>{{dialogTitle}}</h3>
-      <el-form :model="dialogForm" ref="dialogForm" style="width: 500px" :rules="rules">
-        <el-form-item :label="categoriesLabel" :label-width="formLabelWidth">
+      <el-form :model="dialogForm" ref="dialogForm" style="width: 500px;" :label-width="formLabelWidth" :rules="rules">
+        <el-form-item :label="categoriesLabel">
           <el-cascader v-if="categories"
             expand-trigger="hover"
             disabled
@@ -32,30 +32,24 @@
             v-model="selectedCategoryOptions">
           </el-cascader>
         </el-form-item>
-        <el-form-item label="类目名称" :label-width="formLabelWidth" prop="name">
+        <el-form-item label="类目名称" prop="name">
           <el-input v-model="dialogForm.name" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="排序" :label-width="formLabelWidth" prop="orderNo">
+        <el-form-item label="排序" prop="orderNo">
           <el-input v-model.number="dialogForm.orderNo" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="分类图标" :label-width="formLabelWidth" prop="thumbnailUrl">
-          <el-upload
-            ref="thumbnailUrl"
-            action="https://upload.qiniup.com"
-            accept="image/jpeg,image/gif,image/png,image/bmp"
-            list-type="picture-card"
-            :limit='1'
-            :file-list="listPicList"
-            :on-exceed="handleImgExceed"
-            :before-upload="beforUpload"
-            :on-success="handleSuccess"
-            :on-remove="handelRemove"
-            :on-error="handleUpFail"
-            :auto-upload="true"
-            :data="postQiniupData">
-            <i class="el-icon-plus"></i>
-          </el-upload>
+        <el-form-item label="分类图标"  prop="thumbnailUrl">
+           <upload :limit="1" :postQiniupData="postQiniupData" @uploadSuccess="uploadSuccess" @removeUploadFile="removeUploadFile"></upload>
         </el-form-item>
+        <template v-if="(dialogTitle === '添加类目' && dialogForm.level === 1) || (dialogTitle === '编辑类目' && dialogForm.level === 2)">
+          <el-form-item label="下级展示形式">
+            <el-radio-group v-model="dialogForm.displayMode" style="line-height: 40px">
+              <el-radio label="THRID_CATEGORY">展示三级类目</el-radio>
+              <el-radio label="CATEGORY_PRODUCT">展示类目和商品</el-radio>
+              <el-radio label="PRODUCT">只展示商品</el-radio>
+            </el-radio-group>
+          </el-form-item>
+        </template>
       </el-form>
       <div class="dialog-footer">
         <el-button @click="resetForm('dialogForm', 'edit')">重 置</el-button>
@@ -66,9 +60,14 @@
   </div>
 </template>
 <script>
-import { getAllCategories, handleCategory, getCategoryDes } from '@/api/product'
-// import * as qiniu from 'qiniu-js'
+import { getAllCategories, handleCategory, getCategoryById } from '@/api/product'
+import { getQiniuUpToken } from '@/api/user'
+import upload from '@/components/Upload'
+import { constants } from 'fs';
 export default {
+  components: {
+    upload
+  },
   data() {
     return {
       categories: [{
@@ -80,20 +79,22 @@ export default {
       isEditing: false,
       listPicList: [],
       selectedCategoryOptions: [0],
+      selectedCategoryObj: null,
       dialogTitle: '',
       formLabelWidth: '120px',
       showDialog: false,
       canEditAndDe: false,
       postQiniupData: null,
       isEditForm: false,
-      imgServe: 'http://rsource.haic168.com',
       perDialogForm: null,
       categoryId: 0,
       categoriesLabel: '',
       dialogForm: {
         name: '',
         orderNo: '',
-        thumbnailUrl: ''
+        thumbnailUrl: '',
+        level: 0,
+        displayMode: 'THRID_CATEGORY'
       },
       rules: {
         name: [{ required: true, message: '请输入类目名称', trigger: 'blur' }],
@@ -106,32 +107,25 @@ export default {
     }
   },
   created() {
-    // getQiniuUpToken().then(res => {
-    //   this.postQiniupData = {}
-    //   this.postQiniupData.token = res.data
-    // })
+    this.getQiniuUpToken()
     this.init()
   },
   methods: {
     init() {
       this.getAllCategories()
     },
-    beforUpload(file){
-      // const isJPG = file.type === 'image/jpeg';
-      const isLtM = file.size / 1024 / 1024 < 10;
-      // if (!isJPG) {
-      //   this.$message.error('上传头像图片只能是 JPG 格式!');
-      // }
-      if (!isLtM) {
-        this.$message.error('上传头像图片大小不能超过 10MB!');
-      }
-      return isLtM
+    getQiniuUpToken() {
+      getQiniuUpToken().then(res => {
+        this.postQiniupData = {}
+        this.postQiniupData.token = res.data
+      })
     },
-    handleSuccess(res, file){
-      this.dialogForm.thumbnailUrl = `${this.imgServe}/${res.key}`
+    uploadSuccess(file, imgServe) {
+      console.log(file)
+      this.dialogForm.thumbnailUrl = `${imgServe}/${file[0].response.key}`
     },
-    handelRemove(file, fileList) {
-      if (fileList.length == 0 ) this.dialogForm.thumbnailUrl = ''
+    removeUploadFile(file, imgServe) {
+      this.dialogForm.thumbnailUrl = ''
     },
     getAllCategories() {
       getAllCategories().then(res => {
@@ -159,12 +153,32 @@ export default {
     handleCategoryChange(value) {
       this.canEditAndDe = value.length > 1
       this.categoryId = value[value.length - 1]
+      this.selectedCategoryObj = this.getCascaderObj(value, this.categories)
+      console.log(this.selectedCategoryObj)
+      this.dialogForm.level = this.selectedCategoryObj.level
+    },
+    getCascaderObj(val, opt) {
+      let obj = null
+      const len = val.length 
+      val.forEach((value, index) => {
+        for (var itm of opt) {
+          if (itm.value == value) {
+            if (index < len - 1) {
+              opt = itm.children
+              break
+            } else {
+              obj = itm
+            }
+          }
+        }
+      })
+      return obj
     },
     handleEdit() {
       this.isEditForm = true
       this.dialogTitle = "编辑类目"
       this.categoriesLabel = '当前类目'
-      getCategoryDes(this.categoryId).then(res => {
+      getCategoryById(this.categoryId).then(res => {
         if (res.status == 200) {
           this.dialogForm = {
             id: res.data.id,
@@ -245,7 +259,9 @@ export default {
       this.dialogForm = {
         name: '',
         orderNo: '',
-        thumbnailUrl: ''
+        thumbnailUrl: '',
+        level: this.dialogForm.level,
+        displayMode: 'THRID_CATEGORY'
       }
       this.listPicList = []
     },

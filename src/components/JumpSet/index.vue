@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-form :model="ruleForm" ref="roleForm" :rules="rules" class="edit-form" label-width="150px">
+    <el-form :model="ruleForm" ref="roleForm" :rules="rules" label-width="120px">
       <el-form-item label="跳转目标">
         <el-radio-group v-model="ruleForm.jumpDestination" prop="jumpDestination">
           <el-radio style="line-height:40px" v-for="(item, index) in destinations" :key="index" :label="item.value">{{item.label}}</el-radio>
@@ -46,6 +46,8 @@
   </div>
 </template>
 <script>
+import { getAllCategories } from '@/api/product'
+import { getQiniuUpToken } from '@/api/user'
 import productDialog from '@/views/appset/components/productDialog'
 import upload from '@/components/Upload'
 export default {
@@ -53,10 +55,18 @@ export default {
     productDialog,
     upload
   },
+  props: {
+    bannerJump: {
+      default: null
+    },
+    type: {
+      default: 'HOME_SECTION'
+    }
+  },
   data() {
     return {
       ruleForm: {
-        jumpDestination: 'COUPON_CENTER',
+        jumpDestination: '',
         picUrl: '',
         jumpUrl : '',
         jumpCategoryId: '',
@@ -66,7 +76,7 @@ export default {
       },
       rules: {
         jumpDestination: [{required: true, trigger: 'blur'}],
-        picUrl: [{required: true, trigger: 'blur'}],
+        picUrl: [{required: true, message: '请上传图片', trigger: 'blur'}],
         jumpUrl : [{required: true, trigger: 'blur'}],
         jumpCategoryId: [{required: true, trigger: 'blur'}],
         productId: [{required: true, trigger: 'blur'}]
@@ -95,7 +105,8 @@ export default {
   },
   created() {
     // this.ruleForm.associatedId = this.$route.query.associatedId || ''
-    // this.ruleForm.type = this.$route.query.type || ''
+    this.ruleForm.type = this.type
+    if (!this.bannerJump) this.ruleForm = {...this.bannerJump}
     this.getQiniuUpToken()
     this.getCategories()
   },
@@ -126,28 +137,16 @@ export default {
       this.ruleForm.productId = data[0].id
       this.showProductDialog = false
     },
-    // submitForm(formName) {
-    //   this.$refs[formName].validate(valid => {
-    //     if (valid) {
-    //       let params = {...this.ruleForm}
-    //       if (this.editType === '添加') {
-    //         params.methodType = 'ADD'
-    //       } else {
-    //         params.methodType = 'UPDATE'
-    //       }
-    //       console.log('params', params)
-    //       handleBannerJump(params).then(res => {
-    //         this.$message({
-    //           message: `${this.editType}成功`,
-    //           type: 'success'
-    //         })
-    //         this.$router.push({
-    //           path: 'carousel'
-    //         })
-    //       })
-    //     }
-    //   })
-    // }
+    submitForm() {
+      let data = {}
+      this.$refs['roleForm'].validate(valid => {
+        data.valid = valid
+        if (valid) {
+          data.bannerJump = this.ruleForm
+        }
+      })
+      return data
+    }
   }
 }
 </script>

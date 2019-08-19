@@ -8,10 +8,12 @@
         <el-button type="primary" @click="addMaterial">添加</el-button>
       </div>
       <div class="dialog-content">
+        <p v-if="materialsType === 'single'">提示：只能选择1个物料</p>
         <el-table border :data="tableData" @selection-change="handleSelectionChange">
            <el-table-column
             type="selection"
-            width="55">
+            width="55"
+            :selectable="checkRow">
           </el-table-column>
           <el-table-column label="物料编号" prop="id"></el-table-column>
           <el-table-column label="物料名称" prop="name"></el-table-column>
@@ -54,7 +56,7 @@ export default {
       pageIndex: 0,
       pageSize: 10,
       total: 0,
-      materials: null // 最后添加的物料
+      materials: [] // 最后添加的物料
     }
   },
   created() {
@@ -79,23 +81,18 @@ export default {
       this.getListData()
     },
     handleSelectionChange(val) {
-      console.log(val)
-      if (this.materialsType === 'single') {
-        if (this.materials && this.materials.length > 1) {
-          this.$message({
-            message: '商品组成为单个物料',
-            type: 'warning'
-          });
-          thia.materials = val[0]
-        } else {
-          this.materials = val
-        }
+      this.materials = val
+    },
+    checkRow(row, index) {
+      let checked = this.materials.some(item => item.id === row.id)
+      if (checked) return 1
+      if (this.materialsType === 'single' && this.materials.length >= 1) {
+        return 0
       } else {
-        this.materials = val
+        return 1
       }
     },
     closeDialog(){
-      console.log('ok')
       this.$emit('close')
     },
     addMaterial() {

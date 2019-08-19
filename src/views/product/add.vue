@@ -29,7 +29,7 @@
           <el-input type="number" v-model="formData1.sort"></el-input>
         </el-form-item>
         <el-form-item label="生产日期" prop="producedDate">
-          <el-input v-model="formData1.producedDate"></el-input>
+          <el-date-picker type="date" value-format="yyyy-MM-dd" v-model="formData1.producedDate" placeholder="选择日期"></el-date-picker>
         </el-form-item>
          <el-form-item label="保质期" prop="shelfLife">
           <el-input v-model="formData1.shelfLife"></el-input>
@@ -64,13 +64,39 @@
             </el-table>
           </template>
         </el-form-item>
-        <!-- <template>
+        <template v-if="materials && materials.length > 0">
           <el-form-item label="物料规格">
-            <div class="">
-              <p></p>
-            </div>
+            <div class="sku-box" v-for="(attr, index) in attributeList" :key="index">
+            <p>{{attr.name}}：</p>
+            <el-checkbox-group v-model="checkedAttr[attr.name]" @change="handleCheckedChange">
+              <el-checkbox v-for="(item, i) in attr.inputList" :key="i" :label="item"></el-checkbox>
+            </el-checkbox-group>
+          </div>
+          <!-- <span v-if="skucCheckedErr" class="error">{{skuErrText}}</span> -->
+          <el-table border :data="materialSkuList">
+            <el-table-column v-for="(key, index) in checkedKeys" :key="index" :label="key">
+              <template slot-scope="scope">
+                {{scope.row.skuAttribute[index]}}
+              </template>
+            </el-table-column>
+            <el-table-column label="商品进价" prop="purchasePrice">
+              <template slot-scope="scope">
+                <el-input v-model="scope.row.purchasePrice"></el-input>
+              </template>
+            </el-table-column>
+            <el-table-column label="库存" prop="stock">
+              <template slot-scope="scope">
+                <el-input type="number" class="input-number" v-model="scope.row.stock"></el-input>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作">
+              <template slot-scope="scope">
+                <el-button type="text" @click="deleteSku(scope.$index)">删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
           </el-form-item>
-        </template> -->
+        </template>
         <el-form-item size="large" class="form-btn">
           <el-button @click="previousStep()">上一步，填写商品信息</el-button>
           <el-button type="primary" @click="submit()">完成，提交商品</el-button>
@@ -150,12 +176,17 @@ export default {
       this.showMaterialDialog = false
       if (this.materialsType === 'single') {
         this.materials = [...materials]
-        return
+        console.log('materials', this.materials)
+      } else {
+        this.materials = [...this.materials, ...materials]
+        // 去重
+        this.materials = this.uniqueById(this.materials)
       }
-      this.materials = [...this.materials, ...materials]
-      // 去重
-      this.materials = this.uniqueById(this.materials)
       console.log('materials', this.materials)
+      this.getSkuList(this.materials)
+    },
+    getSkuList() {
+
     },
     uniqueById(arr) {
       if (!Array.isArray(arr)) {

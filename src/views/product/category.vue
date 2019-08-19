@@ -2,10 +2,9 @@
   <div class="edit-container">
     <div style="margin: 20px 0 0 120px; ">
       <el-cascader
-        expand-trigger="hover"
+        :props="cascaderProps"
         filterable
         clearable
-        change-on-select
         placeholder="选择类目"
         style="width:500px"
         :options="categories"
@@ -24,9 +23,8 @@
       <el-form :model="dialogForm" ref="dialogForm" style="width: 500px;" :label-width="formLabelWidth" :rules="rules">
         <el-form-item :label="categoriesLabel">
           <el-cascader v-if="categories"
-            expand-trigger="hover"
+            :props="cascaderProps"
             disabled
-            change-on-select
             style="width:380px"
             :options="categories"
             v-model="selectedCategoryOptions">
@@ -41,7 +39,7 @@
         <el-form-item label="分类图标"  prop="thumbnailUrl">
            <upload :limit="1" :postQiniupData="postQiniupData" @uploadSuccess="uploadSuccess" @removeUploadFile="removeUploadFile"></upload>
         </el-form-item>
-        <template v-if="(dialogTitle === '添加类目' && dialogForm.level === 1) || (dialogTitle === '编辑类目' && dialogForm.level === 2)">
+        <template v-if="isTowLevel">
           <el-form-item label="下级展示形式">
             <el-radio-group v-model="dialogForm.displayMode" style="line-height: 40px">
               <el-radio label="THRID_CATEGORY">展示三级类目</el-radio>
@@ -51,6 +49,9 @@
           </el-form-item>
         </template>
       </el-form>
+      <template v-if="isTowLevel">
+        <jump-set ref="jumpSet" :bannerJump = dialogForm.bannerJump type="SECOND_Category" style="width: 500px;"></jump-set>        
+      </template>
       <div class="dialog-footer">
         <el-button @click="resetForm('dialogForm', 'edit')">重 置</el-button>
         <el-button type="warning" @click="closeForm('dialogForm', 'close')">取 消</el-button>
@@ -63,10 +64,12 @@
 import { getAllCategories, handleCategory, getCategoryById } from '@/api/product'
 import { getQiniuUpToken } from '@/api/user'
 import upload from '@/components/Upload'
+import jumpSet from '@/components/JumpSet'
 import { constants } from 'fs';
 export default {
   components: {
-    upload
+    upload,
+    jumpSet
   },
   data() {
     return {
@@ -75,6 +78,10 @@ export default {
         value: 0,
         children: []
       }],
+      cascaderProps: {
+        expandTrigger: 'hover',
+        checkStrictly: true
+      },
       isAdding: false,
       isEditing: false,
       listPicList: [],
@@ -85,16 +92,18 @@ export default {
       showDialog: false,
       canEditAndDe: false,
       postQiniupData: null,
-      isEditForm: false,
+      isEditForm: false, // 编辑添加类目是，禁止操作类目级联表
       perDialogForm: null,
       categoryId: 0,
-      categoriesLabel: '',
+      categoriesLabel: '', // 显示当前选中的类目在不同编辑方式下的展示 ‘当前类目’ ‘父级类目’
+      isTowLevel: false, // 判断是否二级类目
       dialogForm: {
         name: '',
         orderNo: '',
         thumbnailUrl: '',
         level: 0,
-        displayMode: 'THRID_CATEGORY'
+        displayMode: 'THRID_CATEGORY',
+        bannerJump: null
       },
       rules: {
         name: [{ required: true, message: '请输入类目名称', trigger: 'blur' }],
@@ -178,13 +187,21 @@ export default {
       this.isEditForm = true
       this.dialogTitle = "编辑类目"
       this.categoriesLabel = '当前类目'
+      if (this.dialogForm.level === 2) {
+        this.isTowLevel = true
+      } else {
+        this.isTowLevel = false
+      }
       getCategoryById(this.categoryId).then(res => {
         if (res.status == 200) {
           this.dialogForm = {
             id: res.data.id,
             name: res.data.name,
             orderNo: res.data.sort,
-            thumbnailUrl: res.data.thumbnailUrl
+            thumbnailUrl: res.data.thumbnailUrl,
+            displayMode: res.data.displayMode || '',
+            level: res.data.level,
+            bannerJump: res.data.bannerJump || null
           }
           if (res.data.thumbnailUrl) {
             this.listPicList = [{url: res.data.thumbnailUrl}]
@@ -200,6 +217,7 @@ export default {
     handleDelete() {
       let params = {
         id: this.categoryId,
+        level: this.selectedCategoryObj.level,
         methodType: 'DELETE'
       }
       this.$confirm('此操作将删除该类目, 是否继续?', '提示', {
@@ -232,8 +250,15 @@ export default {
     addCategory() {
       this.dialogTitle = "添加类目"
       this.categoriesLabel = '父级类目'
+      this.isEditForm = true
       this.isAdding = true
       this.showDialog = true
+      this.dialogForm.level = this.dialogForm.level + 1
+      if (this.dialogForm.level === 2) {
+        this.isTowLevel = true
+      } else {
+        this.isTowLevel = false
+      }
     },
     closeForm(formName, type) {
       this.isEditForm = false
@@ -268,6 +293,13 @@ export default {
     submitForm() {
        this.$refs.dialogForm.validate(valid => {
         if (valid) {
+          if (this.isTowLevel) {
+            let jumpSetData = this.$refs.jumpSet.submitForm()
+            console.log(jumpSetData)
+            if (!jumpSetData.valid) return
+            this.dialogForm.bannerJump = jumpSetData.bannerJump
+            console.log(this.dialogForm)
+          }
           let params = Object.assign({}, this.dialogForm)
           if (this.dialogTitle == '添加类目') {
             params.methodType = 'ADD'
@@ -280,26 +312,20 @@ export default {
               params.parentId = this.selectedCategoryOptions[this.selectedCategoryOptions.length - 2]
             }
           }
+          console.log('params', params)
           
           handleCategory(params).then((res) => {
-            if (res.status == 200) {
-              this.$notify({
-                title: '成功',
-                message: '保存成功',
-                type: 'success'
-              })
-              this.getAllCategories()
-              this.isEditForm = false
-              this.isAdding = false
-              this.isEditing = false
-              this.showDialog = false
-              this.resetForm('dialogForm', 'close')
-            } else {
-              this.$message({
-                message: res.message,
-                type: 'warning'
-              })
-            }
+            this.$notify({
+              title: '成功',
+              message: '保存成功',
+              type: 'success'
+            })
+            this.getAllCategories()
+            this.isEditForm = false
+            this.isAdding = false
+            this.isEditing = false
+            this.showDialog = false
+            this.resetForm('dialogForm', 'close')
           })
         }
       })

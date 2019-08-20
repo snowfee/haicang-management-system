@@ -1,8 +1,8 @@
 <template>
   <div>
-    <el-form :model="ruleForm" ref="roleForm" :rules="rules" label-width="120px">
-      <el-form-item label="跳转目标">
-        <el-radio-group v-model="ruleForm.jumpDestination" prop="jumpDestination">
+    <el-form :model="ruleForm" ref="ruleForm" :rules="rules" label-width="120px">
+      <el-form-item label="跳转目标" prop="jumpDestination">
+        <el-radio-group v-model="ruleForm.jumpDestination">
           <el-radio style="line-height:40px" v-for="(item, index) in destinations" :key="index" :label="item.value">{{item.label}}</el-radio>
         </el-radio-group>
       </el-form-item>
@@ -13,6 +13,7 @@
       </template>
       <el-form-item label="广告图片" prop="picUrl">
         <upload :limit="1" :postQiniupData="postQiniupData" @uploadSuccess="uploadSuccess" @removeUploadFile="removeUploadFile"></upload>
+        <div class="err" v-if="picUrlErr">请上传图片</div>
       </el-form-item>
       <template v-if="ruleForm.jumpDestination === 'CATEGORY'">
         <el-form-item label="选择类目" prop="jumpCategoryId">
@@ -22,7 +23,7 @@
         </el-form-item>
       </template>
       <template v-if="ruleForm.jumpDestination === 'PRODUCT'">
-        <el-form-item label="选择类目" prop="productId">
+        <el-form-item label="选择商品" prop="productId">
           <el-button @click="openProductDialog">添加</el-button>
           <el-table border :data="products" style="margin-top: 20px;">
             <el-table-column label="商品编号" prop="id"></el-table-column>
@@ -33,12 +34,9 @@
               </template>
             </el-table-column>
           </el-table>
+          <div class="err" v-if="productErr">请添加商品</div>
         </el-form-item>
       </template>
-      <!-- <el-form-item size="large" class="form-btn">
-        <el-button type="primary" @click="submitForm('roleForm')">提交</el-button>
-        <el-button>重置</el-button>
-      </el-form-item> -->
     </el-form>
     <el-dialog title="添加商品" width="70%" :visible.sync="showProductDialog">
       <product-dialog @addProduct = addProduct :limit='1'></product-dialog>      
@@ -65,6 +63,8 @@ export default {
   },
   data() {
     return {
+      productErr: false,
+      picUrlErr: false,
       ruleForm: {
         jumpDestination: '',
         picUrl: '',
@@ -76,10 +76,10 @@ export default {
       },
       rules: {
         jumpDestination: [{required: true, trigger: 'blur'}],
-        picUrl: [{required: true, message: '请上传图片', trigger: 'blur'}],
+        // picUrl: [{required: true, message: '请上传图片', trigger: 'blur'}],
         jumpUrl : [{required: true, trigger: 'blur'}],
         jumpCategoryId: [{required: true, trigger: 'blur'}],
-        productId: [{required: true, trigger: 'blur'}]
+        // productId: [{required: true, trigger:  'blur'}]
       },
       destinations: [{
         value: 'COUPON_CENTER',
@@ -118,7 +118,6 @@ export default {
       })
     },
     uploadSuccess(file, imgServe) {
-      console.log(file)
       this.ruleForm.picUrl = `${imgServe}/${file[0].response.key}`
     },
     removeUploadFile(file, imgServe) {
@@ -136,13 +135,20 @@ export default {
       this.products = data
       this.ruleForm.productId = data[0].id
       this.showProductDialog = false
+      console.log('1', this.ruleForm.productId)
     },
     submitForm() {
       let data = {}
-      this.$refs['roleForm'].validate(valid => {
-        data.valid = valid
-        if (valid) {
-          data.bannerJump = this.ruleForm
+      console.log('2', this.ruleForm)
+      this.$refs['ruleForm'].validate(valid => {
+        this.picUrlErr = !Boolean(this.ruleForm.picUrl)
+        if (this.ruleForm.type === 'PRODUCT') {
+          this.productErr = !Boolean(this.ruleForm.productId)
+        }
+        data.valid = valid && !this.picUrlErr && !this.productErr
+        console.log('ok', data.valid)
+        if (data.valid) {
+          data.bannerJump = {...this.ruleForm}
         }
       })
       return data
@@ -151,5 +157,8 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-
+.err{
+  // position: absolute;
+  color: #F56C6C;
+}
 </style>

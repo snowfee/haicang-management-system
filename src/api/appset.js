@@ -37,3 +37,9 @@ export function getBannerJump() {
   })
 }
 
+export function getBannerJumpById(id) {
+  return request({
+    url: `/backend/appSet/getBannerJumpById?bannerJumpId=${id}`,
+    method: 'get'
+  })
+}

@@ -76,7 +76,6 @@ export default {
     },
     checkRow(row, index) {
       let checked = this.products.some(item => item.id === row.id)
-      console.log(checked)
       if (checked) return 1
       if (this.products.length >= this.limit) {
         return 0

@@ -83,6 +83,11 @@ div:focus {
   }
   .box-content{
     margin-top: 15px;
+    .form{
+      .el-input{
+        width: 203px;
+      }
+    }
   }
 }
 .edit-container{

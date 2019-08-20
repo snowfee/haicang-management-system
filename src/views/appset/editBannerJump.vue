@@ -12,7 +12,7 @@
          </el-form-item>
       </template>
       <el-form-item label="广告图片" prop="picUrl">
-        <upload :limit="1" :postQiniupData="postQiniupData" @uploadSuccess="uploadSuccess" @removeUploadFile="removeUploadFile"></upload>
+        <upload :limit="1" :fileList="fileList" :postQiniupData="postQiniupData" @uploadSuccess="uploadSuccess" @removeUploadFile="removeUploadFile"></upload>
       </el-form-item>
       <template v-if="ruleForm.jumpDestination === 'CATEGORY'">
         <el-form-item label="选择类目" prop="jumpCategoryId">
@@ -46,7 +46,7 @@
   </div>
 </template>
 <script>
-import { handleBannerJump } from '@/api/appset'
+import { handleBannerJump, getBannerJumpById } from '@/api/appset'
 import { getAllCategories, productsList} from '@/api/product'
 import { getQiniuUpToken } from '@/api/user'
 import productDialog from './components/productDialog'
@@ -59,6 +59,7 @@ export default {
   data() {
     return {
       editType: '添加',
+      fileList: [],
       ruleForm: {
         jumpDestination: 'COUPON_CENTER',
         picUrl: '',
@@ -100,10 +101,26 @@ export default {
   created() {
     this.ruleForm.associatedId = this.$route.query.associatedId || ''
     this.ruleForm.type = this.$route.query.type || ''
+    this.ruleForm.id = this.$route.query.id || ''
+    if (this.ruleForm.id) {
+      this.editType = '更新'
+      this.getBannerJumpInfo()
+    }
     this.getQiniuUpToken()
     this.getCategories()
   },
   methods: {
+    getBannerJumpInfo() {
+      getBannerJumpById(this.ruleForm.id).then(res => {
+        this.ruleForm = {...res.data}
+        let picName = this.ruleForm.picUrl.split('/')
+        picName = picName[picName.length -1]
+        this.$set(this.fileList, 0, {name: picName, url: this.ruleForm.picUrl})
+        if (res.data.product) {
+          this.products = [{...res.data.product}]
+        }
+      })
+    },
     getQiniuUpToken() {
       getQiniuUpToken().then(res => {
         this.postQiniupData = {}
@@ -145,9 +162,15 @@ export default {
               message: `${this.editType}成功`,
               type: 'success'
             })
-            this.$router.push({
-              path: 'carousel'
-            })
+            if (this.ruleForm.type === 'HOME_SECTION') {
+              this.$router.replace({
+                path: `updateHomeBlock?id=${this.ruleForm.associatedId}`
+              })
+            } else {
+              this.$router.replace({
+                path: 'carousel'
+              })
+            }
           })
         }
       })

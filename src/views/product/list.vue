@@ -12,7 +12,7 @@
         </div>
       </div>
       <div class="box-content">
-        <el-form :model="listForm" label-width="150px" label-position="right" :inline="true" >
+        <el-form class="form" :model="listForm" label-width="150px" label-position="right" :inline="true" >
           <el-form-item label="商品名称">
             <el-input v-model="listForm.name" placeholder="商品名称"></el-input>
           </el-form-item>
@@ -53,6 +53,11 @@
         <el-table-column label="商品名称" prop="name"></el-table-column>
         <el-table-column label="原价（元）" prop="priceIntervalOriginal"></el-table-column>
         <el-table-column label="售价（元）" prop="priceInterval"></el-table-column>
+        <el-table-column label="商品类型" prop="type">
+          <template slot-scope="scope">
+            {{scope.row.type | keyToDes}}
+          </template>
+        </el-table-column>
         <el-table-column label="排序" prop="sort"></el-table-column>
         <el-table-column label="商品状态" prop="status">
           <template slot-scope="scope">
@@ -116,6 +121,10 @@ export default {
     this.getAllCategories()
   },
   methods: {
+    test(val) {
+      console.log('1')
+      return val+'test'
+    },
     getListData() {
       let params = this.getParams()
       productsList(params).then(res => {

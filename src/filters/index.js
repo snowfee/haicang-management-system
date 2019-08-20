@@ -83,6 +83,10 @@ export function keyToDes(key) {
       break
     case 'HOME_CAROUSEL': des = '首页轮播图'
       break
+    case 'SINGLE': des = '单个物料'
+      break
+    case 'MULTI': des = '组合物料'
+      break
   }
   return des
 }

@@ -12,7 +12,7 @@
         </div>
       </div>
       <div class="box-content">
-        <el-form :model="listForm" label-width="150px" label-position="right" :inline="true" >
+        <el-form class="form" :model="listForm" label-width="150px" label-position="right" :inline="true" >
           <el-form-item label="物料名称" prop="name">
             <el-input v-model="listForm.name" placeholder="物料名称"></el-input>
           </el-form-item>
@@ -40,11 +40,11 @@
         <el-table-column label="基本单位" prop="basicUnit"></el-table-column>
         <el-table-column label="采购单位" prop="purchaseUnit"></el-table-column>
         <!-- <el-table-column label="单价（元）" prop="name"></el-table-column> -->
-        <el-table-column label="状态" prop="status">
+        <!-- <el-table-column label="状态" prop="status">
           <template slot-scope="scope">
             <el-switch v-model="scope.row.status" active-value="ENABLE" inactive-value="DISABLE"></el-switch>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column label="创建时间" prop="name"></el-table-column>
         <el-table-column label="操作" min-width="100px" fixed="right">
           <template slot-scope="scope">

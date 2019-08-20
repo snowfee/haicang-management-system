@@ -22,7 +22,7 @@
       <h3>{{dialogTitle}}</h3>
       <el-form :model="dialogForm" ref="dialogForm" style="width: 500px;" :label-width="formLabelWidth" :rules="rules">
         <el-form-item :label="categoriesLabel">
-          <el-cascader v-if="categories"
+          <el-cascader
             :props="cascaderProps"
             disabled
             style="width:380px"
@@ -37,7 +37,7 @@
           <el-input v-model.number="dialogForm.orderNo" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="分类图标"  prop="thumbnailUrl">
-           <upload :limit="1" :postQiniupData="postQiniupData" @uploadSuccess="uploadSuccess" @removeUploadFile="removeUploadFile"></upload>
+           <upload :limit="1" :fileList="listPicList" :postQiniupData="postQiniupData" @uploadSuccess="uploadSuccess" @removeUploadFile="removeUploadFile"></upload>
         </el-form-item>
         <template v-if="isTowLevel">
           <el-form-item label="下级展示形式">
@@ -74,11 +74,14 @@ export default {
   data() {
     return {
       categories: [{
-        label: '全部商品',
-        value: 0,
+        name: '全部商品',
+        id: 0,
+        level: 0,
         children: []
       }],
       cascaderProps: {
+        value: 'id',
+        label: 'name',
         expandTrigger: 'hover',
         checkStrictly: true
       },
@@ -149,8 +152,6 @@ export default {
     },
     getCategoriesFormat(data) {
       data.forEach(item => {
-        item.label = item.name
-        item.value = item.id
         if (item.children.length > 0) {
           this.getCategoriesFormat(item.children)
         } else {
@@ -163,7 +164,7 @@ export default {
       this.canEditAndDe = value.length > 1
       this.categoryId = value[value.length - 1]
       this.selectedCategoryObj = this.getCascaderObj(value, this.categories)
-      console.log(this.selectedCategoryObj)
+      console.log('level',this.selectedCategoryObj)
       this.dialogForm.level = this.selectedCategoryObj.level
     },
     getCascaderObj(val, opt) {
@@ -171,7 +172,7 @@ export default {
       const len = val.length 
       val.forEach((value, index) => {
         for (var itm of opt) {
-          if (itm.value == value) {
+          if (itm.id == value) {
             if (index < len - 1) {
               opt = itm.children
               break
@@ -253,8 +254,8 @@ export default {
       this.isEditForm = true
       this.isAdding = true
       this.showDialog = true
-      this.dialogForm.level = this.dialogForm.level + 1
-      if (this.dialogForm.level === 2) {
+      this.dialogForm.level = this.dialogForm.level
+      if (this.dialogForm.level === 1) {
         this.isTowLevel = true
       } else {
         this.isTowLevel = false
@@ -297,12 +298,14 @@ export default {
             let jumpSetData = this.$refs.jumpSet.submitForm()
             console.log(jumpSetData)
             if (!jumpSetData.valid) return
-            this.dialogForm.bannerJump = jumpSetData.bannerJump
+            this.dialogForm.bannerJump = {...jumpSetData.bannerJump}
+            this.dialogForm.bannerJump.associatedId = this.dialogForm.id || ''
             console.log(this.dialogForm)
           }
           let params = Object.assign({}, this.dialogForm)
           if (this.dialogTitle == '添加类目') {
             params.methodType = 'ADD'
+            params.level = params.level + 1  // 添加类目是添加当前级的下一级，所以+1
             if ( this.selectedCategoryOptions.length > 1) {
               params.parentId = this.categoryId
             }

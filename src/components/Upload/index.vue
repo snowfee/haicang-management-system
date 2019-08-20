@@ -25,11 +25,13 @@ export default {
     },
     postQiniupData: {
       required: true
+    },
+    fileList: {
+      default: () => []
     }
   },
   data() {
     return {
-      fileList: [],
       imgServe: 'http://rsource.haic168.com'
     }
   },

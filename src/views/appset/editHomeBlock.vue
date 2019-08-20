@@ -73,7 +73,7 @@
       </template>
       <template v-if="ruleForm.type === 'GET_COUPON'">
         <el-form-item label="上传图片">
-            <upload :limit="1" :postQiniupData="postQiniupData" @uploadSuccess="uploadSuccess" @removeUploadFile="removeUploadFile"></upload>
+            <upload :limit="1" :fileList="fileList" :postQiniupData="postQiniupData" @uploadSuccess="uploadSuccess" @removeUploadFile="removeUploadFile"></upload>
         </el-form-item>
       </template>
       <el-form-item size="large" class="form-btn">
@@ -103,6 +103,7 @@ export default {
       id: '',
       editType: '添加',
       categories: [],
+      fileList: [], // 图片上传列表
       ruleForm: {
         name: '',
         type: 'ACTIVITY',
@@ -178,6 +179,9 @@ export default {
         }
         this.products = [...data.productList]
         this.bannerJumpList = [...data.bannerJumpList]
+        let picName = this.ruleForm.picUrl.split('/')
+        picName = picName[picName.length -1]
+        this.$set(this.fileList, 0, {name: picName, url: this.ruleForm.picUrl})
         if (data.type === 'SNAP_UP') {
           this.ruleForm.time = [data.startTime, data.endTime]
         }
@@ -194,9 +198,9 @@ export default {
         this.categories = res.data
       })
     },
-    uploadSuccess(file, imgServe) {
-      console.log(file)
-      this.ruleForm.picUrl = `${imgServe}/${file[0].response.key}`
+    uploadSuccess(fileList, imgServe) {
+      console.log(fileList)
+      this.ruleForm.picUrl = `${imgServe}/${fileList[0].response.key}`
     },
     removeUploadFile(file, imgServe) {
       this.ruleForm.picUrl = ''
@@ -299,10 +303,10 @@ export default {
               message: `版块${this.editType}成功`,
               type: 'success'
             });
-            if (this.ruleForm.type === 'ACTIVITY') {
-              // this.$router.replace({
-              //   path: `updateHomeBlock?id=${res.data.id}`
-              // })
+            if (this.editType === '添加' && this.ruleForm.type === 'ACTIVITY') {
+              this.$router.replace({
+                path: `updateHomeBlock?id=${res.data}`
+              })
             } else {
               this.$router.replace({
                 path: 'homePage'

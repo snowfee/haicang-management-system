@@ -42,3 +42,12 @@
     display: block
   }
 }
+
+// 解决element table表头错位
+.el-table th.gutter{ 
+  display: table-cell !important;
+}
+
+.el-table::before {
+    z-index: inherit;
+}

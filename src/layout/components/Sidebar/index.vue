@@ -54,7 +54,7 @@ export default {
       'permission'
     ]),
     routes() {
-      return this.router
+      return this.$router.options.routes
     },
     activeMenu() {
       const route = this.$route

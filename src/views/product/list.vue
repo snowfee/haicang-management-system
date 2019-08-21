@@ -121,10 +121,6 @@ export default {
     this.getAllCategories()
   },
   methods: {
-    test(val) {
-      console.log('1')
-      return val+'test'
-    },
     getListData() {
       let params = this.getParams()
       productsList(params).then(res => {

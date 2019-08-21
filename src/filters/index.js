@@ -5,10 +5,6 @@ export function keyToDes(key) {
       break
     case 'FEMALE': des = '女'
       break
-    case 'FIXED': des = '固定比例'
-      break
-    case 'INTERVAL': des = '区间比例'
-      break
     case 'SHELVE': des = '上架'
       break
     case 'UNSHELVE': des = '下架'
@@ -19,8 +15,6 @@ export function keyToDes(key) {
       break
     case 'VOUCHER': des = '代金券'
       break
-    // case 'PRODUCT': des = '商品券'
-    //   break
     case 'UNCHECKED': des = '未审核'
       break
     case 'CHECKED': des = '已审核'

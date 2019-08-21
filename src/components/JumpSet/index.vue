@@ -46,7 +46,7 @@
 <script>
 import { getAllCategories } from '@/api/product'
 import { getQiniuUpToken } from '@/api/user'
-import productDialog from '@/views/appset/components/productDialog'
+import productDialog from '@/components/Dialog/productDialog'
 import upload from '@/components/Upload'
 export default {
   components: {

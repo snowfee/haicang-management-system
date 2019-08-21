@@ -121,6 +121,18 @@ export const constantRoutes = [
       component: () => import('@/views/product/list'),
       meta: { title: '商品列表', icon: 'list' }
     }, {
+      path: 'coupon',
+      name: '活动管理',
+      id: 9,
+      component: () => import('@/views/product/coupon'),
+      meta: { title: '活动管理', icon: 'list' }
+    }, {
+      path: 'addCoupon',
+      name: '添加活动',
+      component: () => import('@/views/product/editCoupon'),
+      meta: { title: '添加活动', icon: 'list' },
+      hidden: true
+    }, {
       path: 'add',
       name: '添加商品',
       id: 40,

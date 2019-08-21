@@ -8,6 +8,22 @@ export function productsList(data) {
   })
 }
 
+export function handleCoupon(data) {
+  return request({
+    url: `/backend/product/handleCoupon`,
+    method: 'post',
+    data
+  })
+}
+
+export function couponList(data) {
+  return request({
+    url: `/backend/product/queryCoupons`,
+    method: 'post',
+    data
+  })
+}
+
 export function getAllCategories() {
   return request({
     url: `/backend/product/allCategories`,

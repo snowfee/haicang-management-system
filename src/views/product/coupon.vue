@@ -129,6 +129,11 @@ export default {
         })
       })
     },
+    handleEdit(id) {
+      this.$router.push({
+        path: `updateCoupon?id=${id}`
+      })
+    },
     add() {
       this.$router.push({
         path: 'addCoupon'

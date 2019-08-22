@@ -51,3 +51,7 @@
 .el-table::before {
     z-index: inherit;
 }
+
+.el-dialog{
+  min-width: 460px;
+}

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-form :model="ruleForm" ref="ruleForm" :rules="rules" label-width="120px">
+    <el-form :model="ruleForm" ref="ruleForm" :rules="rules" :label-width="labelWidth">
       <el-form-item label="跳转目标" prop="jumpDestination">
         <el-radio-group v-model="ruleForm.jumpDestination">
           <el-radio style="line-height:40px" v-for="(item, index) in destinations" :key="index" :label="item.value">{{item.label}}</el-radio>
@@ -59,6 +59,29 @@ export default {
     },
     type: {
       default: 'HOME_SECTION'
+    },
+    labelWidth: {
+      default: '120px'
+    },
+    destinations: {
+      default: () => {
+        return [{
+          value: 'COUPON_CENTER',
+          label: '领券中心'
+        }, {
+          value: 'WEBPAGE',
+          label: '网页链接'
+        }, {
+          value: 'CATEGORY',
+          label: '类目'
+        }, {
+          value: 'PRODUCT',
+          label: '商品'
+        }, {
+          value: 'NO_JUMP',
+          label: '不跳转'
+        }]
+      }
     }
   },
   data() {
@@ -81,22 +104,22 @@ export default {
         jumpCategoryId: [{required: true, trigger: 'blur'}],
         // productId: [{required: true, trigger:  'blur'}]
       },
-      destinations: [{
-        value: 'COUPON_CENTER',
-        label: '领券中心'
-      }, {
-        value: 'WEBPAGE',
-        label: '网页链接'
-      }, {
-        value: 'CATEGORY',
-        label: '类目'
-      }, {
-        value: 'PRODUCT',
-        label: '商品'
-      }, {
-        value: 'NO_JUMP',
-        label: '不跳转'
-      }],
+      // destinations: [{
+      //   value: 'COUPON_CENTER',
+      //   label: '领券中心'
+      // }, {
+      //   value: 'WEBPAGE',
+      //   label: '网页链接'
+      // }, {
+      //   value: 'CATEGORY',
+      //   label: '类目'
+      // }, {
+      //   value: 'PRODUCT',
+      //   label: '商品'
+      // }, {
+      //   value: 'NO_JUMP',
+      //   label: '不跳转'
+      // }],
       showProductDialog: false,
       categories: [],
       products: [],

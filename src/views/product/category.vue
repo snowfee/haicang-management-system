@@ -50,7 +50,10 @@
         </template>
       </el-form>
       <template v-if="isTowLevel">
-        <jump-set ref="jumpSet" :bannerJump = dialogForm.bannerJump type="SECOND_Category" style="width: 500px;"></jump-set>        
+        <jump-set ref="jumpSet"
+          :bannerJump = dialogForm.bannerJump 
+          type="SECOND_Category" 
+          style="width: 500px;"></jump-set>        
       </template>
       <div class="dialog-footer">
         <el-button @click="resetForm('dialogForm', 'edit')">重 置</el-button>
@@ -139,10 +142,14 @@ export default {
     removeUploadFile(file, imgServe) {
       this.dialogForm.thumbnailUrl = ''
     },
+    async initCategories() {
+      this.selectedCategoryOptions = [this.selectedCategoryOptions[0]]
+      await this.getAllCategories()
+    },
     getAllCategories() {
-      getAllCategories().then(res => {
+      return getAllCategories().then(res => {
         if (res.status == 200) {
-          this.categories[0].children = res.data
+          this.categories[0].children = [...res.data]
           this.getCategoriesFormat(this.categories[0].children)
         }
       })
@@ -161,6 +168,7 @@ export default {
       })
     },
     handleCategoryChange(value) {
+      console.log('okok')
       this.canEditAndDe = value.length > 1
       this.categoryId = value[value.length - 1]
       this.selectedCategoryObj = this.getCascaderObj(value, this.categories)
@@ -228,8 +236,8 @@ export default {
       }).then(() => {
         handleCategory(params).then(res => {
           if (res.status == 200) {
-            this.getAllCategories()
             this.selectedCategoryOptions = [0]
+            this.initCategories()
             this.$message({
               type: 'success',
               message: '删除成功!'
@@ -323,7 +331,7 @@ export default {
               message: '保存成功',
               type: 'success'
             })
-            this.getAllCategories()
+            this.initCategories()
             this.isEditForm = false
             this.isAdding = false
             this.isEditing = false

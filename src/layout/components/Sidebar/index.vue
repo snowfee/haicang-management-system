@@ -26,20 +26,13 @@ import variables from '@/styles/variables.scss'
 
 export default {
   components: { SidebarItem, Logo },
-  data() {
-    return {
-      router: []
-    }
-  },
   created() {
-    this.router = this.$router.options.routes
-    this.filterRouter(this.router)
   },
   methods: {
     filterRouter(routes) {
       routes.forEach((item, index) => {
         if (!item.hidden && item.id && this.permission.indexOf(item.id) < 0) {
-          // console.log('ok', item)
+          console.log('ok', item)
           item.hidden = true
         }
         if (item.children && item.children.length > 0) {
@@ -54,6 +47,7 @@ export default {
       'permission'
     ]),
     routes() {
+      this.filterRouter(this.$router.options.routes)
       return this.$router.options.routes
     },
     activeMenu() {

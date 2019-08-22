@@ -85,7 +85,7 @@
 </template>
 
 <script>
-import { handleCoupon } from '@/api/product'
+import { handleCoupon, getCouponById } from '@/api/product'
 import productDialog from '@/components/Dialog/productDialog'
 export default {
   components: {
@@ -93,6 +93,8 @@ export default {
   },
   data() {
     return {
+      id: '',
+      editType: '添加',
       activeStep: 0,
       showProductDialog: false,
       products: [],
@@ -110,6 +112,7 @@ export default {
         discount: '',
         productIds: ''
       },
+      preFormData: null,
       ruleForm: {
         name: [{ required: true, trigger: 'blur' }],
         time: [{ required: true, trigger: 'blur' }],
@@ -128,9 +131,28 @@ export default {
     }
   },
   created() {
-    
+    this.id = this.$route.query.id || ''
+    if (this.id) {
+      this.editType = '更新'
+      this.getTheCoupon()
+    } else {
+      this.editType = '添加'
+    }
+    this.preFormData = {...this.formData}
   },
   methods: {
+    getTheCoupon() {
+      getCouponById(this.id).then(res => {
+        let data = res.data
+        this.formData = {...res.data}
+        this.formData.time = [data.startTime, data.endTime]
+        this.formData.productIds = data.productIds.join(',')
+        delete this.formData.createTime
+        delete this.formData.startTime
+        delete this.formData.endTime
+        this.preFormData = {...this.formData}
+      })
+    },
     openProductDialog() {
       this.showProductDialog = true
     },
@@ -162,6 +184,9 @@ export default {
         }
       })
     },
+    reset() {
+      this.formData = {...this.preFormData}
+    },
     deleteProduct(index) {
       this.products.splice(index, 1)
     },
@@ -174,11 +199,16 @@ export default {
             params.endTime = this.formData.time[1]
             params.startTime = this.formData.time[0]
           }
-          params.methodType = 'ADD'
+          if (this.editType = '添加') {
+            params.methodType = 'ADD'
+          } else {
+            params.methodType = 'UPDATE'
+            params.id = this.id
+          }
           console.log('params', params)
           handleCoupon(params).then(res => {
             this.$message({
-              message: '活动添加成功',
+              message: `活动${this.editType}成功`,
               type: 'success'
             });
             this.$router.replace({

@@ -73,7 +73,7 @@
       </template>
       <template v-if="ruleForm.type === 'GET_COUPON'">
         <el-form-item label="上传图片">
-            <upload :limit="1" :fileList="fileList" :postQiniupData="postQiniupData" @uploadSuccess="uploadSuccess" @removeUploadFile="removeUploadFile"></upload>
+          <upload :limit="1" :fileList="fileList" :postQiniupData="postQiniupData" @uploadSuccess="uploadSuccess" @removeUploadFile="removeUploadFile"></upload>
         </el-form-item>
       </template>
       <el-form-item size="large" class="form-btn">

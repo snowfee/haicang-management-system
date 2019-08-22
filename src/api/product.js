@@ -45,3 +45,10 @@ export function getCategoryById(id) {
     method: 'get'
   })
 }
+
+export function getCouponById(id) {
+  return request({
+    url: `/backend/product/getCouponById?couponId=${id}`,
+    method: 'get'
+  })
+}

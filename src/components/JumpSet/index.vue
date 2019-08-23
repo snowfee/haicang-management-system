@@ -12,7 +12,12 @@
          </el-form-item>
       </template>
       <el-form-item label="广告图片" prop="picUrl">
-        <upload :limit="1" :postQiniupData="postQiniupData" @uploadSuccess="uploadSuccess" @removeUploadFile="removeUploadFile"></upload>
+        <upload 
+          :limit="1"
+          :fileList="fileList"
+          :postQiniupData="postQiniupData" 
+          @uploadSuccess="uploadSuccess" 
+          @removeUploadFile="removeUploadFile"></upload>
         <div class="err" v-if="picUrlErr">请上传图片</div>
       </el-form-item>
       <template v-if="ruleForm.jumpDestination === 'CATEGORY'">
@@ -88,6 +93,7 @@ export default {
     return {
       productErr: false,
       picUrlErr: false,
+      fileList: [],
       ruleForm: {
         jumpDestination: '',
         picUrl: '',
@@ -175,6 +181,14 @@ export default {
         }
       })
       return data
+    }
+  },
+  watch: {
+    bannerJump(val) {
+      if (!val) return
+      this.ruleForm = {...val}
+      this.products = [val.product]
+      this.fileList = [{url: val.picUrl}]
     }
   }
 }

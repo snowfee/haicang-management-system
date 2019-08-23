@@ -3,7 +3,9 @@
     <el-steps align-center :active="0" :process-status="stepStatus" class="edit-step">
       <el-step title="编辑消息"></el-step>
     </el-steps>
-    <jump-set ref="jumpSet"
+    <jump-set
+      class="edit-form" 
+      ref="jumpSet"
       labelWidth = '150px'
       :bannerJump = ruleForm.bannerJump
       :destinations = jumpDestinations
@@ -32,7 +34,7 @@
 </template>
 
 <script>
-import { handleMessageCenter } from '@/api/system'
+import { handleMessageCenter, getMessageCenterById } from '@/api/system'
 import { getQiniuUpToken } from '@/api/user'
 import { quillRedefine } from 'vue-quill-editor-upload' // 富文本编辑器vue-quill-editor的辅助插件，用于上传图片到你的服务器
 import { quillEditor } from 'vue-quill-editor'
@@ -85,13 +87,21 @@ export default {
     }
   },
   created() {
+    this.getQiniuUpToken()
     this.id = this.$route.query.id
+    if (this.id) {
+      this.editType = '更新'
+      this.getTheMessage()
+    }
     this.preRuleForm = {...this.ruleForm}
-    this.init()
   },
   methods: {
-    init() {
-      this.getQiniuUpToken()
+    getTheMessage() {
+      getMessageCenterById(this.id).then(res => {
+        this.ruleForm = {...res.data}
+        delete this.ruleForm.createTime
+        delete this.isSend
+      })
     },
     getQiniuUpToken() {
       getQiniuUpToken().then(res => {
@@ -139,7 +149,11 @@ export default {
           if (!jumpData.valid) return
           this.ruleForm.bannerJump = {...jumpData.bannerJump}
           let params = {...this.ruleForm}
-          params.methodType = 'ADD'
+          if (this.editType === '更新') {
+            params.methodType = 'UPDATE'
+          } else {
+            params.methodType = 'ADD'
+          }
           console.log('params', params)
           handleMessageCenter(params).then(res => {
             this.$message({

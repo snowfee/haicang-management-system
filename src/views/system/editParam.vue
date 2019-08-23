@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { handleParamSetting } from '@/api/system'
+import { handleParamSetting, getParamSettingById } from '@/api/system'
 
 export default {
   data() {
@@ -54,12 +54,19 @@ export default {
     this.id = this.$route.query.id
     if (this.id) {
       this.editType = '更新'
+      this.getTheParamSetting()
     } else {
       this.editType = '添加'
     }
     this.preRuleForm = {...this.ruleForm}
   },
   methods: {
+    getTheParamSetting() {
+      getParamSettingById(this.id).then(res => {
+        this.ruleForm = {...res.data}
+        delete this.ruleForm.createTime
+      })
+    },
     restForm() {
       this.ruleForm = Object.assign({}, this.preRuleForm)
     },
@@ -69,7 +76,6 @@ export default {
           let params = this.ruleForm
           if (this.editType === '更新') {
             params.methodType = 'UPDATE'
-            params.id = this.id
           } else {
             params.methodType = 'ADD'
           }

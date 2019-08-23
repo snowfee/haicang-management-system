@@ -66,6 +66,7 @@
       </el-form-item>
       <el-form-item label="有效期" prop="time" v-if="formData.isPermanent === 0">
         <el-date-picker 
+          @change="dateChange"
           v-model="formData.time" 
           type="daterange" 
           range-separator="至" 
@@ -144,14 +145,25 @@ export default {
     getTheCoupon() {
       getCouponById(this.id).then(res => {
         let data = res.data
-        this.formData = {...res.data}
-        this.formData.time = [data.startTime, data.endTime]
-        this.formData.productIds = data.productIds.join(',')
-        delete this.formData.createTime
-        delete this.formData.startTime
-        delete this.formData.endTime
+        this.formData = {
+          name: data.name,
+          couponType: data.couponType,
+          time: [data.startTime, data.endTime],
+          isForAllProduct: data.isForAllProduct,
+          isPermanent: data.isPermanent,
+          isNeedPoints: data.isNeedPoints,
+          points: data.points,
+          description: data.description,
+          full: data.full,
+          discount: data.discount,
+          productIds: data.productIds.join(',')
+        }
         this.preFormData = {...this.formData}
+        this.products = [...data.productList]
       })
+    },
+    dateChange(val){
+      console.log('ok', val)
     },
     openProductDialog() {
       this.showProductDialog = true
@@ -199,7 +211,7 @@ export default {
             params.endTime = this.formData.time[1]
             params.startTime = this.formData.time[0]
           }
-          if (this.editType = '添加') {
+          if (this.editType === '添加') {
             params.methodType = 'ADD'
           } else {
             params.methodType = 'UPDATE'

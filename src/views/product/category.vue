@@ -2,6 +2,8 @@
   <div class="edit-container">
     <div style="margin: 20px 0 0 120px; ">
       <el-cascader
+        v-if="showCascader"
+        ref="categoryCas"
         :props="cascaderProps"
         filterable
         clearable
@@ -76,6 +78,7 @@ export default {
   },
   data() {
     return {
+      showCascader: true,
       categories: [{
         name: '全部商品',
         id: 0,
@@ -142,9 +145,11 @@ export default {
     removeUploadFile(file, imgServe) {
       this.dialogForm.thumbnailUrl = ''
     },
-    async initCategories() {
-      this.selectedCategoryOptions = [this.selectedCategoryOptions[0]]
+    async initCategories(type) {
+      this.showCascader = false
       await this.getAllCategories()
+      this.showCascader = true
+      this.selectedCategoryOptions = [0]
     },
     getAllCategories() {
       return getAllCategories().then(res => {
@@ -236,12 +241,11 @@ export default {
       }).then(() => {
         handleCategory(params).then(res => {
           if (res.status == 200) {
-            this.selectedCategoryOptions = [0]
-            this.initCategories()
             this.$message({
               type: 'success',
               message: '删除成功!'
             })
+            this.initCategories('Delete')
           } else {
             this.$message({
               type: 'warning',

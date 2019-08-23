@@ -30,3 +30,17 @@ export function handleParamSetting(data) {
   })
 }
 
+export function getMessageCenterById(id) {
+  return request({
+    url: `/backend/system/getMessageCenterById?id=${id}`,
+    method: 'get'
+  })
+}
+
+export function getParamSettingById(id) {
+  return request({
+    url: `/backend/system/getParamSettingById?id=${id}`,
+    method: 'get'
+  })
+}
+

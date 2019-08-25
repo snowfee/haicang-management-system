@@ -47,7 +47,7 @@ export default {
       'permission'
     ]),
     routes() {
-      this.filterRouter(this.$router.options.routes)
+      // this.filterRouter(this.$router.options.routes)
       return this.$router.options.routes
     },
     activeMenu() {

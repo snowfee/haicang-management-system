@@ -217,6 +217,46 @@ export const constantRoutes = [
   },
 
   {
+    path: '/member',
+    component: Layout,
+    redirect: '/member/list',
+    name: '会员管理',
+    id: 10,
+    meta: { title: '会员管理', icon: 'goods' },
+    children: [{
+      path: 'list',
+      name: '会员列表',
+      id: 11,
+      component: () => import('@/views/member/list'),
+      meta: { title: '会员列表', icon: 'list' }
+    }, {
+      path: 'addMember',
+      name: '添加会员',
+      component: () => import('@/views/member/editMember'),
+      meta: { title: '添加会员', icon: 'list' },
+      hidden: true
+    }, {
+      path: 'updateMember',
+      name: '更新会员',
+      component: () => import('@/views/member/editMember'),
+      meta: { title: '更新会员', icon: 'list' },
+      hidden: true
+    }, {
+      path: 'membershipGrade',
+      name: '会员等级',
+      id: 45,
+      component: () => import('@/views/member/membershipGrade'),
+      meta: { title: '会员等级', icon: 'list' }
+    }, {
+      path: 'feedback',
+      name: '意见反馈',
+      id: 34,
+      component: () => import('@/views/member/feedback'),
+      meta: { title: '意见反馈', icon: 'list' }
+    }]
+  },
+
+  {
     path: '/appset',
     component: Layout,
     redirect: '/appset/homePage',
@@ -279,7 +319,7 @@ export const constantRoutes = [
       path: 'addparam',
       name: '添加参数',
       component: () => import('@/views/system/editParam'),
-        meta: { title: '添加参数', icon: 'list' },
+      meta: { title: '添加参数', icon: 'list' },
       hidden: true
     }, {
       path: 'updateparam',
@@ -303,7 +343,7 @@ export const constantRoutes = [
       path: 'updatemessage',
       name: '更新消息',
       component: () => import('@/views/system/editMessage'),
-        meta: { title: '更新消息', icon: 'list' },
+      meta: { title: '更新消息', icon: 'list' },
       hidden: true
     }]
   },

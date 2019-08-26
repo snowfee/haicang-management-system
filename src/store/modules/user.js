@@ -1,16 +1,37 @@
 import { login, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken, setGuid, getGuid } from '@/utils/auth'
 import { resetRouter } from '@/router'
+import { asyncRouterMap, constantRouterMap } from '@/router'
 
+const filterAsyncRouter = (routes) => {
+  const res = []
+  routes.forEach((item) => {
+    const tmp = { ...item }
+    if (!tmp.hidden && tmp.id && state.permission.indexOf(tmp.id) < 0) {
+      tmp.hidden = true
+    }
+    res.push(tmp)
+    if (tmp.children && tmp.children.length > 0) {
+      filterAsyncRouter(tmp.children)
+    }
+  })
+  return res
+}
 const state = {
   token: getToken(),
   name: '',
   avatar: '',
   guid: getGuid(),
-  permission: []
+  permission: [],
+  routers: [],
+  addRouters: []
 }
 
 const mutations = {
+  SET_ROUTERS: (state, routers) => {
+    state.addRouters = routers
+    state.routers = constantRouterMap.concat(routers)
+  },
   SET_TOKEN: (state, token) => {
     state.token = token
   },
@@ -29,6 +50,13 @@ const mutations = {
 }
 
 const actions = {
+  GenerateRoutes({ commit }) {
+    return new Promise(resolve => {
+      const accessedRouters = filterAsyncRouter(asyncRouterMap)
+      commit('SET_ROUTERS', accessedRouters)
+      resolve()
+    })
+  },
   // user login
   login({ commit }, userInfo) {
     const { username, password } = userInfo
@@ -38,7 +66,7 @@ const actions = {
         commit('SET_TOKEN', data.backendToken)
         commit('SET_NAME', data.staff.name)
         commit('SET_GUID', data.staff.id)
-        commit('SET_PERMISSION', data.staff.role.permissions)
+        commit('SET_PERMISSION', data.staff.role.permissionIds)
         setToken(data.backendToken)
         setGuid(data.staff.id)
         resolve()

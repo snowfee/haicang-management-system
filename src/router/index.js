@@ -30,32 +30,7 @@ import Layout from '@/layout'
  * a base page that does not have permission requirements
  * all roles can be accessed
  */
-export const constantRoutes = [
-  {
-    path: '/login',
-    component: () => import('@/views/login/index'),
-    hidden: true
-  },
-
-  {
-    path: '/404',
-    component: () => import('@/views/404'),
-    hidden: true
-  },
-
-  {
-    path: '/',
-    component: Layout,
-    redirect: '/home',
-    id: 1,
-    children: [{
-      path: 'home',
-      name: '首页',
-      id: 1,
-      component: () => import('@/views/dashboard/index'),
-      meta: { title: '首页', icon: 'home' }
-    }]
-  },
+export const asyncRouterMap = [
   {
     path: '/staff',
     component: Layout,
@@ -346,8 +321,34 @@ export const constantRoutes = [
       meta: { title: '更新消息', icon: 'list' },
       hidden: true
     }]
+  }
+]
+export const constantRouterMap = [
+  {
+    path: '/login',
+    component: () => import('@/views/login/index'),
+    hidden: true
   },
 
+  {
+    path: '/404',
+    component: () => import('@/views/404'),
+    hidden: true
+  },
+
+  {
+    path: '/',
+    component: Layout,
+    redirect: '/home',
+    id: 1,
+    children: [{
+      path: 'home',
+      name: '首页',
+      id: 1,
+      component: () => import('@/views/dashboard/index'),
+      meta: { title: '首页', icon: 'home' }
+    }]
+  },
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
@@ -355,7 +356,7 @@ export const constantRoutes = [
 const createRouter = () => new Router({
   // mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
-  routes: constantRoutes
+  routes: constantRouterMap
 })
 
 const router = createRouter()
@@ -363,6 +364,7 @@ const router = createRouter()
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
   const newRouter = createRouter()
+  console.log(newRouter)
   router.matcher = newRouter.matcher // reset router
 }
 

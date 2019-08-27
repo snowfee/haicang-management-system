@@ -223,6 +223,12 @@ export const asyncRouterMap = [
       component: () => import('@/views/member/membershipGrade'),
       meta: { title: '会员等级', icon: 'list' }
     }, {
+      path: 'updateGrade',
+      name: '更新会员等级',
+      component: () => import('@/views/member/editGrade'),
+      meta: { title: '更新会员等级', icon: 'list' },
+      hidden: true
+    }, {
       path: 'feedback',
       name: '意见反馈',
       id: 34,
@@ -321,7 +327,9 @@ export const asyncRouterMap = [
       meta: { title: '更新消息', icon: 'list' },
       hidden: true
     }]
-  }
+  },
+  // 404 page must be placed at the end !!!
+  { path: '*', redirect: '/404', hidden: true }
 ]
 export const constantRouterMap = [
   {
@@ -348,9 +356,7 @@ export const constantRouterMap = [
       component: () => import('@/views/dashboard/index'),
       meta: { title: '首页', icon: 'home' }
     }]
-  },
-  // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+  }
 ]
 
 const createRouter = () => new Router({

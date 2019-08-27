@@ -7,9 +7,16 @@ export function memberList({ pageIndex, pageSize }) {
   })
 }
 
-export function AllMembershipGrade() {
+export function allMembershipGrade() {
   return request({
     url: `/backend/member/queryAllMembershipGrade`,
+    method: 'get'
+  })
+}
+
+export function getMembershipGradeById(id) {
+  return request({
+    url: `/backend/member/getMembershipGradeById?id=${id}`,
     method: 'get'
   })
 }

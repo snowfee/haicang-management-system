@@ -1,7 +1,7 @@
 <template>
   <div class="edit-container">
     <el-steps align-center :active="0" :process-status="stepStatus" class="edit-step">
-      <el-step title="编辑会员信息"></el-step>
+      <el-step title="编辑会员等级信息"></el-step>
     </el-steps>
     <el-form :model="ruleForm" ref="roleForm" :rules="rules" label-width="150px" class="edit-form">
         <el-form-item label="会员名称" prop="userName">
@@ -34,18 +34,13 @@
 </template>
 
 <script>
-import { handleMember } from '@/api/member'
-import { getQiniuUpToken } from '@/api/user'
-import upload from '@/components/Upload'
+import { handleMembershipGrade, getMembershipGradeById } from '@/api/member'
 export default {
   components:{
     upload
   },
   data() {
     return {
-      editType: '添加',
-      postQiniupData: null,
-      fileList: [],
       ruleForm: {
         age : '',
         userName: '',
@@ -68,24 +63,13 @@ export default {
   },
   created() {
     this.id = this.$route.query.id || ''
-    if (this.id) {
-      this.editType = '更新'
-    }
-    this.getQiniuUpToken()
+    this.getGradeInfo()
   },
   methods: {
-    getQiniuUpToken() {
-      getQiniuUpToken().then(res => {
-        this.postQiniupData = {}
-        this.postQiniupData.token = res.data
+    getGradeInfo() {
+      getMembershipGradeById(this.id).then(res => {
+        
       })
-    },
-    uploadSuccess(file, imgServe) {
-      console.log(file)
-      this.ruleForm.headUrl = `${imgServe}/${file[0].response.key}`
-    },
-    removeUploadFile(file, imgServe) {
-      this.ruleForm.headUrl = ''
     },
     submitForm(formName) {
       this.$refs[formName].validate(valid => {

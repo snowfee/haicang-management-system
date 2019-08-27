@@ -29,17 +29,13 @@ router.beforeEach(async(to, from, next) => {
     } else {
       const hasGetUserInfo = store.getters.name
       if (hasGetUserInfo) {
-        store.dispatch('user/GenerateRoutes').then(() => {
-          resetRouter()
-          router.addRoutes(store.getters.addRouters) // 动态添加可访问路由表
-          next()
-        })
+        next()
       } else {
         try {
           // get user info
           await store.dispatch('user/getInfo')
           store.dispatch('user/GenerateRoutes').then(() => {
-            resetRouter()
+            // resetRouter()
             router.addRoutes(store.getters.addRouters) // 动态添加可访问路由表
             next({ ...to, replace: true }) // hack方法 确保addRoutes已完成 ,set the replace: true so the navigation will not leave a history record
           })

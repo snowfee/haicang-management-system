@@ -64,7 +64,7 @@ const actions = {
       login({ telephone: username.trim(), password: password }).then(response => {
         const { data } = response
         commit('SET_TOKEN', data.backendToken)
-        commit('SET_NAME', data.staff.name)
+        // commit('SET_NAME', data.staff.name)
         commit('SET_GUID', data.staff.id)
         commit('SET_PERMISSION', data.staff.role.permissionIds)
         setToken(data.backendToken)

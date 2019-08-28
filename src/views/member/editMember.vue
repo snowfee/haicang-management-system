@@ -27,14 +27,14 @@
         </el-form-item>
         <el-form-item size="large" class="form-btn">
           <el-button type="primary" @click="submitForm('roleForm')">提交</el-button>
-          <el-button>重置</el-button>
+          <el-button @click="reset">重置</el-button>
         </el-form-item>
       </el-form>
   </div>
 </template>
 
 <script>
-import { handleMember } from '@/api/member'
+import { handleMember, getMemberById } from '@/api/member'
 import { getQiniuUpToken } from '@/api/user'
 import upload from '@/components/Upload'
 export default {
@@ -46,6 +46,7 @@ export default {
       editType: '添加',
       postQiniupData: null,
       fileList: [],
+      preRuleForm: null,
       ruleForm: {
         age : '',
         userName: '',
@@ -68,12 +69,22 @@ export default {
   },
   created() {
     this.id = this.$route.query.id || ''
+    this.preRuleForm = {...this.ruleForm}
     if (this.id) {
       this.editType = '更新'
+      this.getTheMember()
     }
     this.getQiniuUpToken()
   },
   methods: {
+    getTheMember() {
+      getMemberById(this.id).then(res => {
+        this.ruleForm = {...res.data}
+        this.ruleForm.password = ''
+        this.fileList = [{url: this.ruleForm.headUrl}]
+        this.preRuleForm = {...this.ruleForm}
+      })
+    },
     getQiniuUpToken() {
       getQiniuUpToken().then(res => {
         this.postQiniupData = {}
@@ -86,6 +97,9 @@ export default {
     },
     removeUploadFile(file, imgServe) {
       this.ruleForm.headUrl = ''
+    },
+    reset() {
+      this.ruleForm = {...this.preRuleForm}
     },
     submitForm(formName) {
       this.$refs[formName].validate(valid => {

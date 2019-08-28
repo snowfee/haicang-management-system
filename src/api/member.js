@@ -14,6 +14,13 @@ export function allMembershipGrade() {
   })
 }
 
+export function getMemberById(id) {
+  return request({
+    url: `/backend/member/getMemberById?id=${id}`,
+    method: 'get'
+  })
+}
+
 export function getMembershipGradeById(id) {
   return request({
     url: `/backend/member/getMembershipGradeById?id=${id}`,

@@ -61,7 +61,7 @@ export default {
     },
     edit(id) {
       this.$router.push({
-        path: 'updateGrade'
+        path: `updateGrade?id=${id}`
       })
     }
   }

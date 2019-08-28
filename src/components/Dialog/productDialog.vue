@@ -28,6 +28,17 @@
           :total="total">
         </el-pagination>
       </div>
+      <template v-if="canSelectSku && this.products.length > 0">
+        <el-table border :data="this.products[0].productSkuList"  @selection-change="handleSkuSelectionChange">
+          <el-table-column
+            type="selection"
+            width="55"
+            :selectable="checkSkuRow"
+            ></el-table-column>
+          <el-table-column label="编号" prop="id"></el-table-column>
+          <el-table-column label="属性" prop="skuAttribute"></el-table-column>
+        </el-table>
+      </template>
     </div>
   </div>
 </template>
@@ -38,6 +49,9 @@ export default {
   props: {
     limit: {
       default: Infinity
+    },
+    canSelectSku: {
+      default: false
     }
   },
   data() {
@@ -50,7 +64,8 @@ export default {
       pageIndex: 0,
       pageSize: 10,
       total: 0,
-      products: []
+      products: [],
+      selectedSKU: []
     }
   },
   created() {
@@ -74,6 +89,20 @@ export default {
       this.pageSize = val
       this.getListData()
     },
+    checkSkuRow(row, index) {
+      let checked = this.selectedSKU.some(item => {
+        return item.id === row.id
+      })
+      if (checked) return 1
+      if (this.selectedSKU.length >= 1) {
+        return 0
+      } else {
+        return 1
+      }
+    },
+    handleSelectionChange(val) {
+      this.products = val
+    },
     checkRow(row, index) {
       let checked = this.products.some(item => item.id === row.id)
       if (checked) return 1
@@ -82,13 +111,17 @@ export default {
       } else {
         return 1
       }
+      return 1
     },
-    handleSelectionChange(val) {
-      this.products = val
-      console.log('pro', this.products)
+    handleSkuSelectionChange(val) {
+      if (!val || val.length === 0) return
+      this.selectedSKU = val
     },
     addProduct() {
       if (this.products && this.products.length > 0) {
+        if (this.canSelectSku) {
+          this.products[0].selectedSKU = {...this.selectedSKU[0]}
+        }
         this.$emit('addProduct', this.products)       
       } else {
         this.$alert('请选择商品', {

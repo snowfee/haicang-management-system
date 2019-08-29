@@ -50,3 +50,10 @@ export function handleMembershipGrade(data) {
     data
   })
 }
+
+export function queryPointsProduct({ pageIndex, pageSize, name }) {
+  return request({
+    url: `/backend/member/queryPointsProduct?pageIndex=${pageIndex}&pageSize=${pageSize}&name=${name}`,
+    method: 'get'
+  })
+}

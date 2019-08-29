@@ -234,6 +234,24 @@ export const asyncRouterMap = [
       id: 34,
       component: () => import('@/views/member/feedback'),
       meta: { title: '意见反馈', icon: 'list' }
+    }, {
+      path: 'pointsProduct',
+      name: '积分商品',
+      id: 46,
+      component: () => import('@/views/member/pointsProductList'),
+      meta: { title: '积分商品', icon: 'list' }
+    }, {
+      path: 'addPointsProduct',
+      name: '添加积分商品',
+      component: () => import('@/views/member/editPointsProduct'),
+      meta: { title: '添加会员', icon: 'list' },
+      hidden: true
+    }, {
+      path: 'updatePointsProduct',
+      name: '更新积分商品',
+      component: () => import('@/views/member/editPointsProduct'),
+      meta: { title: '更新会员', icon: 'list' },
+      hidden: true
     }]
   },
 

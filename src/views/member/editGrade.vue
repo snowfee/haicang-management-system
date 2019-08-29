@@ -25,13 +25,21 @@
           </el-table>
         </el-form-item>
         <el-form-item label="赠品数量" prop="count">
-          <el-input v-model.number="ruleForm.count" autocomplete="off"></el-input>
+          <el-input v-model.number="ruleForm.count" autocomplete="off">
+            <template slot="append">件</template>
+          </el-input>
         </el-form-item>
         <el-form-item label="赠品下发时间" prop="startDay">
-          <el-input v-model="ruleForm.startDay" autocomplete="off"></el-input>
+          <el-input v-model="ruleForm.startDay" autocomplete="off">
+            <template slot="prepend">当月</template>
+            <template slot="append">日</template>
+          </el-input>
         </el-form-item>
         <el-form-item label="赠品过期时间" prop="endDay">
-          <el-input v-model="ruleForm.endDay"></el-input>
+          <el-input v-model="ruleForm.endDay">
+            <template slot="prepend">当月</template>
+            <template slot="append">日</template>
+          </el-input>
         </el-form-item>
         <el-form-item label="会员升级价格" prop="upgradePrice">
           <el-input v-model="ruleForm.upgradePrice"></el-input>
@@ -43,7 +51,7 @@
           <el-input v-model="ruleForm.markedWords"></el-input>
         </el-form-item>
         <el-form-item label="积分获取比例" prop="pointsProportion">
-          <el-input v-model="ruleForm.pointsProportion" placeholder="0到1之前的小数，两位小数点"></el-input>
+          <el-input v-model="ruleForm.pointsProportion" placeholder="0到1之前的小数，最多两位小数点"></el-input>
         </el-form-item>
         <el-form-item size="large" class="form-btn">
           <el-button type="primary" @click="submitForm('roleForm')">提交</el-button>
@@ -95,7 +103,7 @@ export default {
         upgradePrice: [{ required: true, trigger: 'blur' }],
         renewPrice: [{ required: true, trigger: 'blur' }],
         markedWords: [{ required: true, trigger: 'blur' }],
-        pointsProportion : [{ required: true, trigger: 'blur' }],
+        pointsProportion : [{ required: true, trigger: 'blur' }, {pattern:/^0\.[0-9]{1,2}/, message:'0到1之前的小数，最多两位小数点', trigger: 'blur'}],
         productId: [{ required: true, trigger: 'blur' }]
       },
       stepStatus: 'progress',

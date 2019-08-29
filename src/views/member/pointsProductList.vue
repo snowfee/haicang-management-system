@@ -3,6 +3,25 @@
     <div class="box">
       <div class="box-top">
         <div class="top-left">
+          <i class="el-icon-search" />
+          <span>筛选搜索</span>
+        </div>
+        <div class="top-right">
+          <el-button @click="resetQuery">重置</el-button>
+          <el-button type="primary" @click="getListData">查询结果</el-button>
+        </div>
+      </div>
+      <div class="box-content">
+        <el-form class="form" :model="listForm" label-width="150px" label-position="right" :inline="true" >
+          <el-form-item label="商品名称">
+            <el-input v-model="listForm.name" placeholder="商品名称"></el-input>
+          </el-form-item>
+        </el-form>
+      </div>
+    </div>
+    <div class="box">
+      <div class="box-top">
+        <div class="top-left">
           <i class="el-icon-tickets" />
           <span>数据列表</span>
         </div>
@@ -14,33 +33,25 @@
     <div class="table">
       <el-table border :data="tableData">
         <el-table-column prop="id" label="ID"></el-table-column>
-        <el-table-column prop="userName" label="会员名称"></el-table-column>
-        <el-table-column prop="telephone" label="手机号"></el-table-column>
-        <el-table-column prop="sex" label="性别">
+        <el-table-column prop="name" label="名称"></el-table-column>
+        <el-table-column prop="exchangePoints" label="价格"></el-table-column>
+        <el-table-column prop="limited" label="限量(单位：份)"></el-table-column>
+        <el-table-column prop="product.listUrl" label="图片">
           <template slot-scope="scope">
-            <div>
-              {{ scope.row.sex | keyToDes }}
-            </div>
+            <el-button type="text" @click="seePics(scope.row.product.listUrl)">查看</el-button>
           </template>
         </el-table-column>
-        <el-table-column prop="age" label="年龄"></el-table-column>
-        <el-table-column prop="membershipGrade" label="会员等级">
+        <el-table-column prop="status" label="状态">
           <template slot-scope="scope">
-            {{scope.row.membershipGrade ? scope.row.membershipGrade.name : '普通用户'}}
+            上架：<el-switch v-model="scope.row.status" active-value="SHELVE" inactive-value="UNSHELVE"></el-switch>
           </template>
         </el-table-column>
-        <el-table-column prop="expirationTime" label="会员到期时间"></el-table-column>
-        <el-table-column prop="createTime" label="创建时间"></el-table-column>
         <el-table-column label="操作" min-width="100px" fixed="right">
           <template slot-scope="scope">
             <el-button
               size="mini"
               type="text"
               @click="handleEdit(scope.row.id)">编辑</el-button>
-            <el-button
-              size="mini"
-              type="text"
-              @click="handleDelete(scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -54,20 +65,26 @@
           layout="total, sizes, prev, pager, next, jumper"
           :total="total">
         </el-pagination>
+      </div>
     </div>
-    </div>
+    <el-dialog title="" :visible.sync="showProdutPicDialog" width="30%">
+      <img :src="picUrl" style="width: 100%">
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { memberList, handleMember } from '@/api/member'
+import { queryPointsProduct } from '@/api/member'
 export default {
   data() {
     return {
-      tableData: [],
+      listForm: {
+        name: ''
+      },
       pageSize: 10,
       total: 0,
-      pageIndex: 0
+      pageIndex: 0,
+      showProdutPicDialog: false
     }
   },
   created() {
@@ -80,12 +97,19 @@ export default {
     getListData() {
       let param = {
         pageIndex: this.pageIndex,
-        pageSize: this.pageSize
+        pageSize: this.pageSize,
+        name: this.listForm.name
       }
-      memberList(param).then(res => {
+      queryPointsProduct(param).then(res => {
         this.tableData = res.data.pageData
         this.total = res.data.count
       })
+    },
+    seePics(picstr) {
+
+    },
+    resetQuery() {
+      this.listForm.name = ''
     },
     handleCurrentPageChange(val) {
       this.pageIndex = val - 1

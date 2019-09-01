@@ -11,10 +11,14 @@
           <upload :limit="1" :fileList="fileList" :postQiniupData="postQiniupData" @uploadSuccess="uploadSuccess" @removeUploadFile="removeUploadFile"></upload>
         </el-form-item>
         <el-form-item label="价格" prop="price">
-          <el-input v-model="ruleForm.price"></el-input>
+          <el-input v-model="ruleForm.price">
+            <template slot="append">元</template>
+          </el-input>
         </el-form-item>
         <el-form-item label="折扣" prop="discount">
-          <el-input v-model="ruleForm.discount" autocomplete="off"></el-input>
+          <el-input v-model="ruleForm.discount" autocomplete="off">
+            <template slot="append">折</template>
+          </el-input>
         </el-form-item>
         <el-form-item label="赠品选择" prop="productId">
           <el-button @click="showProductDialog = true">更换赠品</el-button>
@@ -45,7 +49,9 @@
           <el-input v-model="ruleForm.upgradePrice"></el-input>
         </el-form-item>
         <el-form-item label="续费价格" prop="renewPrice">
-          <el-input v-model="ruleForm.renewPrice"></el-input>
+          <el-input v-model="ruleForm.renewPrice">
+            <template slot="append">元</template>
+          </el-input>
         </el-form-item>
         <el-form-item label="提示语设置" prop="markedWords">
           <el-input v-model="ruleForm.markedWords"></el-input>
@@ -95,15 +101,15 @@ export default {
       rules: {
         name: [{ required: true, trigger: 'blur' }],
         picUrl: [{ required: true, trigger: 'blur' }],
-        price: [{ required: true, trigger: 'blur' }],
-        discount: [{ required: true, trigger: 'blur' }],
+        price: [{ required: true, trigger: 'blur' }, {pattern:/^[0-9]+(.[0-9]{1,2})?$/, message:'格式错误,最多两位小数', trigger: 'blur'}],
+        discount: [{ required: true, trigger: 'blur' }, {pattern:/^[0-9]{1}(.[0-9]{1,2})?$/, message:'格式错误', trigger: 'blur'}],
         count: [{ required: true, trigger: 'blur' }],
         startDay: [{ required: true, trigger: 'blur' }],
         endDay: [{ required: true, trigger: 'blur' }],
-        upgradePrice: [{ required: true, trigger: 'blur' }],
-        renewPrice: [{ required: true, trigger: 'blur' }],
+        upgradePrice: [{ required: true, trigger: 'blur' }, {pattern:/^[0-9]+(.[0-9]{1,2})?$/, message:'格式错误,最多两位小数', trigger: 'blur'}],
+        renewPrice: [{ required: true, trigger: 'blur' }, {pattern:/^[0-9]+(.[0-9]{1,2})?$/, message:'格式错误,最多两位小数', trigger: 'blur'}],
         markedWords: [{ required: true, trigger: 'blur' }],
-        pointsProportion : [{ required: true, trigger: 'blur' }, {pattern:/^0\.[0-9]{1,2}/, message:'0到1之前的小数，最多两位小数点', trigger: 'blur'}],
+        pointsProportion : [{ required: true, trigger: 'blur' }, {pattern:/^0\.[0-9]{1,2}$/, message:'0到1之前的小数，最多两位小数点', trigger: 'blur'}],
         productId: [{ required: true, trigger: 'blur' }]
       },
       stepStatus: 'progress',

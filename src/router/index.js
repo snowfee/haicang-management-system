@@ -244,14 +244,130 @@ export const asyncRouterMap = [
       path: 'addPointsProduct',
       name: '添加积分商品',
       component: () => import('@/views/member/editPointsProduct'),
-      meta: { title: '添加会员', icon: 'list' },
+      meta: { title: '添加积分商品', icon: 'list' },
       hidden: true
     }, {
       path: 'updatePointsProduct',
       name: '更新积分商品',
       component: () => import('@/views/member/editPointsProduct'),
-      meta: { title: '更新会员', icon: 'list' },
+      meta: { title: '更新积分商品', icon: 'list' },
       hidden: true
+    }]
+  },
+
+  {
+    path: '/report',
+    component: Layout,
+    redirect: '/report/revenueProfile',
+    name: '财务报表',
+    id: 14,
+    meta: { title: '财务报表', icon: 'goods' },
+    children: [{
+      path: 'revenueProfile',
+      name: '营收概况',
+      id: 26,
+      component: () => import('@/views/report/revenueProfile'),
+      meta: { title: '营收概况', icon: 'list' }
+    }, {
+      path: 'billSummary',
+      name: '账单汇总',
+      id: 27,
+      component: () => import('@/views/report/billSummary'),
+      meta: { title: '账单汇总', icon: 'list' }
+    }, {
+      path: 'orderList',
+      name: '订单明细',
+      id: 28,
+      component: () => import('@/views/report/orderList'),
+      meta: { title: '订单明细', icon: 'list' }
+    }, {
+      path: 'productReport',
+      name: '商品报表',
+      id: 29,
+      component: () => import('@/views/report/productReport'),
+      meta: { title: '商品报表', icon: 'list' }
+    }, {
+      path: 'finance',
+      name: '财务报表',
+      id: 30,
+      component: () => import('@/views/report/finance'),
+      meta: { title: '财务报表', icon: 'list' }
+    }, {
+      path: 'order',
+      name: '订单报表',
+      id: 31,
+      component: () => import('@/views/report/order'),
+      meta: { title: '订单报表', icon: 'list' }
+    }, {
+      path: 'paymentFlow',
+      name: '支付流水',
+      id: 32,
+      component: () => import('@/views/report/paymentFlow'),
+      meta: { title: '支付流水', icon: 'list' }
+    }]
+  },
+
+  {
+    path: '/invoicing',
+    component: Layout,
+    redirect: '/invoicing/supplier',
+    name: '进销存',
+    id: 15,
+    meta: { title: '进销存', icon: 'goods' },
+    children: [{
+      path: 'supplier',
+      name: '供应商管理',
+      id: 16,
+      component: () => import('@/views/invoicing/supplier'),
+      meta: { title: '供应商管理', icon: 'list' }
+    }, {
+      path: 'addSupplier',
+      name: '添加供应商',
+      component: () => import('@/views/invoicing/editSupplier'),
+      meta: { title: '添加供应商', icon: 'list' },
+      hidden: true
+    }, {
+      path: 'updateSupplier',
+      name: '更新供应商',
+      component: () => import('@/views/invoicing/editSupplier'),
+      meta: { title: '更新供应商', icon: 'list' },
+      hidden: true
+    }, {
+      path: 'inbound',
+      name: '入库管理',
+      id: 18,
+      component: () => import('@/views/invoicing/inbound'),
+      meta: { title: '入库管理', icon: 'list' }
+    }, {
+      path: 'outbound',
+      name: '出库管理',
+      id: 19,
+      component: () => import('@/views/invoicing/outbound'),
+      meta: { title: '出库管理', icon: 'list' }
+    }, {
+      path: 'inventoryCheck',
+      name: '盘点管理',
+      id: 20,
+      component: () => import('@/views/invoicing/inventoryCheck'),
+      meta: { title: '盘点管理', icon: 'list' }
+    }, {
+      path: 'addInventoryCheck',
+      name: '新增盘点',
+      component: () => import('@/views/invoicing/editCheck'),
+      meta: { title: '新增盘点', icon: 'list' },
+      hidden: true
+    }, {
+      path: 'updateInventoryCheck',
+      name: '更新盘点',
+      component: () => import('@/views/invoicing/editCheck'),
+      meta: { title: '更新盘点', icon: 'list' },
+      hidden: true
+    }, {
+      path: 'inventoryMain',
+      name: '总仓库',
+      id: 21,
+      component: () => import('@/views/invoicing/inventoryMain'),
+      meta: { title: '总仓库', icon: 'list' }
     }]
   },
 

@@ -13,8 +13,12 @@
       </div>
       <div class="box-content">
         <el-form class="form" :model="listForm" label-width="150px" label-position="right" :inline="true" >
-          <el-form-item label="商品名称">
-            <el-input v-model="listForm.name" placeholder="商品名称"></el-input>
+          <el-form-item label="类型">
+            <el-select v-model="listForm.targetRole">
+              <el-option label="全部" value=""></el-option>
+              <el-option label="供应商" value="SUPPLIER"></el-option>
+              <el-option label="其他" value="OTHER"></el-option>
+            </el-select>
           </el-form-item>
         </el-form>
       </div>
@@ -26,32 +30,27 @@
           <span>数据列表</span>
         </div>
         <div class="top-right">
-          <el-button @click="add">添加</el-button>
+          <el-button @click="add">商品出库</el-button>
         </div>
       </div>
     </div>
     <div class="table">
       <el-table border :data="tableData">
-        <el-table-column prop="id" label="ID"></el-table-column>
-        <el-table-column prop="name" label="名称"></el-table-column>
-        <el-table-column prop="exchangePoints" label="价格"></el-table-column>
-        <el-table-column prop="limited" label="限量(单位：份)"></el-table-column>
-        <el-table-column prop="product.listUrl" label="图片">
-          <template slot-scope="scope">
-            <el-button type="text" @click="seePics(scope.row.product.listUrl)">查看</el-button>
-          </template>
-        </el-table-column>
-        <el-table-column prop="status" label="状态">
-          <template slot-scope="scope">
-            上架：<el-switch v-model="scope.row.status" active-value="SHELVE" inactive-value="UNSHELVE"></el-switch>
-          </template>
-        </el-table-column>
+        <el-table-column prop="id" label="出库编号"></el-table-column>
+        <el-table-column prop="targetRole" label="出库类型"></el-table-column>
+        <el-table-column prop="materialId" label="物料ID"></el-table-column>
+        <el-table-column prop="createTime" label="创建时间"></el-table-column>
+        <el-table-column prop="remark" label="备注"></el-table-column>
         <el-table-column label="操作" min-width="100px" fixed="right">
           <template slot-scope="scope">
             <el-button
               size="mini"
               type="text"
               @click="handleEdit(scope.row.id)">编辑</el-button>
+            <el-button
+              size="mini"
+              type="text"
+              @click="handleDelete(scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -65,32 +64,23 @@
           layout="total, sizes, prev, pager, next, jumper"
           :total="total">
         </el-pagination>
-      </div>
     </div>
-    <el-dialog title="" :visible.sync="showProdutPicDialog" width="30%">
-      <el-carousel height="300px">
-        <el-carousel-item v-for="item in picUrls" :key="item">
-          <img :src="item" width="100%" height="100%"/>
-        </el-carousel-item>
-      </el-carousel>
-    </el-dialog>
+    </div>
   </div>
 </template>
 
 <script>
-import { queryPointsProduct } from '@/api/member'
+import { queryInventoryRecord } from '@/api/invoicing'
 export default {
   data() {
     return {
-      tableData: [],
       listForm: {
-        name: ''
+        targetRole: ''
       },
+      tableData: [],
       pageSize: 10,
       total: 0,
-      pageIndex: 0,
-      showProdutPicDialog: false,
-      picUrls: []
+      pageIndex: 0
     }
   },
   created() {
@@ -104,19 +94,15 @@ export default {
       let param = {
         pageIndex: this.pageIndex,
         pageSize: this.pageSize,
-        name: this.listForm.name
+        operateType: 'OUTBOUND'
       }
-      queryPointsProduct(param).then(res => {
+      if (this.listForm.targetRole) {
+        param.targetRole = this.listForm.targetRole
+      }
+      queryInventoryRecord(param).then(res => {
         this.tableData = res.data.pageData
         this.total = res.data.count
       })
-    },
-    seePics(picstr) {
-      this.picUrls = picstr.split(',')
-      this.showProdutPicDialog = true
-    },
-    resetQuery() {
-      this.listForm.name = ''
     },
     handleCurrentPageChange(val) {
       this.pageIndex = val - 1
@@ -128,34 +114,13 @@ export default {
     },
     add() {
       this.$router.push({
-        path: 'addPointsProduct'
-      })
-    },
-    handleDelete(id) {
-      let params = {
-        id,
-        methodType: 'DELETE'
-      }
-      this.$confirm('此操作将永久删除该会员, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        handleMember(params).then(res => {
-          this.getListData()
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          })
-        })
-      })
-    },
-    handleEdit(id) {
-      this.$router.push({
-        path: `updatePointsProduct?id=${id}`
+        path: 'addSupplier'
       })
     }
   }
 }
 </script>
 
+<style>
+
+</style>

@@ -57,3 +57,19 @@ export function queryPointsProduct({ pageIndex, pageSize, name }) {
     method: 'get'
   })
 }
+
+export function handlePointsProduct(data) {
+  return request({
+    url: `/backend/member/handlePointsProduct`,
+    method: 'post',
+    data
+  })
+}
+
+export function getPointsProductById(id) {
+  return request({
+    url: `/backend/member/getPointsProductById?id=${id}`,
+    method: 'get'
+  })
+}
+

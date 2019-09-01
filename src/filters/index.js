@@ -29,15 +29,17 @@ export function keyToDes(key) {
       break
     case 'SUCCESS': des = '订单完成'
       break
+    //  结算方式
     case 'CASH_ON_DELIVERY': des = '货到付款'
       break
     case 'DAILY': des = '日结'
       break
     case 'MONTHLY': des = '月结'
       break
-    case 'WEEKLY': des = '周结'
-      break
     case 'ONCREDIT': des = '挂账'
+      break
+    // 盘点类型
+    case 'WEEKLY': des = '周结'
       break
     case 'SUPPLIER': des = '供应商'
       break

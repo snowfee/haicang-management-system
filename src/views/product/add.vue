@@ -66,7 +66,7 @@
               <el-table-column label="物料名称" prop="name"></el-table-column>
               <el-table-column label="操作">
                 <template slot-scope="scope">
-                  <el-button type="text" @click="deleteMaterial(scope.row)">删除</el-button>
+                  <el-button type="text" @click="deleteMaterial(scope.row.$index)">删除</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -74,17 +74,28 @@
         </el-form-item>
         <template v-if="materials && materials.length > 0">
           <el-form-item label="物料规格">
-            <div class="sku-box" v-for="(attr, index) in attributeList" :key="index">
-              <p>{{attr.name}}</p>
-              <div v-for="(item, i) in attr.list" :key="i">
-                <p>{{item.name}}：</p>
-                <el-checkbox-group v-model="item.selectedInputList">
-                  <el-checkbox disabled v-for="(select, is) in item.inputList" :key="is" :label="select"></el-checkbox>
-                </el-checkbox-group>
+            <template v-if="formData2.type==='SINGLE'">
+              <div class="sku-box" v-for="(attr, index) in attributeList" :key="index">
+                <p>{{attr.name}}</p>
+                <div v-for="(item, i) in attr.list" :key="i">
+                  <el-checkbox-group v-model="item.selectedInputList">
+                    <el-checkbox disabled v-for="(select, is) in item.inputList" :key="is" :label="select"></el-checkbox>
+                  </el-checkbox-group>
+                </div>
               </div>
-            </div>
+            </template>
+            <template v-else>
+              <div class="sku-box" v-for="(attr, index) in materialSkuList" :key="index">
+                <p>{{attr.name}}</p>
+                <div>
+                  <el-radio-group v-model="attr.materialSkuId">
+                    <el-radio style="margin-bottom: 10px;" v-for="(item, i) in attr.list" :key="i" :label="item.id">{{item.skuAttribute}}</el-radio>
+                  </el-radio-group>
+                </div>
+              </div>
+            </template>
             <span v-if="skucCheckedErr" class="error">请填写/检查属性表</span>
-            <el-table border :data="attributeResultList">
+            <el-table border :data="attributeResultList" v-if="formData2.type==='SINGLE'">
               <el-table-column v-for="(key, index) in checkedKeys" :key="index" :label="key">
                 <template slot-scope="scope">
                   {{scope.row.skuAttribute[index]}}
@@ -105,6 +116,28 @@
               <el-table-column label="操作">
                 <template slot-scope="scope">
                   <el-button type="text" @click="deleteSku(scope.$index)">删除</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+            <el-table :data="attributeResultList" v-else border>
+              <el-table-column label="属性键名称">
+                <template slot-scope="scope">
+                  <el-input v-model="scope.row.skuKey"></el-input>
+                </template>
+              </el-table-column>
+              <el-table-column label="属性值名称">
+                <template slot-scope="scope">
+                  <el-input v-model="scope.row.skuValue"></el-input>
+                </template>
+              </el-table-column>
+              <el-table-column label="原价">
+                <template slot-scope="scope">
+                  <el-input v-model="scope.row.originalSalePrice"></el-input>
+                </template>
+              </el-table-column>
+              <el-table-column label="售价">
+                <template slot-scope="scope">
+                  <el-input v-model="scope.row.salePrice"></el-input>
                 </template>
               </el-table-column>
             </el-table>
@@ -145,9 +178,9 @@ export default {
       materials: [], // 商品添加的物料
       attributeList: [], // 属性选择列表
       attributeResultList: [], // 属性结果列表
+      materialSkuList: [], // 物料属性列表
       skucCheckedErr: false, // 结果列表填写检查
       checkedKeys: [],
-      attributeResultList_single: [],
       showMaterialDialog: false,
       categoriesRule: {
         value: 'id',
@@ -251,8 +284,13 @@ export default {
       console.log('materials', this.materials)
       this.getSkuList(this.materials)
     },
+    deleteMaterial(index) {
+      this.materials.splice(index, 1)
+      this.addMaterial(this.materials)
+    },
     getSkuList() {
       this.attributeList = this.materials.map(item => {
+        item.skuAttribute.attributeList.selectedSku = ''
         return {
           name: item.name,
           list: item.skuAttribute.attributeList
@@ -275,8 +313,19 @@ export default {
         console.log('checkedKeys', this.checkedKeys)
         console.log('attributeResultList', this.attributeResultList)
         console.log('attributeList', this.attributeList)
-      }
-      
+      } else {
+        this.materialSkuList = this.materials.map(item => ({
+          name: item.name,
+          list: item.materialSkuList,
+          materialSkuId: ''
+        }))
+        this.attributeResultList = [{
+          originalSalePrice: '',
+          skuKey: '',
+          skuValue: '',
+          purchasePrice: ''
+        }]
+      } 
     },
     deleteSku(index) {
       this.attributeResultList.splice(index, 0)
@@ -313,7 +362,11 @@ export default {
     },
     skuListValidator() {
       let valid = true
-      valid = this.attributeResultList.every(item => item.originalSalePrice && item.salePrice  )
+      if (this.formData2.type === 'SINGLE') {
+        valid = this.attributeResultList.every(item => item.originalSalePrice && item.salePrice)      
+      } else {
+        valid = this.attributeResultList.every(item => item.originalSalePrice && item.salePrice && item.skuKey && item.skuValue)
+      }
       return valid
     },
     submit(formName) {
@@ -332,16 +385,26 @@ export default {
           delete params.category
           if (params.type === 'SINGLE') {
             params.singleMaterialId = params.materialIds
+            params.productSkuList = [...this.attributeResultList]
+            params.productSkuList.forEach(item => {
+              let productSkuItem = {...item}
+              this.checkedKeys.forEach((key, index) => {
+                productSkuItem.skuAttribute[index] = `${key}:${item.skuAttribute[index]}`
+              })
+              productSkuItem.skuAttribute = productSkuItem.skuAttribute.join('|')
+              item.skuAttribute = productSkuItem.skuAttribute
+              item.materialSkuIds = item.id
+              delete item.id
+            })
           } else {
             params.combMaterialIds = params.materialIds
+            console.log('attributeResultList', this.attributeResultList)
+            console.log('materialSkuList', this.materialSkuList)
+            let productSkuItem = {...this.attributeResultList[0]}
+            productSkuItem.skuAttribute = this.attributeResultList.skuKey + ':' + this.attributeResultList.skuValue
+            productSkuItem.materialSkuIds = this.materialSkuList.map(item => item.materialSkuId).join(',')
+            params.productSkuList = [{...productSkuItem}]
           }
-          params.productSkuList = [...this.attributeResultList]
-          params.productSkuList.forEach(item => {
-            this.checkedKeys.forEach((key, index) => {
-              item.skuAttribute[index] = `${key}:${item.skuAttribute[index]}`
-            })
-            item.skuAttribute = item.skuAttribute.join('|')
-          })
           params.methodType = 'ADD'
           console.log('params', params)
           handleProduct(params).then(res => {

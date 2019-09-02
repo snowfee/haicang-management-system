@@ -1,6 +1,6 @@
 <template>
   <div v-if="showDialog">
-    <el-dialog class="dialog" title="添加物料" width="70%" :visible="true" @close="closeDialog">
+    <el-dialog class="dialog" title="添加物料" width="50%" :visible="true" @close="closeDialog">
       <div class="search-box">
         <el-input class="search-input" prefix-icon="el-icon-search" v-model="searchForm.name" placeholder="输入物料名称"></el-input>
         <el-input class="search-input" prefix-icon="el-icon-search" v-model="searchForm.id" placeholder="输入物料编号"></el-input>
@@ -8,7 +8,7 @@
         <el-button type="primary" @click="addMaterial">添加</el-button>
       </div>
       <div class="dialog-content">
-        <p v-if="materialsType === 'single'">提示：只能选择1个物料</p>
+        <p v-if="materialsType.toLowerCase() === 'single'">提示：只能选择1个物料</p>
         <el-table border :data="tableData" @selection-change="handleSelectionChange">
            <el-table-column
             type="selection"
@@ -86,7 +86,7 @@ export default {
     checkRow(row, index) {
       let checked = this.materials.some(item => item.id === row.id)
       if (checked) return 1
-      if (this.materialsType === 'single' && this.materials.length >= 1) {
+      if (this.materialsType.toLowerCase() === 'single' && this.materials.length >= 1) {
         return 0
       } else {
         return 1

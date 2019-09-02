@@ -211,6 +211,8 @@ export default {
           if (!this.skuListValidator()) {
             this.skucCheckedErr = true
             return
+          } else {
+            this.skucCheckedErr = false
           }
           let params = {...this.formData1, ...this.formData2}
           params.materialSkuList = [...this.materialSkuList]

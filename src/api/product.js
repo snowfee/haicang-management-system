@@ -8,6 +8,14 @@ export function productsList(data) {
   })
 }
 
+export function handleProduct(data) {
+  return request({
+    url: `/backend/product/handleProduct`,
+    method: 'post',
+    data
+  })
+}
+
 export function handleCoupon(data) {
   return request({
     url: `/backend/product/handleCoupon`,

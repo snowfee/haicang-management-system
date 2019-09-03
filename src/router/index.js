@@ -123,7 +123,7 @@ export const asyncRouterMap = [
       path: 'update',
       name: '修改商品',
       component: () => import('@/views/product/update'),
-      meta: { title: '添加商品', icon: 'add' },
+      meta: { title: '修改商品', icon: 'add' },
       hidden: true
     }, {
       path: 'see',

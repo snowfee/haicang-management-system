@@ -187,6 +187,11 @@ export default {
         path: 'add'
       })
     },
+    handleEdit(id) {
+      this.$router.push({
+        path: `update?id=${id}`
+      })
+    },
     handleSee(id) {
       this.$router.push({
         path: `see?id=${id}`

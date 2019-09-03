@@ -24,9 +24,9 @@
       </el-form-item>
     </el-form>
     <el-dialog title="新增盘点" :visible.sync="showAddCheckDialog" width="50%">
-      <el-form :model="addCheckForm" ref="addCheckForm" :rules="addCheckRules" label-width="150px" class="edit-form">
+      <el-form :model="addCheckForm" ref="addCheckForm" :rules="addCheckRules" label-width="100px">
         <el-form-item label="选择物料" prop="materialId">
-          <el-button @click="show=true">添加</el-button>
+          <el-button @click="showMaterialDialog=true">添加</el-button>
         </el-form-item>
         <el-form-item label="账面数量" prop="systemCount">
           <el-input v-model="addCheckForm.systemCount"></el-input>
@@ -38,13 +38,13 @@
           <el-input v-model="addCheckForm.purchasePrice"></el-input>
         </el-form-item>
         <el-form-item label="损益数量" prop="lossCount">
-          <el-input v-model="addCheckForm.lossCount"></el-input>
+          <el-input readonly v-model="addCheckForm.lossCount" :value="addCheckForm.actualCount - addCheckForm.systemCount"></el-input>
         </el-form-item>
         <el-form-item label="损益金额" prop="lossAmount">
-          <el-input v-model="addCheckForm.lossAmount"></el-input>
+          <el-input readonly v-model="addCheckForm.lossAmount"></el-input>
         </el-form-item>
         <el-form-item label="抹平状态" prop="balanceStatus">
-          <el-input v-model="addCheckForm.balanceStatus"></el-input>
+          <el-switch v-model="addCheckForm.balanceStatus" :active-value="1" :inactive-value="0" active-text="已抹平" inactive-text="未抹平"></el-switch>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="addCheckForm.remark"></el-input>
@@ -54,17 +54,25 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-      <el-dialog title="新增盘点" :visible.sync="show">11111</el-dialog>
+    <material-dialog 
+      :showDialog = showMaterialDialog 
+      materialsType = 'single'
+      @addMaterial="addMaterial" 
+      @close="closeMaterialDialog"></material-dialog>
 
   </div>
 </template>
 
 <script>
 import { handleStockCheck, stockCheckItemList } from '@/api/invoicing'
+import materialDialog from '@/components/Dialog/materialDialog'
 export default {
+  components: {
+    materialDialog
+  },
   data() {
     return {
-      show: false,
+      showMaterialDialog: false,
       showAddCheckDialog: false,
       editType: '添加',
       preRuleForm: null,
@@ -86,7 +94,7 @@ export default {
         purchasePrice: '',
         lossCount: '',
         lossAmount: '',
-        balanceStatus: '',
+        balanceStatus: 0,
         remark: '' 
       },
       addCheckRules: {
@@ -115,6 +123,13 @@ export default {
       stockCheckItemList(this.id).then(res => {
         this.ruleForm = {...res.data}
       })
+    },
+    addMaterial(materials) {
+      console.log('materials', materials)
+      this.showMaterialDialog = false
+    },
+    closeMaterialDialog() {
+      this.showMaterialDialog = false
     },
     submitForm(formName) {
       this.$refs[formName].validate(valid => {

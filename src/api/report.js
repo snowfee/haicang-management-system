@@ -76,3 +76,10 @@ export function queryPaymentFlow(query) {
     method: 'get'
   })
 }
+
+export function getOrderDetail(orderId) {
+  return request({
+    url: `/order/orderDetail/${orderId}`,
+    method: 'get'
+  })
+}

@@ -51,7 +51,7 @@
         </div>
       </template>
       <el-table-column prop="name" label="商品名称"></el-table-column>
-      <el-table-column prop="memberPrice" label="售卖单价（元）"></el-table-column>
+      <!-- <el-table-column prop="memberPrice" label="售卖单价（元）"></el-table-column> -->
       <el-table-column prop="orderNum" label="销量"></el-table-column>
       <el-table-column prop="receivablePrice" label="应收金额（元）"></el-table-column>
       <el-table-column prop="actualPrice" label="实收金额（元）"></el-table-column>

@@ -88,7 +88,7 @@
       <el-table-column prop="memberName" label="商家名称"></el-table-column>
       <el-table-column prop="regionName" label="区域"></el-table-column>
       <el-table-column prop="payType" label="支付方式"></el-table-column>
-      <el-table-column prop="staffName" label="销售员"></el-table-column>
+      <!-- <el-table-column prop="staffName" label="销售员"></el-table-column> -->
       <el-table-column prop="orderPrice" label="订单金额"></el-table-column>
       <el-table-column prop="couponPrice" label="优惠金额"></el-table-column>
       <el-table-column prop="couponType" label="优惠方式"></el-table-column>
@@ -101,7 +101,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <!-- <el-dialog :title="dialogTitle" :visible.sync="showDialog">
+    <el-dialog :title="dialogTitle" :visible.sync="showDialog">
       <div v-if="orderData">
         <p>评分：{{orderData.score < 0 ? '暂无' : orderData.score}}</p>
         <p>评论内容：{{orderData.commentConent?orderData.commentConent:'暂无'}}</p>
@@ -122,7 +122,7 @@
         </template>
         </el-table-column>
       </el-table>
-    </el-dialog> -->
+    </el-dialog>
   </div>
 </template>
 <script>

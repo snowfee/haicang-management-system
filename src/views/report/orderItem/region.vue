@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div>
     <div class="box">
       <div class="box-top">
         <div class="top-left">
@@ -23,22 +23,16 @@
               end-placeholder="结束日期">
             </el-date-picker>
           </el-form-item>
-          <el-form-item label="支付方式" prop="payType">
-            <el-select v-model="searchForm.payType">
-              <el-option label="全部" value=""></el-option>
-              <el-option label="微信支付" value="WECHAT"></el-option>
-              <el-option label="支付宝" value="ALIPAY"></el-option>
-              <el-option label="现金支付" value="CASH"></el-option>
-              <el-option label="挂账" value="ONCREDIT"></el-option>
+          <!-- <el-form-item label="所有区域" prop="regionId">
+            <el-select v-model="searchForm.regionId">
+              <el-option value="" label="全部"></el-option>
+              <el-option 
+                v-for="region in regions" 
+                :key="region.id" 
+                :value="region.id" 
+                :label="`${region.city}${region.towns}${region.village}`"></el-option>
             </el-select>
-          </el-form-item>
-          <el-form-item label="状态" prop="payStatus">
-            <el-select v-model="searchForm.payStatus">
-              <el-option label="全部" value=""></el-option>
-              <el-option label="支付成功" value="PAID_SUCCESS"></el-option>
-              <el-option label="支付失败" value="PAID_FAILURE"></el-option>
-            </el-select>
-          </el-form-item>
+          </el-form-item> -->
         </el-form>
       </div>
     </div>
@@ -49,6 +43,14 @@
           <span>数据列表</span>
         </div>
       </div>
+      <div class="box-content">
+        <div class="amout-price">
+          <span>合计</span>
+          <span>订单数：{{total1}}</span>
+          <span>订单金额：{{total2}}</span>
+          <span>实收金额：{{total3}}</span>
+        </div>
+      </div>
     </div>
     <el-table border :data="tableData" style="width: 100%;">
       <template slot="empty">
@@ -56,42 +58,50 @@
           {{ emptyText }}
         </div>
       </template>
-      <el-table-column prop="tradeNo" label="流水号"></el-table-column>
-      <el-table-column prop="id" label="订单号"></el-table-column>
-      <el-table-column prop="payType" label="支付方式">
-        <template slot-scope="scope">
-          {{scope.row.payType | keyToDes}}
-        </template>
-      </el-table-column>
-      <el-table-column prop="paidPrice" label="支付金额"></el-table-column>
-      <el-table-column prop="orderStatus" label="订单状态">
-        <template slot-scope="scope">
-          {{scope.row.orderStatus | keyToDes}}
-        </template>
-      </el-table-column>
-      <el-table-column prop="createTime" label="支付时间"></el-table-column>
+      <!-- <el-table-column prop="id" label="日期"></el-table-column> -->
+      <el-table-column prop="regionName" label="区域"></el-table-column>
+      <el-table-column prop="orderNum" label="订单数"></el-table-column>
+      <el-table-column prop="rate" label="订单比例"></el-table-column>
+      <el-table-column prop="orderPrice" label="订单金额（元）"></el-table-column>
+      <el-table-column prop="actualPrice" label="实收金额（元）"></el-table-column>
+      <el-table-column prop="avgPrice" label="订单均价（元）"></el-table-column>
     </el-table>
   </div>
 </template>
 <script>
-import { queryPaymentFlow } from '@/api/report'
+import { queryOrderForRegion } from '@/api/report'
 export default {
   data() {
     return {
       tableData: [],
-      excelServe: 'http://www.haic168.com:9527/backend/report/paymentFlow',
+      excelServe: 'http://www.haic168.com:9527/backend/report/orderForRegion',
       emptyText: '暂无数据',
+      regions: [],
+      total1: 0,
+      total2: 0.00,
+      total3: 0.00,
       searchForm: {
-        payType: '',
-        payStatus: '',
-        time: []
+        time: [],
+        // regionId: ''
       }
     }
   },
   created() {
     this.handelSearch()
+    // this.getAllRegions()
   },
   methods: {
+    getAllRegions() {
+      let params = {
+        "pageIndex": 0,
+        "pageSize": 999
+      }
+      getRegionList(params).then(res => {
+        if (res.status == 200) {
+          this.regions = res.data.regions
+        }
+      })
+    },
     getParams() {
       this.searchForm.from = this.searchForm.time[0] ? this.searchForm.time[0] : ''
       this.searchForm.to = this.searchForm.time[1] ? this.searchForm.time[1] : ''
@@ -103,7 +113,7 @@ export default {
       this.emptyText = 'loading...'
       let params = this.getParams()      
       let query = this.paramsToString(params)
-      queryPaymentFlow(query).then(res => {
+      queryOrderForRegion(query).then(res => {
         this.tableData = []
         if (res.status != 200) {
           this.emptyText = res.message
@@ -111,8 +121,9 @@ export default {
         }
         if(res.data.pageData.length > 0) {
             this.tableData = res.data.pageData
-            this.count = res.data.total1
-            this.orderPriceAmout = res.data.total2
+            this.total1 = res.data.total1
+            this.total2 = res.data.total2
+            this.total3 = res.data.total3
           } else {
             this.emptyText = '暂无数据'
           }

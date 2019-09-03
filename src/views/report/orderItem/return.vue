@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div>
     <div class="box">
       <div class="box-top">
         <div class="top-left">
@@ -23,21 +23,8 @@
               end-placeholder="结束日期">
             </el-date-picker>
           </el-form-item>
-          <el-form-item label="支付方式" prop="payType">
-            <el-select v-model="searchForm.payType">
-              <el-option label="全部" value=""></el-option>
-              <el-option label="微信支付" value="WECHAT"></el-option>
-              <el-option label="支付宝" value="ALIPAY"></el-option>
-              <el-option label="现金支付" value="CASH"></el-option>
-              <el-option label="挂账" value="ONCREDIT"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="状态" prop="payStatus">
-            <el-select v-model="searchForm.payStatus">
-              <el-option label="全部" value=""></el-option>
-              <el-option label="支付成功" value="PAID_SUCCESS"></el-option>
-              <el-option label="支付失败" value="PAID_FAILURE"></el-option>
-            </el-select>
+          <el-form-item label="商户名称" prop="memberName">
+            <el-input v-model="searchForm.memberName"></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -49,6 +36,13 @@
           <span>数据列表</span>
         </div>
       </div>
+      <div class="box-content">
+        <div class="amout-price">
+          <span>合计</span>
+          <span>退单数量：{{total1}}</span>
+          <span>退单金额：{{total2}}</span>
+        </div>
+      </div>
     </div>
     <el-table border :data="tableData" style="width: 100%;">
       <template slot="empty">
@@ -56,35 +50,28 @@
           {{ emptyText }}
         </div>
       </template>
-      <el-table-column prop="tradeNo" label="流水号"></el-table-column>
-      <el-table-column prop="id" label="订单号"></el-table-column>
-      <el-table-column prop="payType" label="支付方式">
-        <template slot-scope="scope">
-          {{scope.row.payType | keyToDes}}
-        </template>
-      </el-table-column>
-      <el-table-column prop="paidPrice" label="支付金额"></el-table-column>
-      <el-table-column prop="orderStatus" label="订单状态">
-        <template slot-scope="scope">
-          {{scope.row.orderStatus | keyToDes}}
-        </template>
-      </el-table-column>
-      <el-table-column prop="createTime" label="支付时间"></el-table-column>
+      <el-table-column prop="id" label="退单编号"></el-table-column>
+      <el-table-column prop="name" label="商户名称"></el-table-column>
+      <el-table-column prop="address" label="地址"></el-table-column>
+      <el-table-column prop="detail" label="退单商品"></el-table-column>
+      <el-table-column prop="time" label="退单时间"></el-table-column>
+      <el-table-column prop="remark" label="备注"></el-table-column>
     </el-table>
   </div>
 </template>
 <script>
-import { queryPaymentFlow } from '@/api/report'
+import { queryOrderForReturn } from '@/api/report'
 export default {
   data() {
     return {
       tableData: [],
-      excelServe: 'http://www.haic168.com:9527/backend/report/paymentFlow',
+      excelServe: 'http://www.haic168.com:9527/backend/report/orderForReturn',
       emptyText: '暂无数据',
+      total1: 0,
+      total2: 0.00,
       searchForm: {
-        payType: '',
-        payStatus: '',
-        time: []
+        time: [],
+        memberName: ''
       }
     }
   },
@@ -103,7 +90,7 @@ export default {
       this.emptyText = 'loading...'
       let params = this.getParams()      
       let query = this.paramsToString(params)
-      queryPaymentFlow(query).then(res => {
+      queryOrderForReturn(query).then(res => {
         this.tableData = []
         if (res.status != 200) {
           this.emptyText = res.message
@@ -111,8 +98,8 @@ export default {
         }
         if(res.data.pageData.length > 0) {
             this.tableData = res.data.pageData
-            this.count = res.data.total1
-            this.orderPriceAmout = res.data.total2
+            this.total1 = res.data.total1
+            this.total2 = res.data.total2
           } else {
             this.emptyText = '暂无数据'
           }

@@ -39,6 +39,10 @@ Object.keys(filters).forEach(key => Vue.filter(key, filters[key]))
 
 Vue.config.productionTip = false
 
+// 全局变量
+Vue.prototype.EXCELSERVE = 'http://www.haic168.com:7521' 
+Vue.prototype.WEBSOCKETSERVE = 'ws://www.haic168.com:7521/backend/websocket/newOrder'
+
 new Vue({
   el: '#app',
   router,

@@ -78,6 +78,7 @@
 </template>
 <script>
 import { queryRevenueProfile } from '@/api/report'
+import echarts from 'echarts'
 export default {
   data() {
     return {
@@ -174,7 +175,7 @@ export default {
         }
       })
       console.log(first, second)
-      let pieChart = this.$echarts.init(document.getElementById('pieChart'), 'light')
+      let pieChart = echarts.init(document.getElementById('pieChart'), 'light')
       console.log(pieChart)
       var option={
           title: {
@@ -264,7 +265,7 @@ export default {
       pieChart.setOption(option)
     },
     getColumnChart(column) {
-      let columnChart = this.$echarts.init(document.getElementById('columnChart'), 'light')
+      let columnChart = echarts.init(document.getElementById('columnChart'), 'light')
       if (this.columnType == 'num') {
         var option = {
             title: {

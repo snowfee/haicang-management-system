@@ -86,7 +86,7 @@
       <el-table-column prop="orderStatus" label="订单状态"></el-table-column>
       <el-table-column prop="createTime" label="下单时间"></el-table-column>
       <el-table-column prop="memberName" label="商家名称"></el-table-column>
-      <el-table-column prop="regionName" label="区域"></el-table-column>
+      <!-- <el-table-column prop="regionName" label="区域"></el-table-column> -->
       <el-table-column prop="payType" label="支付方式"></el-table-column>
       <!-- <el-table-column prop="staffName" label="销售员"></el-table-column> -->
       <el-table-column prop="orderPrice" label="订单金额"></el-table-column>
@@ -133,7 +133,7 @@ export default {
       tableData: [],
       tableData_des: [],
       orderData: null,
-      excelServe: 'http://www.haic168.com:9527/backend/report/orderList',
+      excelServe: this.EXCELSERVE + '/backend/report/orderList',
       emptyText: '暂无数据',
       time: [],
       count: 0,

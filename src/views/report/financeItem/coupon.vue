@@ -67,7 +67,7 @@ export default {
   data() {
     return {
       tableData: [],
-      excelServe: 'http://www.haic168.com:9527/backend/report/financeForCoupon',
+      excelServe: this.EXCELSERVE + '/backend/report/financeForCoupon',
       emptyText: '暂无数据',
       total1: 0.00,
       total2: 0,

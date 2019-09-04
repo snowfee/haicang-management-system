@@ -65,7 +65,7 @@ export default {
     return {
       tableData: [],
       emptyText: '暂无数据',
-      excelServe: 'http://www.haic168.com:9527/backend/report/billSummary',
+      excelServe: this.EXCELSERVE + '/backend/report/billSummary',
       time: [],
       count: 0,
       orderPriceAmout: 0.00,

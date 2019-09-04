@@ -60,7 +60,7 @@ export default {
   data() {
     return {
       tableData: [],
-      excelServe: 'http://www.haic168.com:9527/backend/report/financeForRevenue',
+      excelServe: this.EXCELSERVE + '/backend/report/financeForRevenue',
       emptyText: '暂无数据',
       total1: 0.00,
       searchForm: {

@@ -68,7 +68,7 @@ export default {
     return {
       tableData: [],
       categories: null,
-      excelServe: 'http://www.haic168.com:9527/backend/report/productReport',
+      excelServe: this.EXCELSERVE + '/backend/report/productReport',
       emptyText: '暂无数据',
       searchForm: {
         categoryId: '',

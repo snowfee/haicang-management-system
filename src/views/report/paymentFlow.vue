@@ -79,7 +79,7 @@ export default {
   data() {
     return {
       tableData: [],
-      excelServe: 'http://www.haic168.com:9527/backend/report/paymentFlow',
+      excelServe: this.EXCELSERVE + '/backend/report/paymentFlow',
       emptyText: '暂无数据',
       searchForm: {
         payType: '',

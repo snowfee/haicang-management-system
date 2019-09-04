@@ -479,6 +479,12 @@ export const constantRouterMap = [
   },
 
   {
+    path: '/print',
+    component: () => import('@/views/dashboard/printOrderInfo'),
+    hidden: true
+  },
+
+  {
     path: '/',
     component: Layout,
     redirect: '/home',

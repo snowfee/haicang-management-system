@@ -20,7 +20,8 @@
         <el-table-column prop="address" label="地址"></el-table-column>
         <el-table-column prop="status" label="状态">
           <template slot-scope="scope">
-            启用：<el-switch v-model="scope.row.status" :active-value="1" :inactive-value="0"></el-switch>
+            启用：<el-switch v-model="scope.row.status" :active-value="1" :inactive-value="0" 
+            @change="handleStatusChange($event, scope.row.id, scope.$index)"></el-switch>
           </template>
         </el-table-column>
         <el-table-column prop="settleType" label="结算方式">
@@ -119,6 +120,32 @@ export default {
     handleEdit(id) {
       this.$router.push({
         path: `updateSupplier?id=${id}`
+      })
+    },
+    handleStatusChange(val, id, index) {
+      let params = {
+        id,
+        status: val,
+        methodType: 'UPDATE'
+      }
+      this.$confirm('此操作将修改供应商状态, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        handleSupplier(params).then(res => {
+          // this.getListData()
+          this.$message({
+            type: 'success',
+            message: '状态修改成功!'
+          })
+        }, err => {
+          if (val === 0) {
+            this.tableData[index].status = 1
+          } else {
+            this.tableData[index].status = 0
+          }
+        })
       })
     }
   }

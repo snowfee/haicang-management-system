@@ -43,7 +43,8 @@
         </el-table-column>
         <el-table-column prop="status" label="状态">
           <template slot-scope="scope">
-            上架：<el-switch v-model="scope.row.status" active-value="SHELVE" inactive-value="UNSHELVE"></el-switch>
+            上架：<el-switch v-model="scope.row.status" active-value="SHELVE" inactive-value="UNSHELVE" 
+            @change="handleStatusChange($event, scope.row.id, scope.$index)"></el-switch>
           </template>
         </el-table-column>
         <el-table-column label="操作" min-width="100px" fixed="right">
@@ -78,7 +79,7 @@
 </template>
 
 <script>
-import { queryPointsProduct } from '@/api/member'
+import { queryPointsProduct, handlePointsProduct } from '@/api/member'
 export default {
   data() {
     return {
@@ -131,28 +132,36 @@ export default {
         path: 'addPointsProduct'
       })
     },
-    handleDelete(id) {
+    handleEdit(id) {
+      this.$router.push({
+        path: `updatePointsProduct?id=${id}`
+      })
+    },
+    handleStatusChange(val, id, index) {
+      console.log(index)
       let params = {
         id,
-        methodType: 'DELETE'
+        status: val,
+        methodType: 'SHELVE_PRODUCT'
       }
-      this.$confirm('此操作将永久删除该会员, 是否继续?', '提示', {
+      this.$confirm('此操作将修改商品状态, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        handleMember(params).then(res => {
-          this.getListData()
+        handlePointsProduct(params).then(res => {
+          // this.getListData()
           this.$message({
             type: 'success',
-            message: '删除成功!'
+            message: '状态修改成功!'
           })
+        }, err => {
+            if (val == 'SHELVE') {
+            this.tableData[index].status = 'UNSHELVE'
+          } else {
+            this.tableData[index].status = 'SHELVE'
+          }
         })
-      })
-    },
-    handleEdit(id) {
-      this.$router.push({
-        path: `updatePointsProduct?id=${id}`
       })
     }
   }

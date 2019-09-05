@@ -73,7 +73,7 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          let params = this.ruleForm
+          let params = {...this.ruleForm}
           if (this.editType === '更新') {
             params.methodType = 'UPDATE'
           } else {

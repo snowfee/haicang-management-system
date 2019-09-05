@@ -61,7 +61,8 @@
         <el-table-column label="排序" prop="sort"></el-table-column>
         <el-table-column label="商品状态" prop="status">
           <template slot-scope="scope">
-            上架：<el-switch v-model="scope.row.status" active-value="SHELVE" inactive-value="UNSHELVE"></el-switch>
+            上架：<el-switch v-model="scope.row.status" active-value="SHELVE" inactive-value="UNSHELVE"
+            @change="handleStatusChange($event, scope.row.id, scope.$index)"></el-switch>
           </template>
         </el-table-column>
         <el-table-column label="操作">
@@ -92,7 +93,7 @@
   </div>
 </template>
 <script>
-import { getAllCategories, productsList } from '@/api/product'
+import { getAllCategories, productsList, handleProduct } from '@/api/product'
 export default {
   name: 'ProductList',
   data() {
@@ -195,6 +196,33 @@ export default {
     handleSee(id) {
       this.$router.push({
         path: `see?id=${id}`
+      })
+    },
+    handleStatusChange(val, id, index) {
+      console.log(index)
+      let params = {
+        id,
+        status: val,
+        methodType: 'SHELVE_PRODUCT'
+      }
+      this.$confirm('此操作将修改商品状态, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        handleProduct(params).then(res => {
+          // this.getListData()
+          this.$message({
+            type: 'success',
+            message: '状态修改成功!'
+          })
+        }, err => {
+            if (val == 'SHELVE') {
+            this.tableData[index].status = 'UNSHELVE'
+          } else {
+            this.tableData[index].status = 'SHELVE'
+          }
+        })
       })
     }
   }

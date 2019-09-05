@@ -44,3 +44,10 @@ export function getParamSettingById(id) {
   })
 }
 
+export function addAppStartPage({ picUrl }) {
+  return request({
+    url: `/backend/system/appStartPage?picUrl=${picUrl}`,
+    method: 'get'
+  })
+}
+

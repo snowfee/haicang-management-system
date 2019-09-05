@@ -7,7 +7,6 @@
           <span>筛选搜索</span>
         </div>
         <div class="top-right">
-          <el-button @click="resetQuery">重置</el-button>
           <el-button type="primary" @click="getListData">查询结果</el-button>
         </div>
       </div>

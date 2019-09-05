@@ -68,3 +68,9 @@ export function balanceStockCheckItem(data) {
   })
 }
 
+export function inventoryMainList({ pageIndex, pageSize }) {
+  return request({
+    url: `/backend/invoicing/productInventoryList?pageIndex=${pageIndex}&pageSize=${pageSize}`,
+    method: 'get'
+  })
+}

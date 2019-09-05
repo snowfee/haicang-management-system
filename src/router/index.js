@@ -460,6 +460,12 @@ export const asyncRouterMap = [
       component: () => import('@/views/system/editMessage'),
       meta: { title: '更新消息', icon: 'list' },
       hidden: true
+    }, {
+      path: 'appStartPage',
+      name: 'app启动页',
+      id: 47,
+      component: () => import('@/views/system/appStartPage'),
+      meta: { title: 'app启动页', icon: 'list' }
     }]
   },
   // 404 page must be placed at the end !!!

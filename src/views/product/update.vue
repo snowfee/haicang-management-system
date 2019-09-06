@@ -53,7 +53,7 @@
     <transition name="fade-transform" mode="out-in">
       <el-form v-show="activeStep === 1" :model="formData2" ref="formData2" class="edit-form" :rules="ruleForm" label-width="150px">
         <el-form-item label="商品组成" prop="type">
-          <el-radio-group v-model="formData2.type">
+          <el-radio-group v-model="formData2.type" @change="handleTypeChange">
             <el-radio label="SINGLE">单个物料</el-radio>
             <el-radio label="MULTI">多个物料</el-radio>
           </el-radio-group>
@@ -72,7 +72,7 @@
             </el-table>
           </template>
         </el-form-item>
-        <template>
+        <template v-if="materials && materials.length > 0">
           <el-form-item label="物料规格">
             <template v-if="formData2.type==='SINGLE'">
               <div class="sku-box" v-for="(attr, index) in attributeList" :key="index">
@@ -95,7 +95,7 @@
               </div>
             </template>
             <span v-if="skucCheckedErr" class="error">请填写/检查属性表</span>
-            <el-table border :data="attributeResultList" v-if="formData2.type==='SINGLE'">
+            <el-table border :data="attributeResultList" key="1" v-if="formData2.type==='SINGLE'">
               <el-table-column v-for="(key, index) in checkedKeys" :key="index" :label="key">
                 <template slot-scope="scope">
                   {{scope.row.skuAttribute[index]}}
@@ -119,7 +119,7 @@
                 </template>
               </el-table-column>
             </el-table>
-            <el-table :data="attributeResultList" v-else border>
+            <el-table :data="attributeResultList" key="2" v-else border>
               <el-table-column label="属性键名称">
                 <template slot-scope="scope">
                   <el-input v-model="scope.row.skuKey"></el-input>
@@ -233,6 +233,7 @@ export default {
       return productsList(params).then(res => {
         let data = res.data.products[0]
         this.formData1 = {
+          id: this.id,
           name: data.name,
           subtitle: data.subtitle,
           priceUnit: data.priceUnit,
@@ -249,11 +250,16 @@ export default {
         this.fileList_carousel = data.carouselUrls.map(item => ({url: item}))
         this.formData2 = {
           type: data.type,
-          materialIds: data.singleMaterialId ? data.singleMaterialId : data.combMaterialIds.join(',')
+          // materialIds: data.singleMaterialId ? data.singleMaterialId : data.combMaterialIds.join(','),
+          materialIds: ''
         }
+        // this.formData2.productSkuList = [...data.productSkuList]
         // this.attributeList = [...data.skuAttributeItemList]
         // this.materialSkuList = [...data.productSkuList]
       })
+    },
+    handleTypeChange() {
+      this.materials = []
     },
     getQiniuUpToken() {
       getQiniuUpToken().then(res => {
@@ -319,6 +325,10 @@ export default {
     },
     deleteMaterial(index) {
       this.materials.splice(index, 1)
+      if (this.materials.length === 0) {
+        this.formData2.materialIds = ''
+        return
+      }  
       this.addMaterial(this.materials)
     },
     getSkuList() {
@@ -343,9 +353,6 @@ export default {
         this.checkedKeys = this.attributeList[0].list.map(item => {
           return item.name
         })
-        console.log('checkedKeys', this.checkedKeys)
-        console.log('attributeResultList', this.attributeResultList)
-        console.log('attributeList', this.attributeList)
       } else {
         this.materialSkuList = this.materials.map(item => ({
           name: item.name,
@@ -361,7 +368,7 @@ export default {
       } 
     },
     deleteSku(index) {
-      this.attributeResultList.splice(index, 0)
+      this.attributeResultList.splice(index, 1)
     },
     uniqueById(arr) {
       if (!Array.isArray(arr)) {
@@ -427,6 +434,7 @@ export default {
               productSkuItem.skuAttribute = productSkuItem.skuAttribute.join('|')
               item.skuAttribute = productSkuItem.skuAttribute
               item.materialSkuIds = item.id
+              item.productId = this.id
               delete item.id
             })
           } else {
@@ -436,13 +444,14 @@ export default {
             let productSkuItem = {...this.attributeResultList[0]}
             productSkuItem.skuAttribute = this.attributeResultList.skuKey + ':' + this.attributeResultList.skuValue
             productSkuItem.materialSkuIds = this.materialSkuList.map(item => item.materialSkuId).join(',')
+            productSkuItem.productId = this.id
             params.productSkuList = [{...productSkuItem}]
           }
-          params.methodType = 'ADD'
+          params.methodType = 'UPDATE'
           console.log('params', params)
           handleProduct(params).then(res => {
             this.$message({
-              message: '商品添加成功',
+              message: '商品修改成功',
               type: 'success'
             });
             this.$router.replace({

@@ -233,7 +233,7 @@ export default {
       if (!this.materialSkuList || this.materialSkuList.length <= 0) {
         valid = false
       } else {
-        valid = this.materialSkuList.every(item => item.purchasePrice && item.stock )
+        valid = this.materialSkuList.every(item => item.purchasePrice )
       }
       this.skuErrText = '请填写/检查属性表'
       return valid

@@ -139,7 +139,7 @@ export const asyncRouterMap = [
     redirect: '/material/list',
     name: '物料管理',
     id: 35,
-    meta: { title: '物料管理', icon: 'goods' },
+    meta: { title: '物料管理', icon: 'mall' },
     children: [{
       path: 'unit',
       name: '单位管理',
@@ -197,7 +197,7 @@ export const asyncRouterMap = [
     redirect: '/member/list',
     name: '会员管理',
     id: 10,
-    meta: { title: '会员管理', icon: 'goods' },
+    meta: { title: '会员管理', icon: 'dashboard' },
     children: [{
       path: 'list',
       name: '会员列表',
@@ -261,7 +261,7 @@ export const asyncRouterMap = [
     redirect: '/report/revenueProfile',
     name: '财务报表',
     id: 14,
-    meta: { title: '财务报表', icon: 'goods' },
+    meta: { title: '财务报表', icon: 'form' },
     children: [{
       path: 'revenueProfile',
       name: '营收概况',
@@ -313,7 +313,7 @@ export const asyncRouterMap = [
     redirect: '/invoicing/supplier',
     name: '进销存',
     id: 15,
-    meta: { title: '进销存', icon: 'goods' },
+    meta: { title: '进销存', icon: 'tree' },
     children: [{
       path: 'supplier',
       name: '供应商管理',
@@ -339,11 +339,23 @@ export const asyncRouterMap = [
       component: () => import('@/views/invoicing/inbound'),
       meta: { title: '入库管理', icon: 'list' }
     }, {
+      path: 'addInbound',
+      name: '新增入库',
+      component: () => import('@/views/invoicing/editInbound'),
+      meta: { title: '新增入库', icon: 'list' },
+      hidden: true
+    }, {
       path: 'outbound',
       name: '出库管理',
       id: 19,
       component: () => import('@/views/invoicing/outbound'),
       meta: { title: '出库管理', icon: 'list' }
+    }, {
+      path: 'addOutbound',
+      name: '新增出库',
+      component: () => import('@/views/invoicing/editOutbound'),
+      meta: { title: '新增出库', icon: 'list' },
+      hidden: true
     }, {
       path: 'inventoryCheck',
       name: '盘点管理',
@@ -355,12 +367,6 @@ export const asyncRouterMap = [
       name: '新增盘点',
       component: () => import('@/views/invoicing/editCheck'),
       meta: { title: '新增盘点', icon: 'list' },
-      hidden: true
-    }, {
-      path: 'updateInventoryCheck',
-      name: '更新盘点',
-      component: () => import('@/views/invoicing/editCheck'),
-      meta: { title: '更新盘点', icon: 'list' },
       hidden: true
     }, {
       path: 'inventoryMain',
@@ -377,7 +383,7 @@ export const asyncRouterMap = [
     redirect: '/appset/homePage',
     name: 'App设置',
     id: 41,
-    meta: { title: 'App设置', icon: 'goods' },
+    meta: { title: 'App设置', icon: 'example' },
     children: [{
       path: 'homePage',
       name: '首页管理',

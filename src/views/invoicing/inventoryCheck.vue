@@ -31,15 +31,11 @@
             <el-button
               size="mini"
               type="text"
-              @click="handleEdit(scope.row.id)">明细</el-button>
-            <el-button
+              @click="handleSee(scope.row.id)">明细</el-button>
+            <!-- <el-button
               size="mini"
               type="text"
-              @click="handleEdit(scope.row.id)">编辑</el-button>
-            <el-button
-              size="mini"
-              type="text"
-              @click="handleDelete(scope.row.id)">删除</el-button>
+              @click="handleDelete(scope.row.id)">删除</el-button> -->
           </template>
         </el-table-column>
       </el-table>
@@ -53,16 +49,52 @@
           layout="total, sizes, prev, pager, next, jumper"
           :total="total">
         </el-pagination>
+      </div>
     </div>
-    </div>
+    <el-dialog title="盘点明细" :visible.sync="showDetaileDialog">
+      <div v-if="detailData">
+        <p>盘点时间：{{detailData.createTime}}</p>
+        <p> 盘点类型：{{detailData.type | keyToDes}} </p>
+        <p>状态：{{detailData.status==0?'未完成':'已完成'}}</p>
+        <p>备注：{{detailData.remark?detailData.remark:'无'}}</p>
+        <p>盘点内容：</p>
+        <el-table border :data="detailData.content.items">
+          <el-table-column prop="id" label="物料ID"></el-table-column>
+          <el-table-column prop="skuAttribute" label="属性"></el-table-column>
+          <el-table-column prop="systemCount" label="实盘数量"></el-table-column>
+          <el-table-column prop="purchasePrice" label="账面数量"></el-table-column>
+          <el-table-column prop="purchasePrice" label="采购价（元）"></el-table-column>
+          <el-table-column prop="lossAmount" label="损益金额（元）"></el-table-column>
+          <el-table-column prop="lossCount" label="损益数量"></el-table-column>
+          <el-table-column prop="stock" label="库存"></el-table-column>
+          <el-table-column prop="balanceStatus" label="抹平状态">
+            <template slot-scope="scope">
+              {{scope.row.balanceStatus == 0?'未抹平':'已抹平'}}
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" min-width="100px" fixed="right">
+            <template slot-scope="scope">
+              <el-button
+                v-if="scope.row.balanceStatus == 0"
+                size="mini"
+                type="text"
+                @click="balanceStock(detailData.id, scope.row.id, scope.row.actualCount)">抹平</el-button>
+              <span v-else>无</span>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { stockCheckList, handleStockCheck } from '@/api/invoicing'
+import { stockCheckList, handleStockCheck, balanceStockCheckItem } from '@/api/invoicing'
 export default {
   data() {
     return {
+      showDetaileDialog: false,
+      detailData: null,
       tableData: [],
       pageSize: 10,
       total: 0,
@@ -99,30 +131,46 @@ export default {
         path: 'addInventoryCheck'
       })
     },
-    handleDelete(id) {
+    handleSee(id) {
+      this.detailData = this.tableData.filter(item => item.id === id)[0]
+      console.log('ok', this.detailData)
+      this.showDetaileDialog = true
+    },
+    balanceStock(id, materialSkuId, count) {
       let params = {
         id,
-        methodType: 'DELETE'
+        materialSkuId,
+        count
       }
-      this.$confirm('此操作将永久删除该供应商, 是否继续?', '提示', {
+      this.$confirm('是否抹平该盘点信息?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        handleSupplier(params).then(res => {
+        balanceStockCheckItem(params).then(res => {
           this.getListData()
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          })
         })
       })
-    },
-    handleEdit(id) {
-      this.$router.push({
-        path: `updateInventoryCheck?id=${id}`
-      })
     }
+    // handleDelete(id) {
+    //   let params = {
+    //     id,
+    //     methodType: 'DELETE'
+    //   }
+    //   this.$confirm('此操作将永久删除该供应商, 是否继续?', '提示', {
+    //     confirmButtonText: '确定',
+    //     cancelButtonText: '取消',
+    //     type: 'warning'
+    //   }).then(() => {
+    //     handleSupplier(params).then(res => {
+    //       this.getListData()
+    //       this.$message({
+    //         type: 'success',
+    //         message: '删除成功!'
+    //       })
+    //     })
+    //   })
+    // }
   }
 }
 </script>

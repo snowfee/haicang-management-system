@@ -65,8 +65,8 @@
             @change="handleStatusChange($event, scope.row.id, scope.$index)"></el-switch>
           </template>
         </el-table-column>
-        <el-table-column label="操作">
-          <template slot-scope="scope" min-width="100px" fixed="right">
+        <el-table-column label="操作" min-width="100px" fixed="right">
+          <template slot-scope="scope">
             <el-button
               size="mini"
               type="text"

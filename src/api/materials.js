@@ -48,7 +48,7 @@ export function handleSkuAttributeItem(data) {
 
 export function getAttributeListById(id) {
   return request({
-    url: `/backend/material/querySkuAttributeItemByAttributeId?id=${id}`,
+    url: `/backend/material/querySkuAttributeItemByAttributeId?attributeId=${id}`,
     method: 'get'
   })
 }

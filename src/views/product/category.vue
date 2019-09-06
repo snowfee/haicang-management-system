@@ -6,7 +6,6 @@
         ref="categoryCas"
         :props="cascaderProps"
         filterable
-        clearable
         placeholder="选择类目"
         style="width:500px"
         :options="categories"
@@ -147,7 +146,9 @@ export default {
     },
     async initCategories(type) {
       this.showCascader = false
+      this.canEditAndDe = false
       await this.getAllCategories()
+      this.dialogForm.level = 0
       this.showCascader = true
       this.selectedCategoryOptions = [0]
     },

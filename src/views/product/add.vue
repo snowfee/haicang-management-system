@@ -53,7 +53,7 @@
     <transition name="fade-transform" mode="out-in">
       <el-form v-show="activeStep === 1" :model="formData2" ref="formData2" class="edit-form" :rules="ruleForm" label-width="150px">
         <el-form-item label="商品组成" prop="type">
-          <el-radio-group v-model="formData2.type">
+          <el-radio-group v-model="formData2.type" @change = "handleTypeChange">
             <el-radio label="SINGLE">单个物料</el-radio>
             <el-radio label="MULTI">多个物料</el-radio>
           </el-radio-group>
@@ -113,7 +113,7 @@
                   <el-input v-model="scope.row.salePrice"></el-input>
                 </template>
               </el-table-column>
-              <el-table-column label="操作">
+              <el-table-column label="操作" min-width="100px" fixed="right">
                 <template slot-scope="scope">
                   <el-button type="text" @click="deleteSku(scope.$index)">删除</el-button>
                 </template>
@@ -222,6 +222,9 @@ export default {
     this.getAllCategories()
   },
   methods: {
+    handleTypeChange() {
+      this.materials = []
+    },
     getQiniuUpToken() {
       getQiniuUpToken().then(res => {
         this.postQiniupData = {}
@@ -286,6 +289,10 @@ export default {
     },
     deleteMaterial(index) {
       this.materials.splice(index, 1)
+      if (this.materials.length === 0) {
+        this.formData2.materialIds = ''
+        return
+      }  
       this.addMaterial(this.materials)
     },
     getSkuList() {
@@ -310,9 +317,6 @@ export default {
         this.checkedKeys = this.attributeList[0].list.map(item => {
           return item.name
         })
-        console.log('checkedKeys', this.checkedKeys)
-        console.log('attributeResultList', this.attributeResultList)
-        console.log('attributeList', this.attributeList)
       } else {
         this.materialSkuList = this.materials.map(item => ({
           name: item.name,
@@ -328,7 +332,7 @@ export default {
       } 
     },
     deleteSku(index) {
-      this.attributeResultList.splice(index, 0)
+      this.attributeResultList.splice(index, 1)
     },
     uniqueById(arr) {
       if (!Array.isArray(arr)) {

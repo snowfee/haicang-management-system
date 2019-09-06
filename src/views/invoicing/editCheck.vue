@@ -13,50 +13,59 @@
         <el-input v-model="ruleForm.remark"></el-input>
       </el-form-item>
       <el-form-item label="状态" prop="status">
-        <el-switch v-model="ruleForm.status" :active-value="1" :inactive-value="0"></el-switch>
+        <el-switch v-model="ruleForm.status" active-text="已完成" inactive-text="未完成" :active-value="1" :inactive-value="0"></el-switch>
       </el-form-item>
-       <el-form-item label="新增盘点" prop="address">
-        <el-button @click="showAddCheckDialog = true">添加</el-button>
+      <el-form-item label="添加物料" prop="content">
+        <el-button style="margin-bottom: 10px" @click="showMaterialDialog=true">添加</el-button>
+        <span class="error" v-show="showContentErr">请添加|填写物料盘点内容</span>
+        <el-table border :data="stockCheckContent">
+          <el-table-column label="物料ID" prop="materialId"></el-table-column>
+           <el-table-column label="属性名称" prop="skuAttribute"></el-table-column>
+          <el-table-column label="账面数量" prop="systemCount">
+            <template slot-scope="scope">
+              <el-input v-model="scope.row.systemCount" @blur="computeLoss(scope.$index)"></el-input>
+            </template>
+          </el-table-column>
+          <el-table-column label="实盘数量" prop="actualCount">
+             <template slot-scope="scope">
+              <el-input v-model="scope.row.actualCount" @blur="computeLoss(scope.$index)"></el-input>
+            </template>
+          </el-table-column>
+          <el-table-column label="采购价格" prop="purchasePrice"></el-table-column>
+          <el-table-column label="损益数量" prop="lossCount">
+            <template slot-scope="scope">
+              <el-input v-model="scope.row.lossCount" readonly ></el-input>
+            </template>
+          </el-table-column>
+          <el-table-column label="损益金额" prop="lossAmount">
+            <template slot-scope="scope">
+              <el-input v-model="scope.row.lossAmount" readonly ></el-input>
+            </template>
+          </el-table-column>
+          <el-table-column label="库存" prop="stock"></el-table-column>
+           <el-table-column label="备注" prop="remark">
+             <template slot-scope="scope">
+              <el-input v-model="scope.row.remark"></el-input>
+            </template>
+           </el-table-column>
+          <el-table-column label="操作" min-width="100px" fixed="right">
+            <template slot-scope="scope">
+              <el-button
+                size="mini"
+                type="text"
+                @click="deleteStokeContent(scope.$index)">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
       </el-form-item>
       <el-form-item size="large" class="form-btn">
         <el-button type="primary" @click="submitForm('roleForm')">提交</el-button>
         <el-button>重置</el-button>
       </el-form-item>
     </el-form>
-    <el-dialog title="新增盘点" :visible.sync="showAddCheckDialog" width="50%">
-      <el-form :model="addCheckForm" ref="addCheckForm" :rules="addCheckRules" label-width="100px">
-        <el-form-item label="选择物料" prop="materialId">
-          <el-button @click="showMaterialDialog=true">添加</el-button>
-        </el-form-item>
-        <el-form-item label="账面数量" prop="systemCount">
-          <el-input v-model="addCheckForm.systemCount"></el-input>
-        </el-form-item>
-        <el-form-item label="实盘数量" prop="actualCount">
-          <el-input v-model="addCheckForm.actualCount"></el-input>
-        </el-form-item>
-        <el-form-item label="采购价格" prop="purchasePrice">
-          <el-input v-model="addCheckForm.purchasePrice"></el-input>
-        </el-form-item>
-        <el-form-item label="损益数量" prop="lossCount">
-          <el-input readonly v-model="addCheckForm.lossCount" :value="addCheckForm.actualCount - addCheckForm.systemCount"></el-input>
-        </el-form-item>
-        <el-form-item label="损益金额" prop="lossAmount">
-          <el-input readonly v-model="addCheckForm.lossAmount"></el-input>
-        </el-form-item>
-        <el-form-item label="抹平状态" prop="balanceStatus">
-          <el-switch v-model="addCheckForm.balanceStatus" :active-value="1" :inactive-value="0" active-text="已抹平" inactive-text="未抹平"></el-switch>
-        </el-form-item>
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="addCheckForm.remark"></el-input>
-        </el-form-item>
-        <el-form-item size="large" class="form-btn">
-          <el-button type="primary" @click="addCheck('addCheckForm')">提交</el-button>
-        </el-form-item>
-      </el-form>
-    </el-dialog>
     <material-dialog 
       :showDialog = showMaterialDialog 
-      materialsType = 'single'
+      materialsType = 'MULTI'
       @addMaterial="addMaterial" 
       @close="closeMaterialDialog"></material-dialog>
 
@@ -72,50 +81,30 @@ export default {
   },
   data() {
     return {
+      stockCheckContent: [],
       showMaterialDialog: false,
-      showAddCheckDialog: false,
-      editType: '添加',
+      showContentErr: false,
       preRuleForm: null,
       types: [{name: '日结', value: 'DAILY'}, {name: '周结', value: 'WEEKLY'}, {name: '月结', value: 'MONTHLY'}, {name: '其他', value: 'OTHER'}],
       ruleForm: {
         type: 'DAILY',
         remark: '',
-        status: 1
+        status: 0,
+        content: {
+          items: []
+        }
       },
       rules: {
         type: [{ required: true, trigger: 'blur' }],
         remark: [{ required: true, trigger: 'blur' }],
-        status: [{ required: true, trigger: 'blur' }]
+        status: [{ required: true, trigger: 'blur' }],
+        // content: [{ required: true, trigger: 'blur' }]
       },
-      addCheckForm: {
-        materialId: '',
-        systemCount: '',
-        actualCount: '',
-        purchasePrice: '',
-        lossCount: '',
-        lossAmount: '',
-        balanceStatus: 0,
-        remark: '' 
-      },
-      addCheckRules: {
-        materialId: [{ required: true, trigger: 'blur' }],
-        systemCount: [{ required: true, trigger: 'blur' }],
-        actualCount: [{ required: true, trigger: 'blur' }],
-        purchasePrice: [{ required: true, trigger: 'blur' }],
-        lossCount: [{ required: true, trigger: 'blur' }],
-        lossAmount: [{ required: true, trigger: 'blur' }],
-        balanceStatus: [{ required: true, trigger: 'blur' }],
-        remark: [{ required: true, trigger: 'blur' }] 
-      },
+      materials: [],
       stepStatus: 'progress'
     }
   },
   created() {
-    this.id = this.$route.query.id
-    if (this.id) {
-      this.editType = '更新'
-      this.getTheCheck()
-    }
     this.preRuleForm = {...this.ruleForm}
   },
   methods: {
@@ -124,29 +113,86 @@ export default {
         this.ruleForm = {...res.data}
       })
     },
+    computeLoss(index) {
+      let actualCount = this.stockCheckContent[index].actualCount
+      let systemCount = this.stockCheckContent[index].systemCount
+      let purchasePrice = this.stockCheckContent[index].purchasePrice
+      if (actualCount && systemCount) {
+        this.stockCheckContent[index].lossCount = actualCount - systemCount
+        this.stockCheckContent[index].lossAmount = (actualCount - systemCount)*purchasePrice
+      }
+    },
+    deleteStokeContent(index) {
+      this.stockCheckContent.splice(index, 1)
+    },
     addMaterial(materials) {
       console.log('materials', materials)
+      this.materials = [...this.materials, ...materials]
+        // 去重
+      this.materials = this.uniqueById(this.materials)
+      this.stockCheckContent = []
+      materials.forEach(material => {
+        material.materialSkuList.forEach(sku => {
+          let stockCheckContentItem = {
+            materialId: material.id,
+            systemCount: '',
+            actualCount: '',
+            purchasePrice: sku.purchasePrice,
+            lossCount: '',
+            lossAmount: '',
+            remark: '' ,
+            balanceStatus: 0,
+            stock: sku.stock,
+            skuAttribute: sku.skuAttribute,
+            id: sku.id // 物料的skuid
+          }
+          this.stockCheckContent.push(stockCheckContentItem)
+        })
+      })
       this.showMaterialDialog = false
+    },
+    uniqueById(arr) {
+      if (!Array.isArray(arr)) {
+        console.log('type error')
+        return
+      }
+      let obj = {}
+      return arr.filter(item => {
+        if (!obj[item.id]) {
+          obj[item.id] = 1
+          return true
+        } else {
+          ++obj[item.id]
+          return false
+        }
+      })
     },
     closeMaterialDialog() {
       this.showMaterialDialog = false
     },
+    checkContent() {
+      return !this.stockCheckContent.some(item => !(item.systemCount || item.actualCount))
+    },
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          let params = Object.assign({}, this.ruleForm)
-          if (this.editType === '添加') {
-            params.methodType = 'ADD'
+          if (!this.checkContent()){
+            this.showContentErr = true
+            return
           } else {
-            params.methodType = 'UPDATE'            
+            this.showContentErr = false
+            this.ruleForm.content.items = [...this.stockCheckContent]
           }
-          handleSupplier(params).then(res => {
+          let params = Object.assign({}, this.ruleForm)
+          params.methodType = 'ADD'
+          console.log('params', params)
+          handleStockCheck(params).then(res => {
             this.$message({
-              message: `盘点${this.editType}成功`,
+              message: `盘点添加成功`,
               type: 'success'
             });
             this.$router.replace({
-              path: 'supplier'
+              path: 'inventoryCheck'
             })
           })
         }
@@ -157,5 +203,8 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
+.error{
+  color: red;
+}
 </style>

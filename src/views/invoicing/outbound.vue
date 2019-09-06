@@ -45,11 +45,11 @@
             <el-button
               size="mini"
               type="text"
-              @click="handleEdit(scope.row.id)">编辑</el-button>
-            <el-button
+              @click="handleSee(scope.$index)">明细</el-button>
+            <!-- <el-button
               size="mini"
               type="text"
-              @click="handleDelete(scope.row.id)">删除</el-button>
+              @click="handleDelete(scope.row.id)">删除</el-button> -->
           </template>
         </el-table-column>
       </el-table>
@@ -63,20 +63,35 @@
           layout="total, sizes, prev, pager, next, jumper"
           :total="total">
         </el-pagination>
+      </div>
     </div>
-    </div>
+    <el-dialog title="出库明细" :visible.sync="showDetaileDialog">
+      <div v-if="detailData">
+        <p>出库类型：{{detailData.targetRole | keyToDes}}</p>
+        <p v-if="detailData.supplier">供应商名称：{{detailData.supplier.supplierName}}</p>
+        <p>物料名称：{{detailData.material.name}}</p>
+        <el-table border :data="detailData.material.materialSkuList">
+          <el-table-column prop="id" label="ID"></el-table-column>
+          <el-table-column prop="skuAttribute" label="属性"></el-table-column>
+          <el-table-column prop="purchasePrice" label="采购价（元）"></el-table-column>
+          <el-table-column prop="stock" label="库存"></el-table-column>
+        </el-table>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { queryInventoryRecord } from '@/api/invoicing'
+import { queryInventoryRecord, handleInventoryRecord } from '@/api/invoicing'
 export default {
   data() {
     return {
+      showDetaileDialog: false,
       listForm: {
         targetRole: ''
       },
       tableData: [],
+      detailData: null,
       pageSize: 10,
       total: 0,
       pageIndex: 0
@@ -113,9 +128,32 @@ export default {
     },
     add() {
       this.$router.push({
-        path: 'addSupplier'
+        path: 'addOutbound'
       })
+    },
+    handleSee(index) {
+      this.detailData = this.tableData[index]
+      this.showDetaileDialog = true
     }
+    // handleDelete(id) {
+    //   let params = {
+    //     id,
+    //     methodType: 'DELETE',
+    //   }
+    //   this.$confirm('此操作将永久删除该出库信息, 是否继续?', '提示', {
+    //     confirmButtonText: '确定',
+    //     cancelButtonText: '取消',
+    //     type: 'warning'
+    //   }).then(() => {
+    //     handleInventoryRecord(params).then(res => {
+    //       this.getListData()
+    //       this.$message({
+    //         type: 'success',
+    //         message: '删除成功!'
+    //       })
+    //     })
+    //   })
+    // },
   }
 }
 </script>

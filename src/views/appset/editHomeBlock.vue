@@ -282,6 +282,7 @@ export default {
           if (this.editType === '添加') {
             params.methodType = 'ADD'
           } else {
+            params.id = this.id
             params.methodType = 'UPDATE'
           }
           if (params.time) {

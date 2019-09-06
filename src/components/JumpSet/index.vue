@@ -135,7 +135,8 @@ export default {
   created() {
     // this.ruleForm.associatedId = this.$route.query.associatedId || ''
     this.ruleForm.type = this.type
-    if (!this.bannerJump) this.ruleForm = {...this.bannerJump}
+    console.log(this.ruleForm.type)
+    if (this.bannerJump) this.ruleForm = {...this.bannerJump}
     this.getQiniuUpToken()
     this.getCategories()
   },

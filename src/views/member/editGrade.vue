@@ -65,7 +65,7 @@
         </el-form-item>
       </el-form>
       <el-dialog class="dialog" title="选择商品" width="50%" :visible.sync="showProductDialog">
-        <product-dialog :canSelectSku="true" @addProduct = addProduct :limit="1"></product-dialog>      
+        <product-dialog :canSelectSku="true" @addProduct = addProduct :limit="1" :show="showProductDialog"></product-dialog>      
       </el-dialog>
   </div>
 </template>

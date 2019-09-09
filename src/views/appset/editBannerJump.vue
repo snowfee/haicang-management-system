@@ -41,7 +41,7 @@
       </el-form-item>
     </el-form>
     <el-dialog title="添加商品" width="70%" :visible.sync="showProductDialog">
-      <product-dialog @addProduct = addProduct :limit='1'></product-dialog>      
+      <product-dialog @addProduct = addProduct :limit='1' :show='showProductDialog'></product-dialog>      
     </el-dialog>
   </div>
 </template>

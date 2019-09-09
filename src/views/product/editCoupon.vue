@@ -80,7 +80,7 @@
       </el-form-item>
     </el-form>
     <el-dialog class="dialog" title="添加商品" width="70%" :visible.sync="showProductDialog">
-      <product-dialog @addProduct = addProduct></product-dialog>      
+      <product-dialog @addProduct = addProduct :show="showProductDialog"></product-dialog>      
     </el-dialog>
   </div>
 </template>

@@ -8,7 +8,7 @@
     </div>
     <div class="dialog-content">
       <p v-if="limit != Infinity">提示：只能选择{{ limit }}个商品</p>
-      <el-table border :data="tableData" @selection-change="handleSelectionChange">
+      <el-table border ref="table" :data="tableData" @selection-change="handleSelectionChange">
          <el-table-column
           type="selection"
           width="55"
@@ -52,6 +52,9 @@ export default {
     },
     canSelectSku: {
       default: false
+    },
+    show: {
+      default: false
     }
   },
   data() {
@@ -72,6 +75,10 @@ export default {
     this.getListData()
   },
   methods: {
+    // 清空选择的值
+    clearSelect() {
+      this.$refs.table.clearSelection()
+    },
     getListData() {
       let params = Object.assign({}, this.searchForm)
       params.pageSize = this.pageSize
@@ -128,6 +135,11 @@ export default {
           confirmButtonText: '确定'
         })
       }
+    }
+  },
+  watch: {
+    show(val) {
+      if (!val) this.clearSelect()
     }
   }
 }

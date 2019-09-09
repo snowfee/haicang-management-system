@@ -9,7 +9,7 @@
       </div>
       <div class="dialog-content">
         <p v-if="materialsType.toLowerCase() === 'single'">提示：只能选择1个物料</p>
-        <el-table border :data="tableData" @selection-change="handleSelectionChange">
+        <el-table border ref="table" :data="tableData" @selection-change="handleSelectionChange">
            <el-table-column
             type="selection"
             width="55"
@@ -39,7 +39,6 @@ import { queryMaterials } from '@/api/materials'
 export default {
   props: {
     showDialog: {
-      type: Boolean,
       default: false
     },
     materialsType: {
@@ -63,6 +62,10 @@ export default {
     this.getListData()
   },
   methods: {
+     // 清空选择的值
+    clearSelect() {
+      this.$refs.table.clearSelection()
+    },
     getListData() {
       let params = Object.assign({}, this.searchForm)
       params.pageSize = this.pageSize
@@ -103,6 +106,12 @@ export default {
           confirmButtonText: '确定'
         })
       }
+    }
+  },
+  watch: {
+    showDialog(val) {
+      console.log('show', val)
+      if (!val) this.clearSelect()
     }
   }
 }

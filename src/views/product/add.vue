@@ -98,7 +98,7 @@
             <el-table border :data="attributeResultList" v-if="formData2.type==='SINGLE'">
               <el-table-column v-for="(key, index) in checkedKeys" :key="index" :label="key">
                 <template slot-scope="scope">
-                  {{scope.row.skuAttribute[index]}}
+                  <span v-if="scope.row.skuAttribute">{{scope.row.skuAttribute[index]}}</span>
                 </template>
               </el-table-column>
               <el-table-column label="进价" prop="purchasePrice"></el-table-column>
@@ -160,7 +160,7 @@
 <script>
 import { getAllCategories, handleProduct } from '@/api/product'
 import { getQiniuUpToken } from '@/api/user'
-import materialDialog from './components/materialDialog'
+import materialDialog from '@/components/Dialog/materialDialog'
 import upload from '@/components/Upload'
 export default {
   components: {
@@ -305,7 +305,7 @@ export default {
       })
       console.log('attributeList', this.attributeList)
       if (this.formData2.type === 'SINGLE') {
-        this.attributeResultList = [...this.materials[0].materialSkuList]
+        this.attributeResultList = this.materials[0].materialSkuList.map(item => ({...item}))
         this.attributeResultList.forEach(item => {
           let skuAttribute = []
           let arr = item.skuAttribute.split('|')
@@ -405,7 +405,7 @@ export default {
             console.log('attributeResultList', this.attributeResultList)
             console.log('materialSkuList', this.materialSkuList)
             let productSkuItem = {...this.attributeResultList[0]}
-            productSkuItem.skuAttribute = this.attributeResultList.skuKey + ':' + this.attributeResultList.skuValue
+            productSkuItem.skuAttribute = this.attributeResultList[0].skuKey + ':' + this.attributeResultList[0].skuValue
             productSkuItem.materialSkuIds = this.materialSkuList.map(item => item.materialSkuId).join(',')
             params.productSkuList = [{...productSkuItem}]
           }

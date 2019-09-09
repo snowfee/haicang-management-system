@@ -2,7 +2,7 @@ import axios from 'axios'
 import { Message } from 'element-ui'
 import store from '@/store'
 import router from '@/router'
-import { getToken, getGuid } from '@/utils/auth'
+import { getToken, getGuid, setToken, setGuid } from '@/utils/auth'
 
 // create an axios instance
 const service = axios.create({
@@ -55,12 +55,15 @@ service.interceptors.response.use(
       })
 
       if (res.status === 412) {
+        console.log('ok', router)
         Message({
           message: '登录超时，请重新登录',
           type: 'warning',
           duration: 5 * 1000
         })
-        router.replace({ path: '/login' })
+        setToken('')
+        setGuid('')
+        router.push(`/login?redirect=${router.fullPath}`)
       }
       return Promise.reject(new Error(res.message || 'Error'))
     } else {

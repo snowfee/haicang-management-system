@@ -43,8 +43,8 @@
         </el-form-item>
       </template>
     </el-form>
-    <el-dialog title="添加商品" width="70%" :visible.sync="showProductDialog">
-      <product-dialog @addProduct = addProduct :limit='1'></product-dialog>      
+    <el-dialog title="添加商品" width="70%" :visible.sync="showProductDialog" @close="showProductDialog=false">
+      <product-dialog @addProduct = addProduct :limit='1' :show='showProductDialog'></product-dialog>      
     </el-dialog>
   </div>
 </template>
@@ -136,7 +136,12 @@ export default {
     // this.ruleForm.associatedId = this.$route.query.associatedId || ''
     this.ruleForm.type = this.type
     console.log(this.ruleForm.type)
-    if (this.bannerJump) this.ruleForm = {...this.bannerJump}
+    console.log('ok', this.bannerJump)
+    if (this.bannerJump) {
+      this.ruleForm = {...this.bannerJump}
+      this.products = [this.bannerJump.product]
+      this.fileList = [{url: this.bannerJump.picUrl}]
+    }
     this.getQiniuUpToken()
     this.getCategories()
   },
@@ -162,18 +167,23 @@ export default {
       this.showProductDialog = true
     },
     addProduct(data) {
-      this.products = data
+      this.products = [...data]
       this.ruleForm.productId = data[0].id
       this.showProductDialog = false
       console.log('1', this.ruleForm.productId)
+    },
+    deleteProduct(index) {
+      this.ruleForm.productId = ''
+      this.products.splice(index, 1)
     },
     submitForm() {
       let data = {}
       console.log('2', this.ruleForm)
       this.$refs['ruleForm'].validate(valid => {
         this.picUrlErr = !Boolean(this.ruleForm.picUrl)
-        if (this.ruleForm.type === 'PRODUCT') {
+        if (this.ruleForm.jumpDestination === 'PRODUCT') {
           this.productErr = !Boolean(this.ruleForm.productId)
+          console.log('err', this.productErr)
         }
         data.valid = valid && !this.picUrlErr && !this.productErr
         console.log('ok', data.valid)

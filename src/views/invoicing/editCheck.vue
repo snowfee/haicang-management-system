@@ -64,7 +64,7 @@
       </el-form-item>
     </el-form>
     <material-dialog 
-      :showDialog = showMaterialDialog 
+      :showDialog = showMaterialDialog
       materialsType = 'MULTI'
       @addMaterial="addMaterial" 
       @close="closeMaterialDialog"></material-dialog>

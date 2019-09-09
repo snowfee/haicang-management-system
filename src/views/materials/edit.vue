@@ -50,11 +50,11 @@
                 <el-input v-model="scope.row.purchasePrice"></el-input>
               </template>
             </el-table-column>
-            <el-table-column label="库存" prop="stock">
+            <!-- <el-table-column label="库存" prop="stock">
               <template slot-scope="scope">
                 <el-input type="number" class="input-number" v-model="scope.row.stock"></el-input>
               </template>
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column label="操作">
               <template slot-scope="scope">
                 <el-button type="text" @click="deleteSku(scope.$index)">删除</el-button>
@@ -214,7 +214,7 @@ export default {
       skuList.forEach(item => {
         let obj = {
           purchasePrice: '',
-          stock: '',
+          // stock: '',
           skuAttribute: item // 格式['', '', '']
         }
         this.materialSkuList.push(obj)

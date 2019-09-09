@@ -60,7 +60,7 @@
         </el-form-item>
         <el-form-item label="选择物料" prop="materialIds">
           <el-button @click="openMaterialsDialog">添加物料</el-button>
-          <template v-if="materials && materials.length > 0">
+          <template v-if="materials && materials.length > 0 && materials[0] != 1">
             <el-table border :data="materials" style="margin-top: 20px">
               <el-table-column label="物料编号" prop="id"></el-table-column>
               <el-table-column label="物料名称" prop="name"></el-table-column>
@@ -95,10 +95,10 @@
               </div>
             </template>
             <span v-if="skucCheckedErr" class="error">请填写/检查属性表</span>
-            <el-table border :data="attributeResultList" key="1" v-if="formData2.type==='SINGLE'">
+            <el-table border :data="attributeResultList" v-if="formData2.type==='SINGLE'">
               <el-table-column v-for="(key, index) in checkedKeys" :key="index" :label="key">
                 <template slot-scope="scope">
-                  {{scope.row.skuAttribute[index]}}
+                  <span v-if="scope.row.skuAttribute">{{scope.row.skuAttribute[index]}}</span>
                 </template>
               </el-table-column>
               <el-table-column label="进价" prop="purchasePrice"></el-table-column>
@@ -119,7 +119,7 @@
                 </template>
               </el-table-column>
             </el-table>
-            <el-table :data="attributeResultList" key="2" v-else border>
+            <el-table :data="attributeResultList" v-else border>
               <el-table-column label="属性键名称">
                 <template slot-scope="scope">
                   <el-input v-model="scope.row.skuKey"></el-input>
@@ -160,7 +160,7 @@
 <script>
 import { getAllCategories, handleProduct, productsList } from '@/api/product'
 import { getQiniuUpToken } from '@/api/user'
-import materialDialog from './components/materialDialog'
+import materialDialog from '@/components/Dialog/materialDialog'
 import upload from '@/components/Upload'
 export default {
   components: {
@@ -250,15 +250,25 @@ export default {
         this.fileList_carousel = data.carouselUrls.map(item => ({url: item}))
         this.formData2 = {
           type: data.type,
-          // materialIds: data.singleMaterialId ? data.singleMaterialId : data.combMaterialIds.join(','),
-          materialIds: ''
+          materialIds: data.singleMaterialId ? data.singleMaterialId : data.combMaterialIds.join(','),
+          // materialIds: ''
         }
-        // this.formData2.productSkuList = [...data.productSkuList]
-        // this.attributeList = [...data.skuAttributeItemList]
-        // this.materialSkuList = [...data.productSkuList]
+        this.materials = [1]
+        this.attributeResultList = data.productSkuList.map(item => ({...item}))
+        if(data.type == 'SINGLE'){
+          this.checkedKeys = data.productSkuList[0].skuSelectorList.map(item => (item.key))
+          this.attributeResultList.forEach(item => {
+            item.skuAttribute = item.skuSelectorList.map(sku => (sku.value))
+          })
+        } else {
+          this.attributeResultList[0].skuKey = data.productSkuList[0].skuSelectorList[0].key
+          this.attributeResultList[0].skuValue = data.productSkuList[0].skuSelectorList[0].value
+        }
       })
     },
     handleTypeChange() {
+      console.log('clear')
+      this.attributeResultList = []
       this.materials = []
     },
     getQiniuUpToken() {
@@ -309,6 +319,8 @@ export default {
       this.showMaterialDialog = true
     },
     addMaterial(materials) {
+      console.log('ok')
+      if (this.materials[0] == 1) this.materials = []
       this.showMaterialDialog = false
       this.formData2.materialIds = materials.map(item => item.id).join(',')
       console.log('formData2', this.formData2)
@@ -341,8 +353,10 @@ export default {
       })
       console.log('attributeList', this.attributeList)
       if (this.formData2.type === 'SINGLE') {
-        this.attributeResultList = [...this.materials[0].materialSkuList]
+        this.attributeResultList = this.materials[0].materialSkuList.map(item => ({...item}))
         this.attributeResultList.forEach(item => {
+          item.materialSkuIds = item.id
+          delete item.id
           let skuAttribute = []
           let arr = item.skuAttribute.split('|')
           arr.forEach(i => {
@@ -425,7 +439,8 @@ export default {
           delete params.category
           if (params.type === 'SINGLE') {
             params.singleMaterialId = params.materialIds
-            params.productSkuList = [...this.attributeResultList]
+            if (params.combMaterialIds) delete params.combMaterialIds
+            params.productSkuList = this.attributeResultList.map(item => ({...item}))
             params.productSkuList.forEach(item => {
               let productSkuItem = {...item}
               this.checkedKeys.forEach((key, index) => {
@@ -433,16 +448,15 @@ export default {
               })
               productSkuItem.skuAttribute = productSkuItem.skuAttribute.join('|')
               item.skuAttribute = productSkuItem.skuAttribute
-              item.materialSkuIds = item.id
+              item.materialSkuIds = item.materialSkuIds
               item.productId = this.id
-              delete item.id
+              // delete item.id
             })
           } else {
             params.combMaterialIds = params.materialIds
-            console.log('attributeResultList', this.attributeResultList)
-            console.log('materialSkuList', this.materialSkuList)
+            if (params.singleMaterialId) delete params.singleMaterialId
             let productSkuItem = {...this.attributeResultList[0]}
-            productSkuItem.skuAttribute = this.attributeResultList.skuKey + ':' + this.attributeResultList.skuValue
+            productSkuItem.skuAttribute = this.attributeResultList[0].skuKey + ':' + this.attributeResultList[0].skuValue
             productSkuItem.materialSkuIds = this.materialSkuList.map(item => item.materialSkuId).join(',')
             productSkuItem.productId = this.id
             params.productSkuList = [{...productSkuItem}]

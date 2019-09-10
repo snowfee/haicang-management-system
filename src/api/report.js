@@ -83,3 +83,10 @@ export function getOrderDetail(orderId) {
     method: 'get'
   })
 }
+
+export function queryMaterialConsumed(query) {
+  return request({
+    url: `/backend/report/materialConsumed?${query}`,
+    method: 'get'
+  })
+}

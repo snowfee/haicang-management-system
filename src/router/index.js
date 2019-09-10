@@ -304,6 +304,12 @@ export const asyncRouterMap = [
       id: 32,
       component: () => import('@/views/report/paymentFlow'),
       meta: { title: '支付流水', icon: 'list' }
+    }, {
+      path: 'materialConsumed',
+      name: '物料消耗报表',
+      id: 48,
+      component: () => import('@/views/report/materialConsumed'),
+      meta: { title: '物料消耗报表', icon: 'list' }
     }]
   },
 

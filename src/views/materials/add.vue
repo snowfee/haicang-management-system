@@ -50,13 +50,18 @@
                 <el-input v-model="scope.row.purchasePrice"></el-input>
               </template>
             </el-table-column>
+            <el-table-column label="条形码" prop="barCode">
+              <template slot-scope="scope">
+                <el-input v-model="scope.row.barCode"></el-input>
+              </template>
+            </el-table-column>
             <!-- <el-table-column label="库存" prop="stock">
               <template slot-scope="scope">
                 <el-input type="number" class="input-number" v-model="scope.row.stock"></el-input>
               </template>
             </el-table-column> -->
             <el-table-column label="操作">
-              <template slot-scope="scope">
+              <template slot-scope="scope" min-width="100px" fixed="right">
                 <el-button type="text" @click="deleteSku(scope.$index)">删除</el-button>
               </template>
             </el-table-column>
@@ -215,7 +220,7 @@ export default {
             this.skucCheckedErr = false
           }
           let params = {...this.formData1, ...this.formData2}
-          params.materialSkuList = [...this.materialSkuList]
+          params.materialSkuList = this.materialSkuList.map(item => ({...item}))
           params.materialSkuList.forEach(item => {
             this.checkedKeys.forEach((key, index) => {
               item.skuAttribute[index] = `${key}:${item.skuAttribute[index]}`

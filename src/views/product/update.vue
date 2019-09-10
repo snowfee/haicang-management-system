@@ -113,7 +113,7 @@
                   <el-input v-model="scope.row.salePrice"></el-input>
                 </template>
               </el-table-column>
-              <el-table-column label="操作">
+              <el-table-column label="操作" min-width="100px" fixed="right">
                 <template slot-scope="scope">
                   <el-button type="text" @click="deleteSku(scope.$index)">删除</el-button>
                 </template>
@@ -251,16 +251,24 @@ export default {
         this.formData2 = {
           type: data.type,
           materialIds: data.singleMaterialId ? data.singleMaterialId : data.combMaterialIds.join(','),
-          // materialIds: ''
         }
-        this.materials = [1]
         this.attributeResultList = data.productSkuList.map(item => ({...item}))
         if(data.type == 'SINGLE'){
+          this.materials = [{...data.singleMaterial}]
+          this.getSkuList(true)
           this.checkedKeys = data.productSkuList[0].skuSelectorList.map(item => (item.key))
           this.attributeResultList.forEach(item => {
             item.skuAttribute = item.skuSelectorList.map(sku => (sku.value))
           })
         } else {
+          this.materials = [...data.combMaterials]
+          let selectedSku = data.productSkuList[0].materialSkuIds.split(',')
+          this.materialSkuList = this.materials.map((item, index) => ({
+            name: item.name,
+            list: item.materialSkuList,
+            materialSkuId: +selectedSku[index]
+          }))
+          console.log('ok', this.materialSkuList)
           this.attributeResultList[0].skuKey = data.productSkuList[0].skuSelectorList[0].key
           this.attributeResultList[0].skuValue = data.productSkuList[0].skuSelectorList[0].value
         }
@@ -320,10 +328,8 @@ export default {
     },
     addMaterial(materials) {
       console.log('ok')
-      if (this.materials[0] == 1) this.materials = []
       this.showMaterialDialog = false
       this.formData2.materialIds = materials.map(item => item.id).join(',')
-      console.log('formData2', this.formData2)
       if (this.formData2.type === 'SINGLE') {
         this.materials = [...materials]
         console.log('materials', this.materials)
@@ -332,8 +338,7 @@ export default {
         // 去重
         this.materials = this.uniqueById(this.materials)
       }
-      console.log('materials', this.materials)
-      this.getSkuList(this.materials)
+      this.getSkuList()
     },
     deleteMaterial(index) {
       this.materials.splice(index, 1)
@@ -343,15 +348,27 @@ export default {
       }  
       this.addMaterial(this.materials)
     },
-    getSkuList() {
-      this.attributeList = this.materials.map(item => {
+    getSkuList(init) {
+      if (this.formData2.type === 'SINGLE') {
+        this.attributeList = this.materials.map(item => {
         item.skuAttribute.attributeList.selectedSku = ''
-        return {
+          return {
+            name: item.name,
+            list: item.skuAttribute.attributeList
+          }
+        })
+      } else {
+        this.materialSkuList = this.materials.map(item => ({
           name: item.name,
-          list: item.skuAttribute.attributeList
-        }
-      })
+          list: item.materialSkuList,
+          materialSkuId: ''
+        }))
+      }
       console.log('attributeList', this.attributeList)
+      // 如果有初始化数据就不设置attributeResultList
+      if (init) {
+        return
+      }
       if (this.formData2.type === 'SINGLE') {
         this.attributeResultList = this.materials[0].materialSkuList.map(item => ({...item}))
         this.attributeResultList.forEach(item => {
@@ -368,11 +385,6 @@ export default {
           return item.name
         })
       } else {
-        this.materialSkuList = this.materials.map(item => ({
-          name: item.name,
-          list: item.materialSkuList,
-          materialSkuId: ''
-        }))
         this.attributeResultList = [{
           originalSalePrice: '',
           skuKey: '',

@@ -23,7 +23,7 @@
           @removeUploadFile="removeUploadFile"></upload>
       </el-form-item>
       <el-form-item label="内容" prop="content">
-        <quill-editor :options="editorOption" v-model="ruleForm.content"></quill-editor>
+        <quill-editor v-if="showEditor" :options="editorOption" v-model="ruleForm.content"></quill-editor>
       </el-form-item>
       <el-form-item size="large" class="form-btn">
         <el-button type="primary" @click="submitForm('roleForm')">提交</el-button>
@@ -40,6 +40,9 @@ import { quillRedefine } from 'vue-quill-editor-upload' // 富文本编辑器vue
 import { quillEditor } from 'vue-quill-editor'
 import upload from '@/components/Upload'
 import jumpSet from '@/components/JumpSet'
+// import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+// import 'quill/dist/quill.bubble.css'
 
 export default {
   components: {
@@ -50,6 +53,7 @@ export default {
   },
   data() {
     return {
+      showEditor: false,
       stepStatus: 'progress',
       editType: '添加',
       preRuleForm: null,
@@ -107,23 +111,24 @@ export default {
       getQiniuUpToken().then(res => {
         this.postQiniupData = {}
         this.postQiniupData.token = res.data
+        this.showEditor = true
         this.editorOption = quillRedefine({
           placeholder: '',
           theme: 'snow',  // or 'bubble'
-          // toolOptions: [],
           // 图片上传的设置
           uploadConfig: {
             action:  'https://upload.qiniup.com',  // 必填参数 图片上传地址
             token: this.postQiniupData.token,
+            name: 'file',
             accept: 'image/png, image/gif, image/jpeg, image/bmp, image/x-icon',  // 可选参数 可上传的图片格式
             // 必选参数  res是一个函数，函数接收的response为上传成功时服务器返回的数据
             // 你必须把返回的数据中所包含的图片地址 return 回去
             res: (response) => {
               console.log(response)
-              return respnse.info  // 这里切记要return回你的图片地址
+              let picUrl = `http://rsource.haic168.com/${response.key}`
+              return picUrl  // 这里切记要return回你的图片地址
             },
             success: () => {
-
             },
             error: () => {
               console.error('err')

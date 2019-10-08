@@ -203,17 +203,17 @@ export default {
         materialIds: ''
       },
       ruleForm: {
-        name: [{ required: true, trigger: 'blur' }],
-        subtitle: [{ required: true, trigger: 'blur' }],
-        category: [{ required: true, trigger: 'blur' }],
-        priceUnit: [{ required: true, trigger: 'blur' }],
-        weight: [{ required: true, trigger: 'blur' }],
-        producedDate: [{ required: true, trigger: 'blur' }],
-        shelfLife: [{ required: true, trigger: 'blur' }],
-        listUrl: [{ required: true, trigger: 'blur' }],
-        carouselUrls: [{ required: true, trigger: 'blur' }],
-        materialIds: [{ required: true, trigger: 'blur' }],
-        type: [{ required: true, trigger: 'blur' }]
+        name: [{ required: true, message: '请输入商品名称', trigger: 'blur' }],
+        subtitle: [{ required: true, message: '请输入副标题', trigger: 'blur' }],
+        category: [{ required: true, message: '请选择商品类型', trigger: 'blur' }],
+        priceUnit: [{ required: true, message: '请输入商品计量单位', trigger: 'blur' }],
+        weight: [{ required: true, message: '请输入商品重量', trigger: 'blur' }],
+        producedDate: [{ required: true, message: '请输入商品生产日期', trigger: 'blur' }],
+        shelfLife: [{ required: true, message: '请输入商品保质期', trigger: 'blur' }],
+        listUrl: [{ required: true, message: '请上传商品图片', trigger: 'blur' }],
+        carouselUrls: [{ required: true, message: '请输入商品轮番图', trigger: 'blur' }],
+        materialIds: [{ required: true, message: '请添加物料', trigger: 'blur' }],
+        type: [{ required: true, message: '请选择商品组成', trigger: 'blur' }]
       }
     }
   },

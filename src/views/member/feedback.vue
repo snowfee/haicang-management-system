@@ -11,7 +11,7 @@
     <div class="table">
       <el-table border :data="tableData">
         <el-table-column prop="id" label="ID"></el-table-column>
-        <el-table-column prop="memberId" label="商户ID"></el-table-column>
+        <el-table-column prop="member.userName" label="用户名"></el-table-column>
         <el-table-column prop="content" label="意见内容"></el-table-column>
         <el-table-column prop="createTime" label="创建时间"></el-table-column>
       </el-table>

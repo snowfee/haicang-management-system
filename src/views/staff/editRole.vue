@@ -43,7 +43,7 @@ export default {
       rules: {
         name: [{ required: true, message: '请输入职位名称', trigger: 'blur' }],
         code: [{ required: true, message: '请输入职位编码', trigger: 'blur' }],
-        permissions: [{ required: true, message: '请输入职位编码', trigger: 'blur' }]
+        permissions: [{ required: true, message: '请勾选权限', trigger: 'blur' }]
       },
       roles: [],
       stepStatus: 'progress',

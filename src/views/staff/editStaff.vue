@@ -55,22 +55,22 @@ export default {
       },
       rules: {
         age: [
-          {required: true, message: '请输入活动名称', trigger: 'blur'}
+          {required: true, message: '请输入员工年龄', trigger: 'blur'}
         ],
         name: [
-          {required: true, trigger: 'blur'}
+          {required: true, message: '请输入员工姓名', trigger: 'blur'}
         ],
         telephone: [
-          {required: true, trigger: 'blur'}
+          {required: true, message: '请输入员工手机号', trigger: 'blur'}
         ],
         password: [
-          {required: true, trigger: 'blur'}
+          {required: true, message: '请输入员工密码', trigger: 'blur'}
         ],
         roleId: [
-          {required: true, trigger: 'blur'}
+          {required: true, message: '请选择员工职位', trigger: 'blur'}
         ],
         idNumber: [
-          {required: true, trigger: 'blur'}
+          {required: true, message: '请输入员工身份证号码', trigger: 'blur'}
         ]
       },
       roles: [],

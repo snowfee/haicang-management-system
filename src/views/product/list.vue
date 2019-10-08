@@ -216,13 +216,13 @@ export default {
             type: 'success',
             message: '状态修改成功!'
           })
-        }, err => {
-            if (val == 'SHELVE') {
-            this.tableData[index].status = 'UNSHELVE'
-          } else {
-            this.tableData[index].status = 'SHELVE'
-          }
         })
+      }).catch(() => {
+        if (val == 'SHELVE') {
+          this.tableData[index].status = 'UNSHELVE'
+        } else {
+          this.tableData[index].status = 'SHELVE'
+        }
       })
     }
   }

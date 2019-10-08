@@ -62,7 +62,7 @@ export default {
         name: ''
       },
       addRules: {
-        name: [{ required: true, trigger: 'blur' }]
+        name: [{ required: true, message: '请输入类型名称', trigger: 'blur' }]
       },
       dialogTitle: ''
     }

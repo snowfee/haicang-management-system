@@ -115,19 +115,19 @@ export default {
       },
       preFormData: null,
       ruleForm: {
-        name: [{ required: true, trigger: 'blur' }],
-        time: [{ required: true, trigger: 'blur' }],
-        points: [{ required: true, trigger: 'blur' }],
-        description: [{ required: true, trigger: 'blur'}],
+        name: [{ required: true, message: '请输入优惠券名称', trigger: 'blur' }],
+        time: [{ required: true, message: '请选择有效期', trigger: 'blur' }],
+        points: [{ required: true, message: '请输入积分', trigger: 'blur' }],
+        description: [{ required: true, message: '请输入优惠券说明', trigger: 'blur'}],
         full: [
-          { required: true, trigger: 'blur' }, 
+          { required: true, message: '请输入使用额度', trigger: 'blur' }, 
           { pattern:/^[0-9]+(\.[0-9]{0,2})?$/, message: '格式应为数值且最多两位小数', trigger: 'blur' }
         ],
         discount: [
-          { required: true, trigger: 'blur' },
+          { required: true, message: '请输入优惠额度', trigger: 'blur' },
           { pattern:/^[0-9]+(\.[0-9]{0,2})?$/, message: '格式应为数值且最多两位小数', trigger: 'blur' }
         ],
-        productIds: [{ required: true, trigger: 'blur' }]
+        productIds: [{ required: true, message: '请添加商品', trigger: 'blur' }]
       }
     }
   },

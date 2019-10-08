@@ -56,12 +56,12 @@ export default {
         headUrl: ''
       },
       rules: {
-        age: [{ required: true, trigger: 'blur' }],
-        userName: [{ required: true, trigger: 'blur' }],
-        password: [{ required: true, trigger: 'blur' }],
-        sex: [{ required: true, trigger: 'blur' }],
-        telephone: [{ required: true, trigger: 'blur' }],
-        headUrl: [{ required: true, trigger: 'blur' }]
+        age: [{ required: true, message: '请输入会员年龄', trigger: 'blur' }],
+        userName: [{ required: true, message: '请输入会员名称', trigger: 'blur' }],
+        password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
+        sex: [{ required: true, message: '请选择会员性别', trigger: 'blur' }],
+        telephone: [{ required: true, message: '请输入手机号', trigger: 'blur' }],
+        headUrl: [{ required: true, message: '请上传会员头像', trigger: 'blur' }]
       },
       stepStatus: 'progress',
       id: ''

@@ -39,13 +39,13 @@ export default {
       },
       rules: {
         desc: [
-          {required: true, trigger: 'blur'}
+          {required: true, message: '请输入参数描述', trigger: 'blur'}
         ],
         key: [
-          {required: true, trigger: 'blur'}
+          {required: true, message: '请输入参数key', trigger: 'blur'}
         ],
         value: [
-          {required: true, trigger: 'blur'}
+          {required: true, message: '请输入参数值', trigger: 'blur'}
         ]
       }
     }

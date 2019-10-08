@@ -62,11 +62,11 @@ export default {
         status: 'SHELVE'
       },
       rules: {
-        name: [{ required: true, trigger: 'blur' }],
-        count: [{ required: true, trigger: 'blur' }],
-        exchangePoints: [{ required: true, trigger: 'blur' }],
-        limited: [{ required: true, trigger: 'blur' }],
-        status: [{ required: true, trigger: 'blur' }]
+        name: [{ required: true, message: '请输入商品名称', trigger: 'blur' }],
+        count: [{ required: true, message: '请输入商品数量', trigger: 'blur' }],
+        exchangePoints: [{ required: true, message: '请输入需要的积分', trigger: 'blur' }],
+        limited: [{ required: true, message: '请输入限量数额', trigger: 'blur' }],
+        status: [{ required: true, message: '请选择状态', trigger: 'blur' }]
       },
       stepStatus: 'progress',
       id: ''

@@ -31,6 +31,7 @@ export default {
   data() {
     return {
       active: 0,
+      stepStatus: 'progress',
       fileList: [],
       ruleForm: {
         picUrl: ''

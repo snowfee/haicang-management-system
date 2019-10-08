@@ -16,14 +16,14 @@
         <el-input v-model="ruleForm.sort"></el-input>
       </el-form-item>
       <template v-if="ruleForm.type === 'CATEGORY'">
-        <el-form-item label="商品类目">
+        <el-form-item label="商品类目" prop="categoryIds">
           <el-checkbox-group v-model="ruleForm.categoryIds">
             <el-checkbox v-for="(item, index) in categories" :key="index" :label="item.id" style="line-height: 40px">{{item.name}}</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
       </template>
       <template v-if="ruleForm.type === 'SNAP_UP'">
-        <el-form-item label="有效期">
+        <el-form-item label="有效期" prop="time">
           <el-date-picker
             v-model="ruleForm.time"
             type="daterange"
@@ -114,16 +114,22 @@ export default {
       },
       rules: {
         name: [
-          {required: true, trigger: 'blur'}
+          {required: true, message: '请输入版块名称', trigger: 'blur'}
         ],
         type: [
-          {required: true, trigger: 'blur'}
+          {required: true, message: '请选择版块类型', trigger: 'blur'}
         ],
         sort: [
-          {required: true, trigger: 'blur'}
+          {required: true, message: '请输入排序', trigger: 'blur'}
         ],
         categoryIds: [
-          {required: true, trigger: 'blur'}
+          {required: true, message: '请选择商品类目', trigger: 'blur'}
+        ],
+        time: [
+          {required: true, message: '请输入有效期', trigger: 'blur'}
+        ],
+        picUrl: [
+          {required: true, message: '请上传图片', trigger: 'blur'}
         ]
       },
       types: [],

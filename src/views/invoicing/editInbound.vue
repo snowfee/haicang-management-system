@@ -80,8 +80,8 @@ export default {
         supplierId: ''
       },
       rules: {
-        materialId: [{ required: true, trigger: 'blur' }],
-        supplierId: [{ required: true, trigger: 'blur' }]
+        materialId: [{ required: true, message: '请选择供应商', trigger: 'blur' }],
+        supplierId: [{ required: true, message: '请添加物料', trigger: 'blur' }]
       },
       suppliers: [],
       materials: [],

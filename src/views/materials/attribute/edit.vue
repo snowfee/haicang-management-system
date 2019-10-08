@@ -12,7 +12,7 @@
       <el-form-item label="属性值可选值列表" prop="inputList">
         <el-input v-model="formData.inputList" placeholder="每个属性请用逗号隔开"></el-input>
       </el-form-item>
-      <el-form-item label="排序属性" prop="sort">
+      <el-form-item label="排序" prop="sort">
         <el-input type="number" v-model="formData.sort"></el-input>
       </el-form-item>
       <el-form-item size="large" class="form-btn">
@@ -38,13 +38,13 @@ export default {
       preFormData: null,
       id: '', // 属性id
       ruleForm: {
-        name: [{ required: true, trigger: 'blur' }],
-        attributeId: [{ required: true, trigger: 'blur' }],
+        name: [{ required: true, message: '请输入属性名称', trigger: 'blur' }],
+        // attributeId: [{ required: true, trigger: 'blur' }],
         inputList: [
-          { required: true, trigger: 'blur' },
+          { required: true, message: '请输入属性值', trigger: 'blur' },
           {pattern:/^[^,|^，]+([,|，][^,|^，]+)*$/, message: '格式不正确', trigger: 'blur'}
         ],
-        sort: [{ required: true, trigger: 'blur' }]
+        sort: [{ required: true, message: '请输入排序值', trigger: 'blur' }]
       }
     }
   },

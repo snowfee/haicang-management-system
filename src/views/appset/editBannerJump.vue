@@ -70,11 +70,11 @@ export default {
         associatedId: ''
       },
       rules: {
-        jumpDestination: [{required: true, trigger: 'blur'}],
-        picUrl: [{required: true, trigger: 'blur'}],
-        jumpUrl : [{required: true, trigger: 'blur'}],
-        jumpCategoryId: [{required: true, trigger: 'blur'}],
-        productId: [{required: true, trigger: 'blur'}]
+        jumpDestination: [{required: true, message: '请选择跳转目标', trigger: 'blur'}],
+        picUrl: [{required: true, message: '请上传广告图片', trigger: 'blur'}],
+        jumpUrl : [{required: true, message: '请输入跳转链接', trigger: 'blur'}],
+        jumpCategoryId: [{required: true, message: '请选择类目', trigger: 'blur'}],
+        productId: [{required: true, message: '请添加商品', trigger: 'blur'}]
       },
       destinations: [{
         value: 'COUPON_CENTER',

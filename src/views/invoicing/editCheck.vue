@@ -96,7 +96,7 @@ export default {
       },
       rules: {
         type: [{ required: true, trigger: 'blur' }],
-        remark: [{ required: true, trigger: 'blur' }],
+        remark: [{ required: true, message: '请输入备注', trigger: 'blur' }],
         status: [{ required: true, trigger: 'blur' }],
         // content: [{ required: true, trigger: 'blur' }]
       },
@@ -176,7 +176,7 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          if (!this.checkContent()){
+          if (!this.checkContent() || this.stockCheckContent.length === 0){
             this.showContentErr = true
             return
           } else {

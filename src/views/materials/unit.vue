@@ -54,7 +54,7 @@ export default {
         name: ''
       },
       addRules: {
-        name: [{ required: true, trigger: 'blur' }]
+        name: [{ required: true, message: '请输入单位名称', trigger: 'blur' }]
       },
       dialogTitle: ''
     }

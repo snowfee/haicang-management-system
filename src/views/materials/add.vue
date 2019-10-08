@@ -101,12 +101,12 @@ export default {
         attributeId: ''
       },
       ruleForm: {
-        name: [{ required: true, trigger: 'blur' }],
-        basicUnit: [{ required: true, trigger: 'blur' }],
-        purchaseUnit: [{ required: true, trigger: 'blur' }],
+        name: [{ required: true, message: '请输入物料名称', trigger: 'blur' }],
+        basicUnit: [{ required: true, message: '请输入物料基本单位', trigger: 'blur' }],
+        purchaseUnit: [{ required: true, message: '请输入物料采购单位', trigger: 'blur' }],
         unitConversion: [
-          { required: true, trigger: 'blur' },
-          {pattern:/^[1-9]+\-[1-9]+$/, message: '格式不正确', trigger: 'blur'}
+          { required: true, message: '请输入物料单位换算', trigger: 'blur' },
+          {pattern:/^[0-9]+\-[0-9]+$/, message: '格式不正确', trigger: 'blur'}
         ],
         attributeId: [{ required: true, message: '请选择属性类型', trigger: 'blur' }]
       }

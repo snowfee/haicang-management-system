@@ -4,7 +4,7 @@
 
       <div class="title-container">
         <svg-icon icon-class="mall" class="title-icon" />
-        <h3 class="title">海仓后台</h3>
+        <h3 class="title">优果后台</h3>
       </div>
 
       <el-form-item prop="username">

@@ -79,13 +79,13 @@ export default {
       },
       rules: {
         title: [
-          {required: true, trigger: 'blur'}
+          {required: true, message: '请输入标题', trigger: 'blur'}
         ],
         picUrl: [
-          {required: true, trigger: 'blur'}
+          {required: true, message: '请上传图片', trigger: 'blur'}
         ],
         content: [
-          {required: true, trigger: 'blur'}
+          {required: true, message: '请输入内容', trigger: 'blur'}
         ]
       }
     }

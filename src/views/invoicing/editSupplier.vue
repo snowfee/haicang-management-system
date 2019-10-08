@@ -7,7 +7,7 @@
         <el-form-item label="供应商名称" prop="supplierName">
           <el-input v-model="ruleForm.supplierName"></el-input>
         </el-form-item>
-        <el-form-item label="联系人姓" prop="contactName">
+        <el-form-item label="联系人姓名" prop="contactName">
           <el-input v-model="ruleForm.contactName"></el-input>
         </el-form-item>
         <el-form-item label="电话" prop="telephone">
@@ -49,12 +49,12 @@ export default {
         status: 1
       },
       rules: {
-        supplierName: [{ required: true, trigger: 'blur' }],
-        contactName: [{ required: true, trigger: 'blur' }],
-        telephone: [{ required: true, trigger: 'blur' }, {pattern: /^1[3456789]\d{9}$/, message: '格式错误', trigger: 'blur'}],
-        address: [{ required: true, trigger: 'blur' }],
-        settleType: [{ required: true, trigger: 'blur' }],
-        status: [{ required: true, trigger: 'blur' }]
+        supplierName: [{ required: true, message: '请输入供应商名称', trigger: 'blur' }],
+        contactName: [{ required: true, message: '请输入联系人姓名', trigger: 'blur' }],
+        telephone: [{ required: true, message: '请输入电话', trigger: 'blur' }, {pattern: /^1[3456789]\d{9}$/, message: '格式错误', trigger: 'blur'}],
+        address: [{ required: true, message: '请输入地址', trigger: 'blur' }],
+        settleType: [{ required: true, message: '请选择结算方式', trigger: 'blur' }],
+        status: [{ required: true, message: '请选择状态', trigger: 'blur' }]
       },
       stepStatus: 'progress'
     }

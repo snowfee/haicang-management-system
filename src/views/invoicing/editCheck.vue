@@ -16,7 +16,7 @@
         <el-switch v-model="ruleForm.status" active-text="已完成" inactive-text="未完成" :active-value="1" :inactive-value="0"></el-switch>
       </el-form-item>
       <el-form-item label="添加物料" prop="content">
-        <el-button style="margin-bottom: 10px" @click="showMaterialDialog=true">添加</el-button>
+        <el-button style="margin-bottom: 10px" type="primary" @click="showMaterialDialog=true">添加</el-button>
         <span class="error" v-show="showContentErr">请添加|填写物料盘点内容</span>
         <el-table border :data="stockCheckContent">
           <el-table-column label="物料ID" prop="materialId"></el-table-column>

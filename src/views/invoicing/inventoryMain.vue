@@ -15,7 +15,7 @@
       <el-table border :data="tableData">
         <el-table-column prop="id" label="ID"></el-table-column>
         <el-table-column prop="materialId" label="物料ID"></el-table-column>
-        <!-- <el-table-column prop="name" label="物料名称"></el-table-column> -->
+        <el-table-column prop="name" label="物料名称"></el-table-column>
         <el-table-column prop="purchasePrice" label="采购价格（元）"></el-table-column>
         <el-table-column prop="skuAttribute" label="SKU属性"></el-table-column>
         <el-table-column prop="stock" label="库存"></el-table-column>
@@ -74,7 +74,10 @@ export default {
       this.getListData()
     },
     handelExcel() {
-      let params = {}
+      let params = {
+        pageIndex: this.pageIndex,
+        pageSize: this.pageSize
+      }
       params.excelExport = 1
       let query = this.paramsToString(params)
       window.open(`${this.excelServe}?${query}`)

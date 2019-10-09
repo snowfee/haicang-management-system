@@ -59,7 +59,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="选择物料" prop="materialIds">
-          <el-button @click="openMaterialsDialog">添加物料</el-button>
+          <el-button type="primary" @click="openMaterialsDialog">添加物料</el-button>
           <template v-if="materials && materials.length > 0 && materials[0] != 1">
             <el-table border :data="materials" style="margin-top: 20px">
               <el-table-column label="物料编号" prop="id"></el-table-column>

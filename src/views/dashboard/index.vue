@@ -59,6 +59,7 @@ export default {
                 regionId_1: ''
             },
             orderId: '',
+            receiverPhone: '',
             isLoading_0: false,
             isLoading_1: false,
             formLabelWidth: '120px',
@@ -67,9 +68,11 @@ export default {
             orderInfos_0: [],
             orderInfos_1: [],
             showDialog: false,
+            dialogType: 'receipt',
             dialogForm: {
                 name: '',
                 phone: '',
+                staffId: ''
                 // issuer: this.userName
             },
             rules: {
@@ -94,9 +97,11 @@ export default {
         handelTabClick(tab, event) {
           this.getHomeOrder()
         },
-        handleOrderPrint(orderId) {
+        handleOrderPrint(orderId, receiverPhone) {
             this.orderId = orderId
+            this.receiverPhone = receiverPhone
             if (this.form.orderStatus == 'PAID') {
+                this.dialogType = 'receipt'
                 this.showDialog = true
             } else {
                 let routeUrl = this.$router.resolve({
@@ -139,24 +144,50 @@ export default {
             this.$refs.dialogForm.validate(valid => {
                 if (valid) {
                     this.showDialog = false
-                    let routeUrl = this.$router.resolve({
-                        path: "/print",
-                        query: {
-                            orderId: this.orderId,
-                            deliveryman: this.dialogForm.name,
-                            phone: this.dialogForm.phone,
-                            issuer: this.name
+                    if (this.dialogType === 'receipt') {
+                        let routeUrl = this.$router.resolve({
+                            path: "/print",
+                            query: {
+                                orderId: this.orderId,
+                                deliveryman: this.dialogForm.name,
+                                phone: this.dialogForm.phone,
+                                issuer: this.name,
+                                receiverPhone: this.receiverPhone
+                            }
+                        });
+                        window.open(routeUrl.href, '_blank');
+                    } else {
+                        let params = {
+                            "id": this.orderId,
+                            "methodType": 'ORDER_DELIVERY',
+                            "deliveryStaffId": this.dialogForm.staffId
                         }
-                    });
-                    window.open(routeUrl.href, '_blank');
+                        console.log(params)
+                        handleHomeOrder(params).then(res => {
+                            if (res.status == 200) {
+                                this.getHomeOrder()
+                                this.$message({
+                                    type: 'success',
+                                    message: '成功!'
+                                })
+                            } else {
+                                this.$message({
+                                    type: 'warning',
+                                    message: res.message
+                                })
+                            }
+                        })
+                    }
                 }
             })
         },
         handleStaffChange(val) {
             this.dialogForm.phone = this.staffs[val].telephone
             this.dialogForm.name = this.staffs[val].name
+            this.dialogForm.staffId = this.staffs[val].id
         },
         orderOperate(id) {
+            this.orderId = id
             let params = {
                 "id": id
             }
@@ -176,6 +207,11 @@ export default {
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
+                if (params.methodType === "ORDER_DELIVERY") {
+                    this.showDialog = true
+                    this.dialogType = 'delivery'
+                    return
+                }
                 handleHomeOrder(params).then(res => {
                     if (res.status == 200) {
                         this.getHomeOrder()

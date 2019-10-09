@@ -29,7 +29,7 @@
       </template>
       <template v-if="ruleForm.jumpDestination === 'PRODUCT'">
         <el-form-item label="选择商品" prop="productId">
-          <el-button @click="openProductDialog">添加</el-button>
+          <el-button type="primary" @click="openProductDialog">添加</el-button>
           <el-table border :data="products" style="margin-top: 20px;">
             <el-table-column label="商品编号" prop="id"></el-table-column>
             <el-table-column label="商品名称" prop="name"></el-table-column>

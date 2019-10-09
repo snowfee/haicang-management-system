@@ -19,7 +19,7 @@
         <el-input v-model="ruleForm.remark"></el-input>
       </el-form-item>
       <el-form-item label="添加物料" prop="materialId">
-        <el-button style="margin-bottom: 10px" @click="showMaterialDialog=true">添加</el-button>
+        <el-button style="margin-bottom: 10px" type="primary" @click="showMaterialDialog=true">添加</el-button>
         <el-table border :data="materialSkuList">
           <el-table-column label="物料ID" prop="materialId"></el-table-column>
           <el-table-column label="属性名称" prop="skuAttribute"></el-table-column>

@@ -1,6 +1,6 @@
 <template>
   <div class="order-container">
-    <h2>您好，欢迎光临{{companyName}}！</h2>
+    <h2>{{receiptHead}}</h2>
     <div class="order-box">
       <el-row class="row">
         <el-col :span="8">订单编号：</el-col>
@@ -19,8 +19,12 @@
         <el-col :span="16">{{deliveryman}}</el-col>
       </el-row>
       <el-row class="row">
-        <el-col :span="8">联系电话：</el-col>
+        <el-col :span="8">送货人联系电话：</el-col>
         <el-col :span="16">{{phone}}</el-col>
+      </el-row>
+      <el-row class="row">
+        <el-col :span="8">用户联系电话：</el-col>
+        <el-col :span="16">{{receiverPhone}}</el-col>
       </el-row>
       <p class="font-bold">备注:</p>
       <p class="font-bold">{{orderDetail.remark}}</p>
@@ -32,9 +36,9 @@
       </el-row>
       <el-row :gutter="5" class="row" v-for="(order, index) in orderItems" :key="index">
         <el-col :span="8">{{index+1}}.{{order.product.name}}</el-col>
-        <el-col :span="4">{{order.count}}</el-col>
-        <el-col :span="6">{{order.product.specification}}</el-col>
-        <el-col :span="6">{{order.price}}元</el-col>
+        <el-col :span="4" style="text-align: center">{{order.count}}</el-col>
+        <el-col :span="6">{{order.product.specification || order.product.priceUnit}}</el-col>
+        <el-col :span="6" style="text-align: right">{{order.price}}元</el-col>
       </el-row>
     </div>
     <div class="order-box">
@@ -59,10 +63,10 @@
     </div>
     <div class="order-box">
       <el-row class="row">
-        <el-col :span="24">谢谢您的惠顾，欢迎您再次光临！</el-col>
+        <el-col :span="24">{{receiptTail}}</el-col>
       </el-row>
       <el-row class="row">
-        <el-col :span="24">营业时间：00:00:00 - 23:59:59</el-col>
+        <el-col :span="24">{{openTime}}</el-col>
       </el-row>
     </div>
   </div>
@@ -80,6 +84,9 @@ export default {
       issuer: '',
       companyName: '',
       printType: '',
+      receiptHead: '',
+      receiptTail: '',
+      openTime: '',
       orderDetail: null
     }
   },
@@ -89,6 +96,7 @@ export default {
     this.deliveryman =this.$route.query.deliveryman
     this.phone = this.$route.query.phone
     this.issuer = this.$route.query.issuer
+    this.receiverPhone = this.$route.query.receiverPhone
     this.getOrderDetail()
     this.getPrintParams()
   },
@@ -102,6 +110,24 @@ export default {
       getPrintParams('PRINT_INVOICE_TYPE').then((res) => {
         if (res.status == 200) {
           this.printType = res.data
+        }
+      })
+      // 小票头部提示语
+      getPrintParams('RECEIPT_HEAD').then((res) => {
+        if (res.status == 200) {
+          this.receiptHead = res.data
+        }
+      })
+      // 小票尾部提示语
+      getPrintParams('RECEIPT_TAIL').then((res) => {
+        if (res.status == 200) {
+          this.receiptTail = res.data
+        }
+      })
+      // 营业时间
+      getPrintParams('RECEIPT_OPEN_HOURS').then((res) => {
+        if (res.status == 200) {
+          this.openTime = res.data
         }
       })
     },

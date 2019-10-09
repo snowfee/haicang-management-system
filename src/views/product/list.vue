@@ -43,7 +43,7 @@
           <span>数据列表</span>
         </div>
         <div class="top-right">
-          <el-button @click="add">添加</el-button>
+          <el-button type="primary" @click="add">添加</el-button>
         </div>
       </div>
     </div>

@@ -44,7 +44,7 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item label="选择" prop="productIds" v-if="formData.isForAllProduct === 0">
-        <el-button @click="openProductDialog">添加商品</el-button>
+        <el-button type="primary" @click="openProductDialog">添加商品</el-button>
           <el-table border :data="products" style="margin-top: 20px">
             <el-table-column label="编号" prop="id"></el-table-column>
             <el-table-column label="商品名称" prop="name"></el-table-column>

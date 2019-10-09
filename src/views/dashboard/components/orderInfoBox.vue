@@ -6,7 +6,7 @@
           <el-row :gutter="20" class="item-row">
             <el-col :span="12"><span class="item-title">{{item.member.userName}}</span></el-col>
             <el-col :span="12" class="align-right" v-if="orderStatus == 'PAID'">
-              <el-button icon="el-icon-printer" circle style="font-size: 25px" @click="handleOrderPrint(item.id)"></el-button>
+              <el-button icon="el-icon-printer" circle style="font-size: 25px" @click="handleOrderPrint(item.id, item.deliveryAddress.receiverPhone)"></el-button>
             </el-col>
           </el-row>
           <el-row class="item-row" :gutter="20" v-for="order in item.orderItems" :key="order.id">
@@ -27,7 +27,10 @@
             <el-col :span="24" class="align-right"><span>合计￥{{item.paidPrice}}</span></el-col>
           </el-row>
           <el-row :gutter="20" class="item-row">
-            <el-col :span="19"><span>收货地址：{{item.receiverAddress}}</span></el-col>
+            <el-col :span="19">
+              收货地址：{{item.deliveryAddress.receiverAddress}}<br/>
+              联系方式：{{item.deliveryAddress.receiverPhone}}
+            </el-col>
             <el-col :span="5" class="align-right">
               <el-button type="primary" size="small" @click="orderOperate(item.id)">{{orderStatus == 'PAID' ? "开始配送" : "完成配送"}}</el-button>
             </el-col>
@@ -54,8 +57,8 @@ export default {
     orderOperate(id) {
       this.$emit('orderOperate', id)
     },
-    handleOrderPrint(orderId) {
-      this.$emit('handleOrderPrint', orderId)
+    handleOrderPrint(orderId, receiverPhone) {
+      this.$emit('handleOrderPrint', orderId, receiverPhone)
     }
   }
 }

@@ -118,3 +118,10 @@ div:focus {
     padding-right: 0 !important;
   }
 }
+.el-cascader-node{
+  .el-radio{
+    .el-radio__input .el-radio__inner{
+      border-color: #bbb !important;
+    }
+  }
+}

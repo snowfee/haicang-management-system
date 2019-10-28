@@ -125,3 +125,12 @@ div:focus {
     }
   }
 }
+.w-e-menu{
+  z-index: unset !important;
+}
+.w-e-droplist{
+  z-index: 10002;
+}
+.w-e-toolbar{
+  flex-wrap: wrap;
+}

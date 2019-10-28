@@ -23,7 +23,7 @@
           @removeUploadFile="removeUploadFile"></upload>
       </el-form-item>
       <el-form-item label="内容" prop="content">
-        <quill-editor v-if="showEditor" :options="editorOption" v-model="ruleForm.content"></quill-editor>
+        <div id="editor"></div>
       </el-form-item>
       <el-form-item size="large" class="form-btn">
         <el-button type="primary" @click="submitForm('roleForm')">提交</el-button>
@@ -36,23 +36,18 @@
 <script>
 import { handleMessageCenter, getMessageCenterById } from '@/api/system'
 import { getQiniuUpToken } from '@/api/user'
-import { quillRedefine } from 'vue-quill-editor-upload' // 富文本编辑器vue-quill-editor的辅助插件，用于上传图片到你的服务器
-import { quillEditor } from 'vue-quill-editor'
 import upload from '@/components/Upload'
 import jumpSet from '@/components/JumpSet'
-// import 'quill/dist/quill.core.css'
-import 'quill/dist/quill.snow.css'
-// import 'quill/dist/quill.bubble.css'
+import WangEditor from 'wangeditor'
 
 export default {
   components: {
     upload,
-    jumpSet,
-    quillEditor,
-    quillRedefine
+    jumpSet
   },
   data() {
     return {
+      editor: '',
       showEditor: false,
       stepStatus: 'progress',
       editType: '添加',
@@ -100,9 +95,101 @@ export default {
     this.preRuleForm = {...this.ruleForm}
   },
   methods: {
+    createEditor(){  // 创建编辑器
+        this.editor = new WangEditor('#editor');
+        this.initEditorConfig();  // 初始化编辑器配置，在create之前
+        this.editor.create();  // 生成编辑器
+        // this.editor.$txt.html('<p>要初始化的内容</p>');  // 初始化内容
+        // $('#account--editor').css('height', 'auto');  // 使编辑器内容区自动撑开，在css中定义min-height
+    },
+    destroyEditor(){  // 销毁编辑器，官方没有给出完美方案。此方案是作者给出的临时方案
+        this.editor.destroy();  // 这个没有完全销毁实例，只是作了隐藏
+        // $('#account--editor').remove();  // 不报错的话，这一步可以省略
+        this.editor = null;
+        WangEditor.numberOfLocation--;  // 手动清除地图的重复引用，作者的临时解决方案。否则单页面来回切换时，地图报错重复引用
+    },
+    initEditorConfig(){  // 初始化编辑器配置
+        console.log(this.editor)
+        this.editor.config = {}
+        this.editor.customConfig.menus = [
+          'head',  // 标题
+          'bold',  // 粗体
+          'fontSize',  // 字号
+          'fontName',  // 字体
+          'italic',  // 斜体
+          'underline',  // 下划线
+          'strikeThrough',  // 删除线
+          'foreColor',  // 文字颜色
+          'backColor',  // 背景颜色
+          'link',  // 插入链接
+          'list',  // 列表
+          'justify',  // 对齐方式
+          'quote',  // 引用
+          'emoticon',  // 表情
+          'image',  // 插入图片
+          'table',  // 表格
+          'video',  // 插入视频
+          'code',  // 插入代码
+          'undo',  // 撤销
+          'redo'  // 重复
+        ]
+        this.editor.config.fontSizes = {  // 字号配置，增加14px
+          // 格式：'value': 'title'
+          1: '12px',
+          2: '13px',
+          3: '14px',
+          4: '16px',
+          5: '18px',
+          6: '24px',
+          7: '32px',
+          8: '48px'
+        }
+        this.editor.customConfig.uploadImgServer = 'https://upload.qiniup.com'  // 图片上传地
+        this.editor.customConfig.uploadFileName = 'file'   // 统一指定上传的文件name，需要指定。否则默认不同的上传方式是不同的nam
+        this.editor.customConfig.uploadImgParams = {
+          token: this.postQiniupData.token
+        }
+        this.editor.customConfig.uploadImgHooks = {
+          qiniu: true,
+          before: (xhr, editor, files) => {
+            editor.config.uploadImgParams = {
+              token: this.postQiniupData.token
+            }
+          },
+          success: function (xhr, editor, result) {
+            console.log('success', result)
+              // 图片上传并返回结果，图片插入成功之后触发
+              // xhr 是 XMLHttpRequst 对象，editor 是编辑器对象，result 是服务器端返回的结果
+          },
+          fail: function (xhr, editor, result) {
+            console.log('fail', result)
+              // 图片上传并返回结果，但图片插入错误时触发
+              // xhr 是 XMLHttpRequst 对象，editor 是编辑器对象，result 是服务器端返回的结果
+          },
+          error: function (xhr, editor, result) {
+            console.log('error', result)
+              // 图片上传出错时触发
+              // xhr 是 XMLHttpRequst 对象，editor 是编辑器对象
+          },
+          customInsert: function (insertImg, result, editor) {
+            // 图片上传并返回结果，自定义插入图片的事件（而不是编辑器自动插入图片！！！）
+            // insertImg 是插入图片的函数，editor 是编辑器对象，result 是服务器端返回的结果
+            // 举例：假如上传图片成功后，服务器端返回的是 {url:'....'} 这种格式，即可这样插入图片：
+            var url = `http://rsource.haic168.com/${result.key}`;
+            insertImg(url);
+            // result 必须是一个 JSON 格式字符串！！！否则报错
+          }
+        }
+    },    
+    getEditorContent(){  // 获取编辑器 内容区内容
+        this.editorContent = this.editor.$txt.html();  // 获取 html 格式
+        // this.editor.$txt.text();  // 获取纯文本
+        // this.editor.$txt.formatText();  // 获取格式化后的纯文本
+    },
     getTheMessage() {
       getMessageCenterById(this.id).then(res => {
         this.ruleForm = {...res.data}
+        this.editor.txt.html(this.ruleForm.content);
         delete this.ruleForm.createTime
         delete this.isSend
       })
@@ -111,30 +198,7 @@ export default {
       getQiniuUpToken().then(res => {
         this.postQiniupData = {}
         this.postQiniupData.token = res.data
-        this.showEditor = true
-        this.editorOption = quillRedefine({
-          placeholder: '',
-          theme: 'snow',  // or 'bubble'
-          // 图片上传的设置
-          uploadConfig: {
-            action:  'https://upload.qiniup.com',  // 必填参数 图片上传地址
-            token: this.postQiniupData.token,
-            name: 'file',
-            accept: 'image/png, image/gif, image/jpeg, image/bmp, image/x-icon',  // 可选参数 可上传的图片格式
-            // 必选参数  res是一个函数，函数接收的response为上传成功时服务器返回的数据
-            // 你必须把返回的数据中所包含的图片地址 return 回去
-            res: (response) => {
-              console.log(response)
-              let picUrl = `http://rsource.haic168.com/${response.key}`
-              return picUrl  // 这里切记要return回你的图片地址
-            },
-            success: () => {
-            },
-            error: () => {
-              console.error('err')
-            }
-          }
-        })
+        this.createEditor()
       })
     },
     uploadSuccess(fileList, imgServe) {
@@ -148,6 +212,8 @@ export default {
       this.ruleForm = Object.assign({}, this.preRuleForm)
     },
     submitForm(formName) {
+      this.ruleForm.content = this.editor.txt.html()
+      console.log(this.editor.txt.html())
       this.$refs[formName].validate(valid => {
         if (valid) {
           let jumpData = this.$refs.jumpSet.submitForm()
@@ -176,6 +242,3 @@ export default {
   }
 }
 </script>
-
-<style>
-</style>

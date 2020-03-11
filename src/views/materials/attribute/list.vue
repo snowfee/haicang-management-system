@@ -13,25 +13,27 @@
     </div>
     <div class="table">
       <el-table border :data="tableData">
-        <el-table-column label="编号" prop="id"></el-table-column>
-        <el-table-column label="属性名称" prop="name"></el-table-column>
+        <el-table-column label="编号" prop="id" />
+        <el-table-column label="属性名称" prop="name" />
         <!-- <el-table-column label="属性类型" prop="attributeId"></el-table-column> -->
         <el-table-column label="可选值列表" prop="inputList">
           <template slot-scope="scope">
-            {{scope.row.inputList.join(', ')}}
+            {{ scope.row.inputList.join(', ') }}
           </template>
         </el-table-column>
-        <el-table-column label="排序" prop="sort"></el-table-column>
+        <el-table-column label="排序" prop="sort" />
         <el-table-column label="操作" min-width="100px" fixed="right">
           <template slot-scope="scope">
             <el-button
               size="mini"
               type="text"
-              @click="handleEdit(scope.row.id)">编辑</el-button>
+              @click="handleEdit(scope.row.id)"
+            >编辑</el-button>
             <el-button
               size="mini"
               type="text"
-              @click="handleDelete(scope.row.id)">删除</el-button>
+              @click="handleDelete(scope.row.id)"
+            >删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -40,7 +42,7 @@
 </template>
 
 <script>
-import { getAttributeListById, handleSkuAttributeItem } from '@/api/materials';
+import { getAttributeListById, handleSkuAttributeItem } from '@/api/materials'
 export default {
   data() {
     return {
@@ -69,7 +71,7 @@ export default {
       })
     },
     handleDelete(id) {
-      let params = {
+      const params = {
         id,
         methodType: 'DELETE'
       }
@@ -86,7 +88,7 @@ export default {
           })
         })
       })
-    },
+    }
   }
 }
 </script>

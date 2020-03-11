@@ -1,72 +1,72 @@
 <template>
   <div class="order-container">
-    <h2>{{receiptHead}}</h2>
+    <h2>{{ receiptHead }}</h2>
     <div class="order-box">
       <el-row class="row">
         <el-col :span="8">订单编号：</el-col>
-        <el-col :span="16">{{orderId}}</el-col>
+        <el-col :span="16">{{ orderId }}</el-col>
       </el-row>
       <el-row class="row">
         <el-col :span="8">订单时间：</el-col>
-        <el-col :span="16">{{orderDetail.createTime }}</el-col>
+        <el-col :span="16">{{ orderDetail.createTime }}</el-col>
       </el-row>
       <el-row class="row">
         <el-col :span="8">预约配送时间：</el-col>
-        <el-col :span="16">{{orderDetail.deliveryTime }}</el-col>
+        <el-col :span="16">{{ orderDetail.deliveryTime }}</el-col>
       </el-row>
       <el-row class="row">
         <el-col :span="8">送货人：</el-col>
-        <el-col :span="16">{{deliveryman}}</el-col>
+        <el-col :span="16">{{ deliveryman }}</el-col>
       </el-row>
       <el-row class="row">
         <el-col :span="8">送货人联系电话：</el-col>
-        <el-col :span="16">{{phone}}</el-col>
+        <el-col :span="16">{{ phone }}</el-col>
       </el-row>
       <el-row class="row">
         <el-col :span="8">用户联系电话：</el-col>
-        <el-col :span="16">{{receiverPhone}}</el-col>
+        <el-col :span="16">{{ receiverPhone }}</el-col>
       </el-row>
       <p class="font-bold">备注:</p>
-      <p class="font-bold">{{orderDetail.remark}}</p>
+      <p class="font-bold">{{ orderDetail.remark }}</p>
     </div>
     <div class="order-box">
       <el-row class="row title">
         <el-col :span="8">购买清单：</el-col>
-        <el-col class="title-right" :span="16">共{{orderDetail.allProductsCount }}件</el-col>
+        <el-col class="title-right" :span="16">共{{ orderDetail.allProductsCount }}件</el-col>
       </el-row>
-      <el-row :gutter="5" class="row" v-for="(order, index) in orderItems" :key="index">
-        <el-col :span="8">{{index+1}}.{{order.product.name}}</el-col>
-        <el-col :span="4" style="text-align: center">{{order.count}}</el-col>
-        <el-col :span="6">{{order.product.specification || order.product.priceUnit}}</el-col>
-        <el-col :span="6" style="text-align: right">{{order.price}}元</el-col>
+      <el-row v-for="(order, index) in orderItems" :key="index" :gutter="5" class="row">
+        <el-col :span="8">{{ index+1 }}.{{ order.product.name }}</el-col>
+        <el-col :span="4" style="text-align: center">{{ order.count }}</el-col>
+        <el-col :span="6">{{ order.product.specification || order.product.priceUnit }}</el-col>
+        <el-col :span="6" style="text-align: right">{{ order.price }}元</el-col>
       </el-row>
     </div>
     <div class="order-box">
       <el-row class="row">
         <el-col :span="8">订单总额：</el-col>
-        <el-col class="text-right" :span="16">{{orderDetail.paidPrice + orderDetail.discountPrice}}元</el-col>
+        <el-col class="text-right" :span="16">{{ orderDetail.paidPrice + orderDetail.discountPrice }}元</el-col>
       </el-row>
       <el-row class="row">
         <el-col :span="8">订单运费：</el-col>
-        <el-col class="text-right" :span="16">{{orderDetail.deliveryPrice}}元</el-col>
+        <el-col class="text-right" :span="16">{{ orderDetail.deliveryPrice }}元</el-col>
       </el-row>
       <el-row class="row">
         <el-col :span="8">订单优惠：</el-col>
-        <el-col class="text-right" :span="16">{{orderDetail.discountPrice}}元</el-col>
+        <el-col class="text-right" :span="16">{{ orderDetail.discountPrice }}元</el-col>
       </el-row>
     </div>
     <div class="order-box">
       <el-row class="row">
         <el-col :span="8">应收金额：</el-col>
-        <el-col class="text-right" :span="16">{{orderDetail.paidPrice + orderDetail.deliveryPrice}}元</el-col>
+        <el-col class="text-right" :span="16">{{ orderDetail.paidPrice + orderDetail.deliveryPrice }}元</el-col>
       </el-row>
     </div>
     <div class="order-box">
       <el-row class="row">
-        <el-col :span="24">{{receiptTail}}</el-col>
+        <el-col :span="24">{{ receiptTail }}</el-col>
       </el-row>
       <el-row class="row">
-        <el-col :span="24">{{openTime}}</el-col>
+        <el-col :span="24">{{ openTime }}</el-col>
       </el-row>
     </div>
   </div>
@@ -93,7 +93,7 @@ export default {
   created() {
     console.log(this.$route.query)
     this.orderId = this.$route.query.orderId
-    this.deliveryman =this.$route.query.deliveryman
+    this.deliveryman = this.$route.query.deliveryman
     this.phone = this.$route.query.phone
     this.issuer = this.$route.query.issuer
     this.receiverPhone = this.$route.query.receiverPhone
@@ -103,9 +103,9 @@ export default {
   methods: {
     getPrintParams() {
       getPrintParams('PRINT_COMPANY_NAME').then((res) => {
-          if (res.status == 200) {
-            this.companyName = res.data
-          }
+        if (res.status == 200) {
+          this.companyName = res.data
+        }
       })
       getPrintParams('PRINT_INVOICE_TYPE').then((res) => {
         if (res.status == 200) {
@@ -189,5 +189,4 @@ export default {
   }
 }
 </style>
-
 

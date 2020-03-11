@@ -92,14 +92,14 @@ div:focus {
 }
 .edit-container{
   @extend .box;
-  width: 800px;
+  width: 1000px;
   margin: 20px auto;
   .edit-step{
     width: 600px;
     margin: 25px auto;
   }
   .edit-form{
-    width: 600px;
+    width: 800px;
     .form-btn{
       text-align: center;
     }

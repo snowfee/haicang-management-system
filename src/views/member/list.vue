@@ -13,9 +13,9 @@
     </div>
     <div class="table">
       <el-table border :data="tableData">
-        <el-table-column prop="id" label="ID"></el-table-column>
-        <el-table-column prop="userName" label="会员名称"></el-table-column>
-        <el-table-column prop="telephone" label="手机号"></el-table-column>
+        <el-table-column prop="id" label="ID" />
+        <el-table-column prop="userName" label="会员名称" />
+        <el-table-column prop="telephone" label="手机号" />
         <el-table-column prop="sex" label="性别">
           <template slot-scope="scope">
             <div>
@@ -23,38 +23,41 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="age" label="年龄"></el-table-column>
+        <el-table-column prop="age" label="年龄" />
         <el-table-column prop="membershipGrade" label="会员等级">
           <template slot-scope="scope">
-            {{scope.row.membershipGrade ? scope.row.membershipGrade.name : '普通用户'}}
+            {{ scope.row.membershipGrade ? scope.row.membershipGrade.name : '普通用户' }}
           </template>
         </el-table-column>
-        <el-table-column prop="expirationTime" label="会员到期时间"></el-table-column>
-        <el-table-column prop="createTime" label="创建时间"></el-table-column>
+        <el-table-column prop="expirationTime" label="会员到期时间" />
+        <el-table-column prop="createTime" label="创建时间" />
         <el-table-column label="操作" min-width="100px" fixed="right">
           <template slot-scope="scope">
             <el-button
               size="mini"
               type="text"
-              @click="handleEdit(scope.row.id)">编辑</el-button>
+              @click="handleEdit(scope.row.id)"
+            >编辑</el-button>
             <el-button
               size="mini"
               type="text"
-              @click="handleDelete(scope.row.id)">删除</el-button>
+              @click="handleDelete(scope.row.id)"
+            >删除</el-button>
           </template>
         </el-table-column>
       </el-table>
       <div class="pagination-box">
         <el-pagination
-          @size-change="handlePageSizeChange"
-          @current-change="handleCurrentPageChange"
           :current-page="pageIndex + 1"
           :page-sizes="[10, 20, 30, 40, 50]"
           :page-size="pageSize"
+          :page-count="1"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="total">
-        </el-pagination>
-    </div>
+          :total="total"
+          @size-change="handlePageSizeChange"
+          @current-change="handleCurrentPageChange"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -78,7 +81,7 @@ export default {
       this.getListData()
     },
     getListData() {
-      let param = {
+      const param = {
         pageIndex: this.pageIndex,
         pageSize: this.pageSize
       }
@@ -101,7 +104,7 @@ export default {
       })
     },
     handleDelete(id) {
-      let params = {
+      const params = {
         id,
         methodType: 'DELETE'
       }
